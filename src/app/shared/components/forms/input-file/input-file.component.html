@@ -1,0 +1,9 @@
+<main class=" ">
+    <label for="input-file" class=" w-full {{bg_color}} hover:bg-opacity-75 rounded-full border-none h-10 
+    cursor-pointer  duration-300 ease-in-out px-2
+    flex items-center justify-center gap-3 {{moreClasses}}">
+    <ng-content/>
+    {{text ? '' : 'default'}}
+    </label>
+    <input class=" hidden" type="file" name="fileImage" id="input-file" accept=accept>
+</main>

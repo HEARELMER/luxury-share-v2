@@ -1,0 +1,11 @@
+app-button:hover{
+    svg path {
+     @apply fill-primary-l-500 stroke-primary-l-500 duration-300 ease-in-out
+    }
+ 
+ }
+ .icon-h:hover{
+    svg path {
+        @apply fill-none stroke-primary-l-500 duration-300 ease-in-out
+    }
+}

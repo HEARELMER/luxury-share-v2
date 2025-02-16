@@ -1,0 +1,8 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+  <img src="/assets/not-found-icon.svg" alt="No Encontrado" class=" mb-4" />
+  <p class="text-xl font-semibold text-gray-700">¡Ups! Parece que algo salió mal</p>
+  <div class="mt-6">
+    <app-button (click)="goToDashboard()" [text]="'Volver a Inicio'" [moreClasses]="'px-4 py-2 mb-2 font-medium text-white duration-300 ease-in-out bg-blue-600 rounded hover:bg-blue-500'" />
+    <p class="text-red-500 mt-2">Inténtalo de nuevo más tarde</p>
+  </div>
+</div>

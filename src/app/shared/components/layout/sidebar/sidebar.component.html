@@ -1,0 +1,64 @@
+<main [ngClass]="{ 'show-menu': ismenuVisible() }" class="border-r shadow-md">
+  <button class="menu" (click)="toggleMenu()">
+    @if (ismenuVisible()) {
+
+    <i
+      class="pi pi-bars absolute left-[60px] text-xl text-primary-l-500 font-bold"
+    ></i>
+
+    } @else {
+    <button
+      class="bg-white p-2 w-10 h-10 flex justify-center items-center rounded-full hover:bg-opacity-75"
+    >
+      <i class="pi pi-times text-xl text-primary-l-500 font-bold"></i>
+    </button>
+
+    }
+  </button>
+
+  <div [ngClass]="{ 'show-menu': !ismenuVisible() }" class="logo">
+    <img src="./assets/logo.svg" alt="logo" class="w-14 h-14 rounded-full" />
+    <h1 class="font-bold text-2xl text-primary-l-500">Luxury Travel</h1>
+  </div>
+
+  <ul
+    [ngClass]="{ 'show-menu': !ismenuVisible() }"
+    class="w-full px-4 flex flex-col gap-2"
+  >
+    @for (item of MENU_OPTIONS; track $index) {
+
+    <li
+      [pTooltip]="ismenuVisible() ? item.label : ''"
+      tooltipPosition="right"
+      [showDelay]="300"
+    >
+      <app-sidebar-button
+        text="{{ item.label }}"
+        type="flex gap-4 items-center  border py-2 font-regular hover:bg-primary-l-100 hover:text-primary-l-500 "
+        [selected]="false"
+        [textHidden]="ismenuVisible()"
+        [routerLink]="'./' + item.routerLink"
+        [bg]="
+          selectedButton() === item.routerLink
+            ? 'bg-primary-l-100 text-primary-l-500 font-semibold'
+            : 'bg-white'
+        "
+        [color]="'text-primary-l-500'"
+        [font]="'font-regular'"
+        [text]="item.label"
+        [ngClass]="{ selected: selectedButton() === item.routerLink }"
+        (click)="selectButton(item.routerLink || '')"
+      >
+        <i class="{{ item.icon }} text-lg "></i>
+      </app-sidebar-button>
+    </li>
+
+    }
+  </ul>
+</main>
+
+<div
+  [ngClass]="{ hidden: ismenuVisible() }"
+  (click)="toggleMenu()"
+  class="close absolute cursor-pointer top-0 left-0 w-screen h-screen lg:w-full bg-black -z-10 bg-opacity-25"
+></div>

@@ -1,0 +1,40 @@
+<main [ngClass]="{'w-full px-1': textHidden}"
+    class=" bg-white shadow-xl rounded-2xl p-4 border-2 flex flex-col gap-2 w-64 inset-0 z-[1000000]">
+
+    <app-sidebar-button [textHidden]=textHidden [bg]="'bg-white'" [color]="'text-black'"
+        [type]="' flex gap-4 items-center justify-center border py-1 hover:bg-primary-l-100 hover:text-primary-l-500'"
+        [text]="'Perfil Usuario'" [routerLink]="'profile'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+            <path fill="#000000"
+                d="M12 4a4 4 0 1 0 0 8a4 4 0 0 0 0-8M6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8m2 10a3 3 0 0 0-3 3a1 1 0 1 1-2 0a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5a1 1 0 1 1-2 0a3 3 0 0 0-3-3z" />
+        </svg>
+    </app-sidebar-button>
+
+    <app-sidebar-button (click)="darkMode()" class="icon-h" [textHidden]=textHidden [bg]="'bg-white'" [color]="'text-black'"
+        [type]="' flex gap-4 items-center justify-center border py-1 hover:bg-primary-l-100 hover:text-primary-l-500'"
+        [text]="'Modo Oscuro'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+            <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" />
+        </svg>
+    </app-sidebar-button>
+
+    <app-sidebar-button class="icon-h" [textHidden]=textHidden (click)="logOut()" [bg]="'bg-white'" [color]="'text-black'"
+        [type]="' flex gap-4 items-center justify-center border py-1 hover:bg-primary-l-100 hover:text-primary-l-500'"
+        [text]="'Cerrar Sesión'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+            <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                color="#999999">
+                <path
+                    d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12" />
+                <path
+                    d="M17.037 12.028h-6.975m0 0c0 .57 2.155 2.487 2.155 2.487m-2.155-2.487c0-.586 2.155-2.465 2.155-2.465m-5.18-1.568v8" />
+            </g>
+        </svg>
+    </app-sidebar-button>
+
+</main>
+@if (confirm) {
+<app-alert [duration]="1000000" [autoClose]="true" type={{messageLogin.type}} title={{messageLogin.title}}
+    message={{messageLogin.message}} />
+}

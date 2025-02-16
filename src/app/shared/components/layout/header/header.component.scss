@@ -1,0 +1,18 @@
+main{
+    @apply flex justify-end items-center  bg-white h-full px-4;
+
+    .user{
+        @apply flex items-center gap-1 cursor-pointer ;
+        img{
+            @apply w-8 h-8 rounded-full;
+        }
+    
+    }
+
+    .more{
+        @apply fixed z-[1000000] top-14    right-2 rounded-[20px] shadow-lg;
+    }
+}
+button svg path:hover{
+    @apply fill-primary-l-500 duration-300 ease-in-out;
+}

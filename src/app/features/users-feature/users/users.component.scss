@@ -1,0 +1,44 @@
+ :host ::ng-deep {
+    .menu-horizontal {
+      .p-tieredmenu {
+        .p-menuitem-link {
+          padding: 0;
+        }
+        @media (min-width: 768px) {
+          .p-tieredmenu-root-list {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+          }
+          .p-menuitem-active > .p-submenu-list {
+            top: 100%;
+            left: 0;
+          }
+        }
+  
+        @media (max-width: 767px) {
+          .p-tieredmenu-root-list {
+            flex-direction: column;
+          }
+  
+          .p-menuitem-active > .p-submenu-list {
+            position: relative;
+            left: 1rem;
+          }
+        }
+      }
+    }
+  }
+.button-table-actions{
+   @apply hover:bg-primary-50 p-2 rounded-full duration-300 ease-in-out w-10 h-10 flex items-center justify-center;
+}
+
+
+.search-bar {
+  @apply bg-primary-50/50 border border-primary-200 transition-all duration-200;
+}
+
+.search-bar:focus-within {
+  @apply ring-2 ring-primary-200 border-primary-300;
+}
+

@@ -1,0 +1,9 @@
+.table-content{
+    @apply overflow-y-hidden overflow-x-auto;
+}
+.table-content {
+    scrollbar-width: thin;
+}
+ table button{
+@apply hover:bg-primary-50 p-2 rounded-full duration-300 ease-in-out;
+}

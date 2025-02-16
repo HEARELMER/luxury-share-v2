@@ -1,0 +1,30 @@
+<main class="grid-container bg-[#F6F8FA] overflow-hidden">
+    <app-header></app-header>
+    <app-sidebar />
+    <section class="outlet p-6">
+      <router-outlet />
+    </section>
+  </main>
+  @if (activeModalSelectBranch) {
+  
+  <app-alert type="warning" title="Selecciona tu sucursal" class="w-auto">
+    <div class="w-full flex items-center flex-col gap-4 justify-center">
+      <p-listbox
+        [options]="branches"
+        [(ngModel)]="selectedBranch"
+        optionLabel="address"
+        [style]="{ width: '300px' }"
+      ></p-listbox>
+  
+      <app-button
+        class="w-full max-w-[300px]"
+        (click)="confirmBranch()"
+        [bgColor]="'bg-primary-l-500'"
+        [moreClasses]="'py-2 hover:bg-primary-l-300'"
+        [text]="'Confirmar'"
+      />
+    </div>
+  </app-alert>
+  
+  }
+  

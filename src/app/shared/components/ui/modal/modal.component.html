@@ -1,0 +1,20 @@
+@if (show) {
+    <main (click)="onBackdropClick($event)"  class=" flex justify-center lg:items-center  w-full h-full lg:min-h-screen bg-black fixed overflow-auto z-[999999] bg-opacity-15 top-0 left-0">
+        <section class=" bg-white {{style}} rounded-lg m-auto" >
+            <div class="w-full py-2 text-lg font-semibold px-10 flex items-center justify-between ">
+                <h1 class=" text-primary-l-500">{{title}}</h1>
+                <button (click)="closeHandler()" class=" hover:bg-primary-l-100 rounded-full duration-300 ease-in-out p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="none" stroke="#666666" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.5"
+                            d="M6.5 6.5l11 11m0-11l-11 11" />
+                    </svg>
+                </button>
+            </div>
+            <div class=" p-10">
+                <ng-content  ></ng-content>
+    
+            </div>
+            
+        </section>
+    </main>
+}

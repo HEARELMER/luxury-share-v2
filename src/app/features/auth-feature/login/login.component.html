@@ -1,0 +1,125 @@
+<main
+  [ngClass]="{ fixed: confirmLogin }"
+  class="grid grid-cols-1 lg:grid-cols-2 min-h-screen w-full h-full lg:py-10 lg:px-20"
+>
+  <form
+    [formGroup]="form"
+    class="flex flex-col col-span-1 py-3 md:py-14 px-8 lg:px-20 rounded-2xl border-2 border-primary-l-100 shadow-lg lg:pt-24 lg:pb-20 h-full rounded-r-none border-r-0 justify-between"
+  >
+    <div>
+      <div class="flex flex-col">
+        <h2 class="text-2xl font-bold mt-2 text-primary-l-300">
+          Bienvenido a nuestra plataforma
+        </h2>
+
+        <span class=""
+          >Por favor, ingrese sus credenciales para continuar.</span
+        >
+        <img
+          class="lg:hidden max-h-60 w-full rounded-lg mt-4 object-cover shadow-lg border"
+          src="./assets/portada.svg"
+          alt=""
+        />
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="font-semibold mt-4 md:mt-10">
+          <label> ID Usuario </label>
+          <div
+            [ngClass]="{
+              'border-danger-100':
+                form.controls['userId'].invalid &&
+                form.controls['userId'].touched
+            }"
+            class="mt-2 flex border-2 text-lg rounded-lg px-4 font-normal gap-2 items-center focus-within:border-blue-400 focus-within:outline outline-blue-200"
+          >
+            <i class="pi pi-user text-sm text-gray-400"></i>
+            <input
+              type="text"
+              formControlName="userId"
+              maxlength="8"
+              required
+              class="h-full bg-transparent w-full border-none outline-none py-2"
+              placeholder="ID de usuario"
+            />
+          </div>
+          @if (form.controls['userId'].invalid &&
+          form.controls['userId'].touched) {
+          <div class="text-red-500 mt-2 text-sm">
+            ID de usuario debe ser un número de 8 dígitos.
+          </div>
+          }
+        </div>
+        <div class="font-semibold mt-4">
+          <label> Contraseña </label>
+          <div
+            [ngClass]="{
+              'border-danger-100':
+                form.controls['password'].invalid &&
+                form.controls['password'].touched
+            }"
+            class="mt-2 flex border-2 text-lg rounded-lg px-4 font-normal gap-2 items-center focus-within:border-blue-400 focus-within:outline outline-blue-200"
+          >
+            <i class="pi pi-lock text-sm text-gray-400"></i>
+            <input
+              type="text"
+              formControlName="password"
+              required
+              class="h-full bg-transparent w-full py-2 border-none outline-none"
+              placeholder="Contraseña"
+              [type]="passwordVisible ? 'text' : 'password'"
+            />
+            <div class="icon cursor-pointer" (click)="showPassword()">
+              <i
+                class="pi {{
+                  passwordVisible ? 'pi-eye' : 'pi-eye-slash'
+                }} text-lg text-gray-400"
+              ></i>
+            </div>
+          </div>
+          @if (form.controls['password'].invalid &&
+          form.controls['password'].touched) {
+          <div class="text-red-500 mt-2 text-sm">
+            La contraseña debe tener al menos 8 caracteres.
+          </div>
+          }
+          <p
+            [routerLink]="'../recovery-password'"
+            class="w-full text-primary-l-300 text-end mt-2 cursor-pointer mb-2"
+          >
+            ¿Olvidaste tu contraseña?
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <app-button
+      (click)="login()"
+      [bgColor]="'bg-primary-l-500'"
+      [text]="'Iniciar Sesión'"
+      [moreClasses]="
+        'text-lg hover:bg-opacity-90 duration-300 ease-in-out py-3 w-full flex items-center justify-center gap-4'
+      "
+    >
+      @if (loading) {
+      <i class="pi pi-spin pi-spinner text-[1.8rem]"></i>
+      }
+    </app-button>
+  </form>
+  <div class="w-auto col-span-1 hidden lg:block h-full">
+    <img
+      class="h-full object-cover border-l-0 border-4 border-primary-l-100 rounded-2xl rounded-l-none"
+      src="./assets/portada.svg"
+      alt=""
+    />
+  </div>
+</main>
+
+@if (confirmLogin) {
+<app-alert
+  type="{{ messageLogin.type }}"
+  title="{{ messageLogin.title }}"
+  message="{{ messageLogin.message }}"
+  [autoClose]="true"
+  [duration]="3000"
+/>
+}

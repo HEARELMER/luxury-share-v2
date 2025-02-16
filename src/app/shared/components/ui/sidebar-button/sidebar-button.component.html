@@ -1,0 +1,8 @@
+<button
+  class="{{ type() }} {{ bg() }} border-none outline-none {{
+    font()
+  }}  rounded-lg {{ color() }} duration-300 ease-in-out py-1 px-6  w-full"
+>
+  <ng-content></ng-content>
+  <p [class.hidden]="textHidden()">{{ text() }}</p>
+</button>

@@ -1,0 +1,140 @@
+<main>
+  <h1 class="text-xl text-primary-l-500 font-semibold">Usuarios</h1>
+  <div
+    class="flex justify-between items-end flex-col gap-6 lg:gap-0 w-full lg:flex-row-reverse"
+  >
+    <div
+      class="search-bar flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 w-96 border border-gray-100 focus-within:border-blue-500 transition-all duration-300"
+    >
+      <i class="pi pi-search text-gray-400 text-lg font-semibold"></i>
+      <input
+        type="text"
+        placeholder="Buscar por DNI"
+        class="bg-transparent w-full outline-none text-gray-700"
+        maxlength="8"
+      />
+    </div>
+
+    <p-tieredMenu [model]="items" class="menu-horizontal">
+      <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+        <div class="flex items-center gap-2 px-4 py-2 cursor-pointer">
+          <i [class]="item.icon"></i>
+          <span class="whitespace-nowrap">{{ item.label }}</span>
+          <p-badge *ngIf="item.badge" [value]="item.badge" class="ml-2" />
+          <span
+            *ngIf="item.shortcut"
+            class="text-xs bg-gray-100 px-2 py-1 rounded"
+          >
+            {{ item.shortcut }}
+          </span>
+          <i *ngIf="hasSubmenu" class="pi pi-angle-down ml-2"></i>
+        </div>
+      </ng-template>
+    </p-tieredMenu>
+  </div>
+
+  <div class="bg-white rounded-lg border w-full">
+    <div class="w-full  py-3 flex px-4 justify-between items-center">
+      <h1 class="   font-semibold">Tabla de Usuarios</h1>
+      <app-button
+        text="Descargar Excel"
+        icon="pi pi-file-excel"
+        moreClasses="py-2"
+      />
+    </div>
+    <p-table
+      [columns]="cols"
+      [value]="virtualUsers"
+      [lazy]="true"
+      [scrollable]="true"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="50"
+      [loading]="loading"
+      [totalRecords]="totalRecords"
+      scrollHeight="400px"
+      (onLazyLoad)="loadUsersLazy()"
+      [resizableColumns]="true"
+      styleClass="p-datatable-gridlines"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border bg-primary-l-100"
+          >
+            {{ col.header }}
+          </th>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user let-columns="columns">
+        <tr>
+          @for (col of columns; track $index) {
+          <td>
+            @if (col.field=="photoUrl") {
+            <img
+              [src]="user[col.field]"
+              alt="user"
+              class="w-8 h-8 rounded-full cursor-pointer"
+              loading="lazy"
+            />
+            } @else if (col.field=="actions") {
+            <div class="flex gap-1">
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Editar Usuario'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-user-edit"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Ver Usuario'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-eye"></i>
+              </button>
+            </div>
+
+            } @else {
+            {{ user[col.field] }}
+
+            }
+          </td>
+          }
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody" let-columns="columns">
+        <tr>
+          @for (col of columns; track $index) {
+          <td>
+            <p-skeleton></p-skeleton>
+          </td>
+
+          }
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showFirstLastIcon]="false"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

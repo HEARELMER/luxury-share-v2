@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormsModule,
@@ -15,6 +15,7 @@ import {
   styleUrl: './password.component.scss',
 })
 export class PasswordComponent {
+  private readonly formBuilder = inject(FormBuilder)
   @Output() password = new EventEmitter<string>();
 
   ngDoCheck(): void {
@@ -24,8 +25,7 @@ export class PasswordComponent {
   }
 
   passwordVisible: boolean = false;
-  errorMessage: string = '';
-  constructor(private formBuilder: FormBuilder) {}
+  errorMessage: string = ''; 
 
   form = this.formBuilder.group({
     password: [

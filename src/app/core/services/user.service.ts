@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environmentDev } from '../../environments/environment.development';
- 
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { NewAdmin } from '../../shared/interfaces/user';
 
@@ -10,23 +9,22 @@ import { NewAdmin } from '../../shared/interfaces/user';
 })
 export class UserService {
   private readonly url = environmentDev.apiUrl;
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient); 
 
   getInfoUserByDni(numDni: any) {
     console.log(numDni);
     return this.httpClient.post(`${this.url}users/search-dni`, numDni, {
       withCredentials: true,
     });
-  }
+  } 
 
   paginateUsers(page: number, size: number): Observable<any> {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('limit', size.toString());
 
-    return this.httpClient.get(`${this.url}users/paginate`, {
-      params,
-      withCredentials: true
+    return this.httpClient.get<any>(`${this.url}users`, {
+      params
     });
   }
 
@@ -69,7 +67,8 @@ export class UserService {
               message: {
                 type: 'error',
                 title: '¡Solicitud incorrecta!',
-                message: 'Hubo un error en la solicitud al agregar el administrador.',
+                message:
+                  'Hubo un error en la solicitud al agregar el administrador.',
               },
             });
           }

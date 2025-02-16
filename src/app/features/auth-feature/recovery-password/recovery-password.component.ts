@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'; 
+import { Component, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
 import {
   FormBuilder,
@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 
 import { Router } from '@angular/router';
-import { InputOtpModule } from 'primeng/inputotp'; 
+import { InputOtpModule } from 'primeng/inputotp';
 import { AuthService } from '../../../core/services/auth.service';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { PasswordComponent } from '../../../shared/components/forms/password/password.component';
@@ -20,7 +20,6 @@ import { ModalComponent } from '../../../shared/components/ui/modal/modal.compon
   selector: 'app-recovery-password',
   standalone: true,
   imports: [
-    ModalComponent,
     NgClass,
     ButtonComponent,
     FormsModule,
@@ -35,6 +34,7 @@ import { ModalComponent } from '../../../shared/components/ui/modal/modal.compon
   styleUrl: './recovery-password.component.scss',
 })
 export class RecoveryPasswordComponent {
+  private readonly formBuilder = inject(FormBuilder);
   messageAlert: MessageAlert | null = null;
   emailIsValid: boolean = false;
   codeIsValid: boolean = false;
@@ -45,7 +45,6 @@ export class RecoveryPasswordComponent {
   NUM_DNI = '';
   constructor(
     private readonly authService: AuthService,
-    private formBuilder: FormBuilder,
     private router: Router
   ) {}
 
@@ -60,7 +59,7 @@ export class RecoveryPasswordComponent {
       this.NUM_DNI.length < 9
     ) {
       this.authService
-        .passwordRecovery( this.NUM_DNI,this.password)
+        .passwordRecovery(this.NUM_DNI, this.password)
         .subscribe((isSuccess) => {
           if (isSuccess) {
             this.codeIsValid = false;

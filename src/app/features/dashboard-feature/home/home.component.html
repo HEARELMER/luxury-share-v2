@@ -1,0 +1,93 @@
+<main class="flex w-full gap-4 justify-center flex-col">
+  <div
+    class="grid items-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full"
+  >
+    <app-card-home
+      class="w-auto"
+      [title]="'Vendedores'"
+      [number]="totalSellers"
+      bg="bg-purple-400"
+      buttonBg="bg-purple-500"
+      [routerLink]="'sellers'"
+    >
+    </app-card-home>
+
+    <app-card-home
+      class="w-auto"
+      [title]="'Administradores'"
+      [number]="totalAdmins"
+      bg="bg-green-400"
+      buttonBg="bg-green-500"
+      [routerLink]="'admins'"
+    >
+    </app-card-home>
+
+    <app-card-home
+      class="w-auto"
+      [title]="'Ventas'"
+      [number]="totalSales"
+      bg="bg-fuchsia-500"
+      buttonBg="bg-fuchsia-600"
+      [routerLink]="'sales'"
+    >
+    </app-card-home>
+
+    <app-card-home
+      class="w-auto"
+      [title]="'Total de Servicios'"
+      [number]="countServices"
+      bg="bg-slate-800"
+      buttonBg="bg-slate-950"
+      [routerLink]="'services_packages'"
+    >
+    </app-card-home>
+    <app-card-home
+      class="w-auto"
+      [title]="'Total de Paquetes'"
+      [number]="countPackages"
+      [color]="'text-orange-700'"
+      [routerLink]="'services_packages'"
+    >
+    </app-card-home>
+  </div>
+  <div class="flex flex-col lg:flex-row w-full gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:w-3/4">
+      @defer {
+      <app-chart-bar
+        class="w-full"
+        [orientation]="'y'"
+        [title]="'Top Paquetes más vendidos'"
+        [labels]="topPackages"
+      ></app-chart-bar>
+
+      } @defer {
+      <app-chart-bar
+        class="w-full"
+        [orientation]="'y'"
+        [title]="'Top Servicios más vendidos'"
+        [labels]="topServices"
+      ></app-chart-bar>
+
+      }
+
+      <app-chart-line
+        class="w-full sm:col-span-2"
+        [title]="'Total de ventas realizadas'"
+      ></app-chart-line>
+    </div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 w-full lg:w-1/4"
+    >
+      @defer {
+      <app-chart-bar
+        class="w-full"
+        [title]="'Ventas por sucursal'"
+        [labels]="totalSalesByBranch"
+      ></app-chart-bar>
+
+      }
+      <!-- <app-date-picker class="w-full"></app-date-picker> -->
+    </div>
+  </div>
+</main>

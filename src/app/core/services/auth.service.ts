@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import { Router } from '@angular/router';
 import { HttpClient, HttpResponse, HttpBackend } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environmentDev } from '../../environments/environment.development';
 import { UserAccessing } from '../../shared/interfaces/user';
 import { MessageAlert } from '../../shared/interfaces/messageAlert';
+import { environmentDev } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -114,9 +113,15 @@ export class AuthService {
       );
   }
 
-  validateCodeForPasswordRecovery(data: { email: string; code: string }): Observable<MessageAlert> {
+  validateCodeForPasswordRecovery(data: {
+    email: string;
+    code: string;
+  }): Observable<MessageAlert> {
     return this.httpClient
-      .post<any>(this.api_url + 'validate-code', data, { observe: 'response', withCredentials: true })
+      .post<any>(this.api_url + 'validate-code', data, {
+        observe: 'response',
+        withCredentials: true,
+      })
       .pipe(
         map((res: HttpResponse<any>) => {
           if (res.status === 200) {
@@ -142,8 +147,6 @@ export class AuthService {
         })
       );
   }
-
-   
 
   passwordRecovery(numDni: string, newPassword: string): Observable<boolean> {
     return this.httpClient

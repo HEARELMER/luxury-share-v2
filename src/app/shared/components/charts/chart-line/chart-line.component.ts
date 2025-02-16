@@ -1,12 +1,10 @@
 import { Component, input, Input, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { ButtonComponent } from '../../ui/button/button.component';
-import { NgStyle } from '@angular/common';
-
+import { ButtonComponent } from '../../ui/button/button.component'; 
 @Component({
   selector: 'app-chart-line',
   standalone: true,
-  imports: [ChartModule, ButtonComponent, NgStyle],
+  imports: [ChartModule, ButtonComponent],
   templateUrl: './chart-line.component.html',
   styleUrl: './chart-line.component.scss',
 })

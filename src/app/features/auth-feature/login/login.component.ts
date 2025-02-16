@@ -6,12 +6,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core'; 
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
- 
 
 @Component({
   selector: 'app-login',
@@ -28,6 +27,7 @@ import { UserAccessing } from '../../../shared/interfaces/user';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  private readonly formBuilder = inject(FormBuilder);
   passwordVisible: boolean = false;
   loading: boolean = false;
   confirmLogin: boolean = false;
@@ -50,18 +50,14 @@ export class LoginComponent {
     password: ['', [Validators.minLength(8)]],
   });
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Error al mantener la sesión
     console.log(this.authService.verifyToken());
 
     if (this.authService.verifyToken()) {
-      this.router.navigate(['/luxury/home']);
+      // this.router.navigate(['/luxury']);
     }
   }
 
@@ -91,7 +87,7 @@ export class LoginComponent {
       setTimeout(() => {
         this.loading = false;
         if (success) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/luxury']);
         } else {
           this.confirmLogin = false;
         }

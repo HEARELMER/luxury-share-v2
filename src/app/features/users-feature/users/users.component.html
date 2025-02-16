@@ -1,10 +1,7 @@
-<main>
-  <h1 class="text-xl text-primary-l-500 font-semibold">Usuarios</h1>
-  <div
-    class="flex justify-between items-end flex-col gap-6 lg:gap-0 w-full lg:flex-row-reverse"
-  >
+<main class="flex flex-col gap-4">
+  <div class="flex gap-2 items-center w-full bg-white rounded-lg border p-4">
     <div
-      class="search-bar flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 w-96 border border-gray-100 focus-within:border-blue-500 transition-all duration-300"
+      class="search-bar flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 w-96 border border-gray-100 focus-within:border-blue-500 transition-all duration-300"
     >
       <i class="pi pi-search text-gray-400 text-lg font-semibold"></i>
       <input
@@ -14,34 +11,71 @@
         maxlength="8"
       />
     </div>
-
-    <p-tieredMenu [model]="items" class="menu-horizontal">
-      <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
-        <div class="flex items-center gap-2 px-4 py-2 cursor-pointer">
-          <i [class]="item.icon"></i>
-          <span class="whitespace-nowrap">{{ item.label }}</span>
-          <p-badge *ngIf="item.badge" [value]="item.badge" class="ml-2" />
-          <span
-            *ngIf="item.shortcut"
-            class="text-xs bg-gray-100 px-2 py-1 rounded"
-          >
-            {{ item.shortcut }}
-          </span>
-          <i *ngIf="hasSubmenu" class="pi pi-angle-down ml-2"></i>
-        </div>
-      </ng-template>
-    </p-tieredMenu>
+    <app-button
+      icon="pi pi-plus"
+      text="Nuevo Administrador"
+      moreClasses="py-2"
+      bgColor="bg-primary-500"
+    />
+    <app-button
+      icon="pi pi-plus"
+      text="Nuevo Vendedor"
+      moreClasses="py-2"
+      bgColor="bg-primary-500"
+    />
+    <app-button
+      icon="pi pi-plus"
+      text="Nuevo Gerente"
+      moreClasses="py-2"
+      bgColor="bg-primary-500"
+    />
   </div>
 
   <div class="bg-white rounded-lg border w-full">
-    <div class="w-full  py-3 flex px-4 justify-between items-center">
-      <h1 class="   font-semibold">Tabla de Usuarios</h1>
-      <app-button
-        text="Descargar Excel"
-        icon="pi pi-file-excel"
-        moreClasses="py-2"
-      />
+    <div class="w-full py-3 flex px-4 justify-between items-center">
+      <div class="flex gap-2">
+        <app-button
+          text="Usuarios"
+          icon="pi pi-users"
+          bgColor="bg-primary-500"
+        />
+        <app-button
+          text="Administradores"
+          icon="pi pi-user"
+          bgColor="bg-primary-500"
+        />
+        <app-button
+          text="Vendedores"
+          icon="pi pi-shop"
+          bgColor="bg-primary-500"
+        />
+      </div>
+      <div class="gap-2 flex">
+        <app-button
+          text="Descargar Excel"
+          icon="pi pi-file-excel"
+          bgColor="bg-green-500"
+        />
+        <app-button
+          text="Filtro"
+          icon="pi pi-filter"
+          bgColor="bg-primary-100"
+          textColor="text-primary-500" 
+          (click)="toggle($event)"
+        />
+        <p-popover #op>
+          <div class="flex flex-col gap-4">
+              <div>
+                  <span class="font-medium block mb-2">Team Members</span>
+                  <ul class="list-none p-0 m-0 flex flex-col">
+                     <h1>hola</h1>
+                  </ul>
+              </div>
+          </div>
+      </p-popover>
+      </div>
     </div>
+   
     <p-table
       [columns]="cols"
       [value]="virtualUsers"
@@ -56,13 +90,17 @@
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
+      selectionMode="single"
+      [(selection)]="selectedRow"
+      [metaKeySelection]="true"
+      dataKey="numDni"
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border bg-primary-l-100"
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
           >
             {{ col.header }}
           </th>
@@ -71,7 +109,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-user let-columns="columns">
-        <tr>
+        <tr [pSelectableRow]="user">
           @for (col of columns; track $index) {
           <td>
             @if (col.field=="photoUrl") {
@@ -138,3 +176,4 @@
     </div>
   </div>
 </main>
+

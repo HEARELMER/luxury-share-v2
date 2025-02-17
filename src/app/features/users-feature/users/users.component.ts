@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
@@ -13,6 +13,10 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { User } from '../../../shared/interfaces/user';
 import { Popover } from 'primeng/popover';
 import { PopoverModule } from 'primeng/popover';
+import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { TagModule } from 'primeng/tag';
+import { AddUserComponent } from "../add-user/add-user.component";
 @Component({
   selector: 'app-users',
   imports: [
@@ -28,7 +32,11 @@ import { PopoverModule } from 'primeng/popover';
     FormsModule,
     ButtonComponent,
     PopoverModule,
-  ],
+    ExportExcelComponent,
+    InputFormComponent,
+    TagModule,
+    AddUserComponent
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -48,7 +56,11 @@ export class UsersComponent {
   virtualUsers: User[] = [];
   loading: boolean = false;
   selectedRow: any;
-
+  showModal = signal<boolean>(false);
+  showModalUser = signal<boolean>(false);
+  filters = signal<{ key: string; value: string }[]>([]);
+  filterNumDni = '';
+  filterRoles = '';
   onPageChange(event: any) {
     this.currentPage = event.page + 1; // Usa el índice de página del evento directamente
     this.rows = event.rows; // Actualiza el tamaño de página
@@ -62,22 +74,71 @@ export class UsersComponent {
     );
   }
 
-  loadUsersLazy(): void {
-    this.loading = true;
-    this._userService.paginateUsers(this.currentPage, this.rows).subscribe({
-      next: (response) => {
-        this.virtualUsers = response.data.users;
-        this.totalRecords = response.data.total;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.loading = false;
-      },
-    });
+  setFilter() {
+    if (this.filterNumDni.length == 8) {
+      this.filters.set([{ key: 'numDni', value: this.filterNumDni }]);
+      this.loadUsersLazy();
+    }
   }
 
-  toggle(event:Event) {
+  setFilterRoles(item: any) { 
+      this.filterRoles = item;  
+      this.loadUsersLazy();
+  }
+
+  clearFilters() {
+    this.filterNumDni = '';
+    this.filters.set([]);
+    this.loadUsersLazy();
+  }
+
+  loadUsersLazy(): void {
+    this.loading = true;
+    this._userService
+      .paginateUsers(
+        this.currentPage,
+        this.rows,
+        this.filterNumDni,
+        this.filterRoles
+      )
+      .subscribe({
+        next: (response) => {
+          this.virtualUsers = response.data.users;
+          this.totalRecords = response.data.total;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          this.loading = false;
+        },
+      });
+  }
+
+  toggle(event: Event) {
     this.op.toggle(event);
+  }
+
+  exportData() {
+    this.openModal();
+  }
+
+  openModal() {
+    this.showModal.set(true);
+  }
+
+  openModalUser() {
+    this.showModalUser.set(true);
+  }
+
+  handleExport(quantity: number) {
+    this._userService.exportToExcel(1, quantity).subscribe({
+      next: () => {
+        console.log('Exportación completada');
+        this.showModal.set(false);
+      },
+      error: (error) => {
+        console.error('Error en la exportación:', error);
+      },
+    });
   }
 }

@@ -1,0 +1,105 @@
+<app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
+  <div class="flex w-full justify-between items-center">
+    <h2 class="text-lg font-semibold text-primary-500">Agregar Usuario</h2>
+    <button
+      class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
+      (click)="showModal.set(false)"
+    >
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="w-full py-4">
+    <div
+      class="grid grid-cols-1 pb-4 md:grid-cols-2 w-full min-w-[40rem] gap-6"
+    >
+      <app-input-form
+        type="text"
+        formControlName="numDni"
+        label="DNI"
+        placeholder="71916103"
+        [isPositive]="true"
+        [required]="true"
+        [maxLength]="8"
+      />
+
+      <app-input-form
+        type="text"
+        formControlName="name"
+        label="Nombre"
+        placeholder="Elmer Jesus"
+        [required]="true"
+      />
+
+      <app-input-form
+        type="text"
+        formControlName="firstLastname"
+        label="Apellido Paterno"
+        placeholder="Huaman"
+        [required]="true"
+        />
+        
+        <app-input-form
+        type="text"
+        formControlName="secondLastname"
+        label="Apellido Materno"
+        placeholder="Rojas"
+        [required]="true"
+      />
+
+      <app-input-form
+        type="email"
+        formControlName="email"
+        label="Email"
+        placeholder="hearelmer242w@gmail.com"
+        [required]="true"
+      />
+
+      <app-input-form
+        type="text"
+        formControlName="phone"
+        label="Teléfono"
+        placeholder="985996213"
+      />
+
+      <app-input-form
+        type="text"
+        formControlName="address"
+        label="Dirección"
+        placeholder="Jiron Callao"
+      />
+
+      <app-input-form
+        type="date"
+        formControlName="birthDate"
+        label="Fecha de Nacimiento"
+        [required]="true"
+      />
+
+      <app-select 
+      formControlName="roleId"
+      label="Rol"
+      [options]="rolesOptions"
+      [required]="true"
+      />     
+    </div>
+
+    <!-- Botón centrado al final -->
+    <div class="mt-6 flex justify-end gap-x-4">
+      <app-button
+        type="button"
+        bgColor="bg-gray-300"
+        textColor="text-gray-900"
+        moreClasses="py-2 px-6"
+        text="Cancelar"
+        (click)="showModal.set(false)"
+      />
+      <app-button
+        type="submit"
+        bgColor="bg-primary-500"
+        moreClasses="py-2 px-6"
+        text="Guardar Usuario"
+        [disabled]="!userForm.valid"
+      />
+    </div>
+  </form>
+</app-modal>

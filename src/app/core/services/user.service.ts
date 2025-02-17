@@ -3,29 +3,51 @@ import { inject, Injectable } from '@angular/core';
 import { environmentDev } from '../../environments/environment.development';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { NewAdmin } from '../../shared/interfaces/user';
+import { ExportFilesService } from './export-files.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private readonly url = environmentDev.apiUrl;
-  private readonly httpClient = inject(HttpClient); 
+  private readonly httpClient = inject(HttpClient);
+  private readonly _exportFilesService = inject(ExportFilesService);
 
-  getInfoUserByDni(numDni: any) {
-    console.log(numDni);
-    return this.httpClient.post(`${this.url}users/search-dni`, numDni, {
-      withCredentials: true,
-    });
-  } 
-
-  paginateUsers(page: number, size: number): Observable<any> {
+  paginateUserByDni(dni: string): Observable<any> {
     const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', size.toString());
+      .set('page', '1')
+      .set('limit', '10')
+      .set('filters[numDni]', dni);
 
     return this.httpClient.get<any>(`${this.url}users`, {
-      params
+      params,
     });
+  }
+
+  paginateUsers(
+    page: number,
+    size: number,
+    filterNumDni?: string,
+    filterRoles?: string
+  ): Observable<any> {
+    if (filterNumDni) {
+      return this.paginateUserByDni(filterNumDni);
+    } else {
+      const params = new HttpParams()
+        .set('page', page.toString())
+        .set('limit', size.toString());
+
+      return this.httpClient.get<any>(
+        `${this.url}users${filterRoles ? '/' + filterRoles : ''}`,
+        {
+          params,
+        }
+      );
+    }
+  }
+
+  createUser(user: any): Observable<any> {
+    return this.httpClient.post(`${this.url}users`, user);
   }
 
   getAllAdmins() {
@@ -75,5 +97,28 @@ export class UserService {
           return throwError(error);
         })
       );
+  }
+
+  exportToExcel(page: number, size: number): Observable<any> {
+    return this.paginateUsers(page, size).pipe(
+      map((response) => {
+        const selectedColumns = ['name', 'email', 'numDni', 'phone'];
+        const headers = {
+          name: 'Nombre',
+          email: 'Correo',
+          numDni: 'DNI',
+          phone: 'Teléfono',
+        };
+
+        this._exportFilesService.exportToExcel(
+          response.data.users,
+          headers,
+          selectedColumns,
+          'usuarios'
+        );
+
+        return response;
+      })
+    );
   }
 }

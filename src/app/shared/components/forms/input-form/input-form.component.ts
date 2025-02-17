@@ -35,6 +35,7 @@ export class InputFormComponent implements ControlValueAccessor {
   required = input<boolean>(false);
   maxLength = input<number>(250);
   readonly = input<boolean>(false);
+  isPositive = input<boolean>(false);
   value = model<string>('');
   isTouched = signal(false);
   showError = signal(false);
@@ -71,15 +72,39 @@ export class InputFormComponent implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+
+    // Si es un campo numérico y positivo
+    if (this.isPositive() && this.type() === 'text') {
+      input.value = input.value.replace(/[^0-9]/g, '');
+
+      let value = Number(input.value);
+      if (input.value === '') {
+        value = 0;
+        input.value = '0';
+      }
+  
+      if (value < 0) {
+        value = 0;
+        input.value = '0';
+        this.showError.set(true);
+        this.errorMessage.set('Este campo no puede ser negativo');
+      }
+
+      // Si el campo está vacío y es requerido
+      if (!input.value && this.required()) {
+        this.showError.set(true);
+        this.errorMessage.set('Este campo es requerido');
+        this.value.set('');
+      } else {
+        this.value.set(value.toString());
+      }
+
+      this.onChange(this.value());
+      return;
+    }
     this.value.set(input.value);
     this.onChange(input.value);
-    
-    if (input.value) {
-      this.showError.set(false);
-      this.errorMessage.set('');
-    } else {
-      this.validateField();
-    }
+    this.validateField();
   }
 
   private validateField(): void {

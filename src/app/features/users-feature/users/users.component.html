@@ -1,34 +1,43 @@
 <main class="flex flex-col gap-4">
-  <div class="flex gap-2 items-center w-full bg-white rounded-lg border p-4">
-    <div
-      class="search-bar flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 w-96 border border-gray-100 focus-within:border-blue-500 transition-all duration-300"
-    >
-      <i class="pi pi-search text-gray-400 text-lg font-semibold"></i>
-      <input
+  <div class="flex items-end gap-2 w-full bg-white rounded-lg border p-4">
+    <div class="flex-none w-64">
+      <app-input-form
         type="text"
+        [isPositive]="true"
+        [maxLength]="8"
+        label="Buscar por DNI"
         placeholder="Buscar por DNI"
-        class="bg-transparent w-full outline-none text-gray-700"
-        maxlength="8"
+        [(ngModel)]="filterNumDni"
       />
     </div>
-    <app-button
-      icon="pi pi-plus"
-      text="Nuevo Administrador"
-      moreClasses="py-2"
-      bgColor="bg-primary-500"
-    />
-    <app-button
-      icon="pi pi-plus"
-      text="Nuevo Vendedor"
-      moreClasses="py-2"
-      bgColor="bg-primary-500"
-    />
-    <app-button
-      icon="pi pi-plus"
-      text="Nuevo Gerente"
-      moreClasses="py-2"
-      bgColor="bg-primary-500"
-    />
+
+    <button
+      (click)="setFilter()"
+      class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+    >
+      <i class="pi pi-search"></i>
+    </button>
+    <div class="flex gap-2 ml-auto">
+      <app-button
+        icon="pi pi-plus"
+        text="Nuevo Administrador"
+        moreClasses="py-2"
+        bgColor="bg-primary-500"
+        (click)="openModalUser()"
+      />
+      <app-button
+        icon="pi pi-plus"
+        text="Nuevo Vendedor"
+        moreClasses="py-2"
+        bgColor="bg-primary-500"
+      />
+      <app-button
+        icon="pi pi-plus"
+        text="Nuevo Gerente"
+        moreClasses="py-2"
+        bgColor="bg-primary-500"
+      />
+    </div>
   </div>
 
   <div class="bg-white rounded-lg border w-full">
@@ -37,45 +46,79 @@
         <app-button
           text="Usuarios"
           icon="pi pi-users"
-          bgColor="bg-primary-500"
+          [bgColor]="filterRoles === '' ? 'bg-white' : 'bg-primary-500'"
+          [textColor]="filterRoles === '' ? 'text-primary-500' : 'text-white'"
+          (click)="setFilterRoles('')"
         />
         <app-button
           text="Administradores"
           icon="pi pi-user"
-          bgColor="bg-primary-500"
+          [bgColor]="filterRoles === 'admins' ? 'bg-white' : 'bg-primary-500'"
+          [textColor]="
+            filterRoles === 'admins' ? 'text-primary-500' : 'text-white'
+          "
+          (click)="setFilterRoles('admins')"
         />
         <app-button
           text="Vendedores"
           icon="pi pi-shop"
-          bgColor="bg-primary-500"
+          [bgColor]="filterRoles === 'sellers' ? 'bg-white' : 'bg-primary-500'"
+          [textColor]="
+            filterRoles === 'sellers' ? 'text-primary-500' : 'text-white'
+          "
+          (click)="setFilterRoles('sellers')"
         />
+        <app-button
+          text="Gerentes"
+          icon="pi pi-user"
+          [bgColor]="filterRoles === 'managers' ? 'bg-white' : 'bg-primary-500'"
+          [textColor]="
+            filterRoles === 'managers' ? 'text-primary-500' : 'text-white'
+          "
+          (click)="setFilterRoles('managers')"
+        />
+
+        @for (item of filters(); track $index) {
+        <div
+          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+        >
+          <p-tag [value]="item.key"></p-tag>
+          <button
+            (click)="clearFilters()"
+            class="hover:text-red-500 text-sm text-red-300"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        }
       </div>
       <div class="gap-2 flex">
         <app-button
           text="Descargar Excel"
           icon="pi pi-file-excel"
           bgColor="bg-green-500"
+          (click)="exportData()"
         />
         <app-button
           text="Filtro"
           icon="pi pi-filter"
           bgColor="bg-primary-100"
-          textColor="text-primary-500" 
+          textColor="text-primary-500"
           (click)="toggle($event)"
         />
         <p-popover #op>
           <div class="flex flex-col gap-4">
-              <div>
-                  <span class="font-medium block mb-2">Team Members</span>
-                  <ul class="list-none p-0 m-0 flex flex-col">
-                     <h1>hola</h1>
-                  </ul>
-              </div>
+            <div>
+              <span class="font-medium block mb-2">Team Members</span>
+              <ul class="list-none p-0 m-0 flex flex-col">
+                <h1>hola</h1>
+              </ul>
+            </div>
           </div>
-      </p-popover>
+        </p-popover>
       </div>
     </div>
-   
+
     <p-table
       [columns]="cols"
       [value]="virtualUsers"
@@ -119,7 +162,14 @@
               class="w-8 h-8 rounded-full cursor-pointer"
               loading="lazy"
             />
-            } @else if (col.field=="actions") {
+            } @else if (col.field == "role") { @if (user[col.field].roleName ===
+            'ADMIN') {
+            <p-tag severity="warn" value="Administrador"></p-tag>
+            } @else if (user[col.field].roleName === 'SELLER') {
+            <p-tag severity="info" value="Vendedor"></p-tag>
+            } @else if (user[col.field].roleName === 'GERENT') {
+            <p-tag severity="success" value="Gerente"></p-tag>
+            } } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
@@ -177,3 +227,11 @@
   </div>
 </main>
 
+<app-export-excel
+  title="Usuarios"
+  [(showModal)]="showModal"
+  (exportData)="handleExport($event)"
+  [total]="totalRecords"
+/>
+
+<app-add-user [(showModal)]="showModalUser"> </app-add-user>

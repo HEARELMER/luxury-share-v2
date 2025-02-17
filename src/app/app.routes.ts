@@ -3,7 +3,6 @@ import { LoginComponent } from './features/auth-feature/login/login.component';
 import { RecoveryPasswordComponent } from './features/auth-feature/recovery-password/recovery-password.component';
 import { UsersComponent } from './features/users-feature/users/users.component';
 import { MainComponent } from './main/main.component';
-import { AdminsComponent } from './features/users-feature/admins/admins.component';
 import { HomeComponent } from './features/dashboard-feature/home/home.component';
 
 export const routes: Routes = [

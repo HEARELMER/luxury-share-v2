@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalComponent } from './modal.component';
+import { ExportExcelComponent } from './export-excel.component';
 
-describe('ModalComponent', () => {
-  let component: ModalComponent;
-  let fixture: ComponentFixture<ModalComponent>;
+describe('ExportExcelComponent', () => {
+  let component: ExportExcelComponent;
+  let fixture: ComponentFixture<ExportExcelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalComponent]
+      imports: [ExportExcelComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ModalComponent);
+    fixture = TestBed.createComponent(ExportExcelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,38 +1,44 @@
-import { Component, Input } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { Component, EventEmitter, input, model } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
-  standalone: true,
   imports: [],
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss'
+  styleUrl: './modal.component.css',
+  animations: [
+    trigger('fadeAnimation', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('150ms', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('150ms', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('slideAnimation', [
+      transition(':enter', [
+        style({ transform: 'scale(0.95)', opacity: 0 }),
+        animate('150ms', style({ transform: 'scale(1)', opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class ModalComponent {
-  @Input() title: string='modal';
-  @Input() show: boolean=true;
-  @Input() confirm: Function=()=>{};
-  @Input() cancel: Function=()=>{};
-  @Input() confirmText: string='Confirm';
-  @Input() cancelText: string='Cancel';
-  @Input() confirmClass: string='btn-primary';
-  @Input() cancelClass: string='btn-secondary';
-  @Input() confirmDisabled: boolean=false;
-  @Input() cancelDisabled: boolean=false;
-  @Input() confirmIcon: string='';
-  @Input() cancelIcon: string='';
-  @Input() confirmIconClass: string='';
-  @Input() cancelIconClass: string='';
-  @Input() style: string='w-auto h-auto lg:w-[80%] lg:h-[80%]';
- 
-  constructor() { }
+  isOpen = model<boolean>(false);
+  title = input<string>('');
+  customClass = input<string>('w-auto');
+  closeOnBackdrop = input<boolean>(true);
+  position= input<string>('center');
 
-  closeHandler() {
-    this.show = false;
+  close() {
+    this.isOpen.set(false);
   }
 
   onBackdropClick(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      this.closeHandler();
+    if (event.target === event.currentTarget && this.closeOnBackdrop()  ) {
+      this.close();
     }
+
   }
 }

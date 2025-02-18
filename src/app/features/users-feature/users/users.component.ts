@@ -16,7 +16,7 @@ import { PopoverModule } from 'primeng/popover';
 import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { TagModule } from 'primeng/tag';
-import { AddUserComponent } from "../add-user/add-user.component";
+import { AddUserComponent } from '../add-user/add-user.component';
 @Component({
   selector: 'app-users',
   imports: [
@@ -35,8 +35,8 @@ import { AddUserComponent } from "../add-user/add-user.component";
     ExportExcelComponent,
     InputFormComponent,
     TagModule,
-    AddUserComponent
-],
+    AddUserComponent,
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
@@ -61,17 +61,12 @@ export class UsersComponent {
   filters = signal<{ key: string; value: string }[]>([]);
   filterNumDni = '';
   filterRoles = '';
+  selectedRole = signal<string>('');
   onPageChange(event: any) {
     this.currentPage = event.page + 1; // Usa el índice de página del evento directamente
     this.rows = event.rows; // Actualiza el tamaño de página
     this.first = event.first; // Actualiza el desplazamiento inicial
     this.loadUsersLazy();
-    console.log(
-      'Página actual:',
-      this.currentPage,
-      'Tamaño de página:',
-      this.rows
-    );
   }
 
   setFilter() {
@@ -81,9 +76,9 @@ export class UsersComponent {
     }
   }
 
-  setFilterRoles(item: any) { 
-      this.filterRoles = item;  
-      this.loadUsersLazy();
+  setFilterRoles(item: any) {
+    this.filterRoles = item;
+    this.loadUsersLazy();
   }
 
   clearFilters() {
@@ -126,10 +121,6 @@ export class UsersComponent {
     this.showModal.set(true);
   }
 
-  openModalUser() {
-    this.showModalUser.set(true);
-  }
-
   handleExport(quantity: number) {
     this._userService.exportToExcel(1, quantity).subscribe({
       next: () => {
@@ -140,5 +131,22 @@ export class UsersComponent {
         console.error('Error en la exportación:', error);
       },
     });
+  }
+
+  editUser(user: any) {
+    this.selectedRole.set(user.role.roleName);
+    this.showModalUser.set(true);
+    this.selectedRow = user;
+    console.log(this.selectedRow)
+  }
+
+  openModalUser(role: string = '') {
+    this.selectedRow = null;
+    this.selectedRole.set(role);
+    this.showModalUser.set(true);
+  }
+
+  handleRefreshData() {
+    this.loadUsersLazy();
   }
 }

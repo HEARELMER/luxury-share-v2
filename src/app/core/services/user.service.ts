@@ -50,6 +50,10 @@ export class UserService {
     return this.httpClient.post(`${this.url}users`, user);
   }
 
+  updateUser( user: any): Observable<any> {
+    return this.httpClient.put(`${this.url}users/${user.userId}`, user);
+  }
+
   getAllAdmins() {
     return this.httpClient.get(`${this.url}users/admins`, {
       withCredentials: true,

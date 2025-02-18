@@ -10,6 +10,7 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import MyPreset from '../../mypreset';
 import { LocalstorageService } from './core/services/localstorage.service';
+import { MessageService } from 'primeng/api';
  
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +32,6 @@ export const appConfig: ApplicationConfig = {
     FormatDatePipe,
     TruncateDecimalPipe,
     LocalstorageService,
+    MessageService
   ],
 };

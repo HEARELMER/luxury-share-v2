@@ -1,9 +1,11 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
   <div class="flex w-full justify-between items-center">
-    <h2 class="text-lg font-semibold text-primary-500">Agregar Usuario</h2>
+    <h2 class="text-lg font-semibold text-primary-500">
+      {{ isEditing() ? "Editar" : "Agregar" }} Usuario
+    </h2>
     <button
       class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
-      (click)="showModal.set(false)"
+      (click)="closeModal()"
     >
       <i class="pi pi-times"></i>
     </button>
@@ -36,9 +38,9 @@
         label="Apellido Paterno"
         placeholder="Huaman"
         [required]="true"
-        />
-        
-        <app-input-form
+      />
+
+      <app-input-form
         type="text"
         formControlName="secondLastname"
         label="Apellido Materno"
@@ -59,6 +61,9 @@
         formControlName="phone"
         label="Teléfono"
         placeholder="985996213"
+        [required]="true"
+        [maxLength]="9"
+        [isPositive]="true"
       />
 
       <app-input-form
@@ -72,34 +77,35 @@
         type="date"
         formControlName="birthDate"
         label="Fecha de Nacimiento"
-        [required]="true"
       />
 
-      <app-select 
-      formControlName="roleId"
-      label="Rol"
-      [options]="rolesOptions"
-      [required]="true"
-      />     
+      <app-select
+        formControlName="roleId"
+        label="Rol"
+        [options]="rolesOptions()"
+        [required]="true"
+      />
     </div>
 
     <!-- Botón centrado al final -->
     <div class="mt-6 flex justify-end gap-x-4">
-      <app-button
+      <button
         type="button"
-        bgColor="bg-gray-300"
-        textColor="text-gray-900"
-        moreClasses="py-2 px-6"
-        text="Cancelar"
-        (click)="showModal.set(false)"
-      />
+        class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 duration-300 ease-in-out"
+        (click)="closeModal()"
+      >
+        Cancelar
+      </button>
+
       <app-button
         type="submit"
         bgColor="bg-primary-500"
         moreClasses="py-2 px-6"
         text="Guardar Usuario"
         [disabled]="!userForm.valid"
+        (click)="onSubmit()"
       />
     </div>
   </form>
 </app-modal>
+<p-toast  [life]="2000" />

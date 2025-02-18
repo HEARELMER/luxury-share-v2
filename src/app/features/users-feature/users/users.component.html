@@ -23,19 +23,21 @@
         text="Nuevo Administrador"
         moreClasses="py-2"
         bgColor="bg-primary-500"
-        (click)="openModalUser()"
+        (click)="openModalUser('ADMIN')"
       />
       <app-button
         icon="pi pi-plus"
         text="Nuevo Vendedor"
         moreClasses="py-2"
         bgColor="bg-primary-500"
+        (click)="openModalUser('SELLER')"
       />
       <app-button
         icon="pi pi-plus"
         text="Nuevo Gerente"
         moreClasses="py-2"
         bgColor="bg-primary-500"
+        (click)="openModalUser('GERENT')"
       />
     </div>
   </div>
@@ -176,10 +178,11 @@
                 [pTooltip]="'Editar Usuario'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="editUser(user)"
               >
                 <i class="pi pi-user-edit"></i>
               </button>
-              <button
+              <!-- <button
                 class="button-table-actions"
                 class="button-table-actions"
                 [pTooltip]="'Ver Usuario'"
@@ -187,7 +190,7 @@
                 [showDelay]="300"
               >
                 <i class="pi pi-eye"></i>
-              </button>
+              </button> -->
             </div>
 
             } @else {
@@ -234,4 +237,9 @@
   [total]="totalRecords"
 />
 
-<app-add-user [(showModal)]="showModalUser"> </app-add-user>
+<app-add-user
+  [(showModal)]="showModalUser"
+  [rolePreselected]="selectedRole()"
+  (refreshData)="handleRefreshData()"
+   [userToEdit]="selectedRow"
+/>

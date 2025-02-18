@@ -1,5 +1,5 @@
-export const environmentDev = {
-    // apiUrl:'https://luxury-service.onrender.com/api/v1/',
-    apiUrl:'http://localhost:3000/api/v1/',
+export const environmentDev = { 
+    // apiUrl:'http://localhost:3000/api/v1/',
+    apiUrl : 'https://luxury-service-v2.onrender.com/api/v1/'
   
   };

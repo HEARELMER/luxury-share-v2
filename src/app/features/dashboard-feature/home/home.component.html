@@ -1,55 +1,45 @@
 <main class="flex w-full gap-4 justify-center flex-col">
   <div
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="onDrop($event)"
     class="grid items-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full"
   >
-    <app-card-home
-      class="w-auto"
-      [title]="'Vendedores'"
-      [number]="totalSellers"
-      bg="bg-purple-400"
-      buttonBg="bg-purple-500"
-      [routerLink]="'sellers'"
+    @for (card of cards(); track card.id) {
+    <div
+      cdkDrag
+      class="relative group cursor-move"
+      [class.shadow-lg]="card.isDragging"
     >
-    </app-card-home>
+      <!-- Preview mientras se arrastra -->
+      <div *cdkDragPreview class="rounded-xl p-4 opacity-70 {{ card.bg }} ">
+        <app-card-home
+          [title]="card.title"
+          [number]="card.number"
+          [bg]="card.bg"
+          [buttonBg]="card.buttonBg"
+          [routerLink]="card.routerLink"
+        />
+      </div>
 
-    <app-card-home
-      class="w-auto"
-      [title]="'Administradores'"
-      [number]="totalAdmins"
-      bg="bg-green-400"
-      buttonBg="bg-green-500"
-      [routerLink]="'admins'"
-    >
-    </app-card-home>
-
-    <app-card-home
-      class="w-auto"
-      [title]="'Ventas'"
-      [number]="totalSales"
-      bg="bg-fuchsia-500"
-      buttonBg="bg-fuchsia-600"
-      [routerLink]="'sales'"
-    >
-    </app-card-home>
-
-    <app-card-home
-      class="w-auto"
-      [title]="'Total de Servicios'"
-      [number]="countServices"
-      bg="bg-slate-800"
-      buttonBg="bg-slate-950"
-      [routerLink]="'services_packages'"
-    >
-    </app-card-home>
-    <app-card-home
-      class="w-auto"
-      [title]="'Total de Paquetes'"
-      [number]="countPackages"
-      [color]="'text-orange-700'"
-      [routerLink]="'services_packages'"
-    >
-    </app-card-home>
+      <!-- Card real -->
+      <app-card-home
+        [title]="card.title"
+        [number]="card.number"
+        [bg]="card.bg"
+        [buttonBg]="card.buttonBg"
+        [routerLink]="card.routerLink"
+      >
+        <div
+          class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200"
+        >
+          <i class="pi pi-grip-lines text-white/50"></i>
+        </div>
+      </app-card-home>
+    </div>
+    }
   </div>
+
   <div class="flex flex-col lg:flex-row w-full gap-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:w-3/4">
       @defer {

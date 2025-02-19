@@ -1,0 +1,23 @@
+.cdk-drag-preview {
+  @apply shadow-xl;
+}
+
+.cdk-drag-placeholder {
+  @apply opacity-30;
+}
+
+.cdk-drag-animating {
+  @apply transition-transform duration-300;
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  @apply transition-transform duration-300;
+}
+
+.cdk-drag-handle {
+  @apply cursor-move;
+}
+
+[cdkDragHandle] {
+  @apply cursor-move;
+}

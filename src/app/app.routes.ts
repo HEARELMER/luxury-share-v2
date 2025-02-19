@@ -5,6 +5,7 @@ import { UsersComponent } from './features/users-feature/users/users.component';
 import { MainComponent } from './main/main.component';
 import { HomeComponent } from './features/dashboard-feature/home/home.component';
 import { MainServicesPackagesComponent } from './features/services-packages-feature/main-services-packages/main-services-packages.component';
+import { UserProfileComponent } from './features/users-feature/user-profile/user-profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -22,8 +23,8 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'users', component: UsersComponent },
+      { path: 'profile', component: UserProfileComponent },
       { path: 'services_packages', component: MainServicesPackagesComponent },
     ],
   },
 ];
-

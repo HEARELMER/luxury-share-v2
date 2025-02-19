@@ -32,6 +32,12 @@ import {
 export class HomeComponent {
   private readonly dashboardService = inject(DashboardService);
   private readonly dragDropService = inject(DragDropService);
+  constructor(){
+    const savedCards = this.dragDropService.loadOrderFromLocalStorage('dashboard-cards');
+    if (savedCards) {
+      this.cards.set(savedCards);
+    }
+  }
   countPackages = 0;
   countServices = 0;
   totalAdmins = 0;
@@ -95,16 +101,19 @@ export class HomeComponent {
         }
       );
     });
+    
   }
 
-  onDrop(event: any) {
+  onDrop(event: CdkDragDrop<any[]>) {
     const currentCards = [...this.cards()];
-    moveItemInArray(currentCards, event.previousIndex, event.currentIndex);
-    this.cards.set(currentCards);
-    this.dragDropService.saveOrderToLocalStorage(
-      'dashboard-cards',
-      currentCards
+    const newOrder = this.dragDropService.updateOrder(
+      currentCards,
+      event.previousIndex,
+      event.currentIndex
     );
+    this.cards.set(newOrder);
+    // Guardar el nuevo orden en localStorage
+    this.dragDropService.saveOrderToLocalStorage('dashboard-cards', newOrder);
   }
 
   cards = signal<any[]>([

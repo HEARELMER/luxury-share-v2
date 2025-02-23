@@ -17,11 +17,12 @@ import {
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
-import { UserService } from '../../../core/services/user.service';
-import { RolesService } from '../../../core/services/roles.service';
+import { UserService } from '../../../core/services/users-services/user.service';
+ 
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { RolesService } from '../../../core/services/roles-services/roles.service';
 @Component({
   selector: 'app-add-user',
   imports: [
@@ -31,8 +32,7 @@ import { ToastModule } from 'primeng/toast';
     ButtonComponent,
     ModalComponent,
     SelectComponent,
-    ToastModule
-
+    ToastModule,
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss',
@@ -68,8 +68,8 @@ export class AddUserComponent {
     this.userForm.get('numDni')?.valueChanges.subscribe((dni) => {
       this.userForm.patchValue({ password: dni }, { emitEvent: false });
     });
-     
-    effect(() => { 
+
+    effect(() => {
       if (this.showModal() && this.rolePreselected() && !this.userToEdit()) {
         this.loadRolesAndSetSelected();
       } else if (this.showModal() && this.userToEdit()) {
@@ -134,22 +134,22 @@ export class AddUserComponent {
           },
         });
       } else {
-       this._userService.updateUser(cleanedFormData).subscribe({
-        next: (response) => {
-          this.showModal.set(false);
-          this.userForm.reset();
-          this.isEditing.set(false);
-          this.refreshData.emit();
-          this._messageService.add({
-            severity: 'success',
-            summary: 'Usuario actualizado',
-            detail: response.message,
-          });
-        },
-        error: (error) => {
-          console.error('Error al actualizar usuario:', error);
-        },
-       })
+        this._userService.updateUser(cleanedFormData).subscribe({
+          next: (response) => {
+            this.showModal.set(false);
+            this.userForm.reset();
+            this.isEditing.set(false);
+            this.refreshData.emit();
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Usuario actualizado',
+              detail: response.message,
+            });
+          },
+          error: (error) => {
+            console.error('Error al actualizar usuario:', error);
+          },
+        });
       }
     }
   }

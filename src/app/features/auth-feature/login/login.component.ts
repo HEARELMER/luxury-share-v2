@@ -7,10 +7,10 @@ import {
 } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
+import { AuthService } from '../../../core/services/auth-services/auth.service';
 
 @Component({
   selector: 'app-login',

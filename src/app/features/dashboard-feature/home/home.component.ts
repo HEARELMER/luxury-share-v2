@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { DashboardService } from '../../../core/services/dashbaord.service';
+import { DashboardService } from '../../../core/services/dashboard-services/dashbaord.service';
 import { ChartBarComponent } from '../../../shared/components/charts/chart-bar/chart-bar.component';
 import { ChartLineComponent } from '../../../shared/components/charts/chart-line/chart-line.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
@@ -32,8 +32,9 @@ import {
 export class HomeComponent {
   private readonly dashboardService = inject(DashboardService);
   private readonly dragDropService = inject(DragDropService);
-  constructor(){
-    const savedCards = this.dragDropService.loadOrderFromLocalStorage('dashboard-cards');
+  constructor() {
+    const savedCards =
+      this.dragDropService.loadOrderFromLocalStorage('dashboard-cards');
     if (savedCards) {
       this.cards.set(savedCards);
     }
@@ -101,7 +102,6 @@ export class HomeComponent {
         }
       );
     });
-    
   }
 
   onDrop(event: CdkDragDrop<any[]>) {

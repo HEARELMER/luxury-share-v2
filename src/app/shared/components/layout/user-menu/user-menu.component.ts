@@ -2,16 +2,15 @@ import { Component, Input } from '@angular/core';
 import { AlertComponent } from '../../ui/alert/alert.component';
 import { FormsModule, NgModel } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common'; 
+import { NgClass } from '@angular/common';
 import { SidebarButtonComponent } from '../../ui/sidebar-button/sidebar-button.component';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth-services/auth.service';
 
 @Component({
-  selector: 'app-user-menu', 
+  selector: 'app-user-menu',
   imports: [
     SidebarButtonComponent,
-    AlertComponent,
-    FormsModule,
+    AlertComponent, 
     NgClass,
     RouterLink,
   ],

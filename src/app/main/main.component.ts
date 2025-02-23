@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from 'express';
-import { AuthService } from '../core/services/auth.service';
-import { BranchService } from '../core/services/branch.service';
-import { LocalstorageService } from '../core/services/localstorage.service';
+import { Router } from 'express'; 
+import { LocalstorageService } from '../core/services/localstorage-services/localstorage.service';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { ListboxModule } from 'primeng/listbox';
@@ -27,14 +25,12 @@ export class MainComponent {
   // activeModalSelectBranch: boolean = false;
   // branches: any[] = [];
   // selectedBranch: any;
-
   // constructor(
   //   private authService: AuthService,
   //   private router: Router,
   //   private localStorageService: LocalstorageService,
   //   private branchService: BranchService
   // ) {}
-
   // // ngOnInit(): void {
   // //   // this.loadModal();
   // //   // this.branchService.getBranches().subscribe((data) => {
@@ -43,7 +39,6 @@ export class MainComponent {
   // //   //   // console.log(data);
   // //   // });
   // // }
-
   // loadModal() {
   //   console.log(this.localStorageService.getBranchLoad());
   //   if (this.localStorageService.getBranchLoad()) {
@@ -52,12 +47,10 @@ export class MainComponent {
   //     this.activeModalSelectBranch = false;
   //   }
   // }
-
   // active: boolean = false;
   // activeAlert() {
   //   this.active = !this.active;
   // }
-
   // confirmBranch() {
   //   if (this.selectedBranch !== undefined) {
   //     this.localStorageService.setBranchLoad(false);
@@ -65,7 +58,6 @@ export class MainComponent {
   //     this.activeModalSelectBranch = false;
   //   }
   // }
-
   // logOut() {
   //   alert('Logout...');
   //   this.authService.logOut();

@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environmentDev } from '../../environments/environment.development';
+import { environmentDev } from '../../../environments/environment.development';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
-import { NewAdmin } from '../../shared/interfaces/user';
-import { ExportFilesService } from './export-files.service';
+import { NewAdmin } from '../../../shared/interfaces/user';
+import { ExportFilesService } from '../files-services/export-files.service';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class UserService {
     return this.httpClient.post(`${this.url}users`, user);
   }
 
-  updateUser( user: any): Observable<any> {
+  updateUser(user: any): Observable<any> {
     return this.httpClient.put(`${this.url}users/${user.userId}`, user);
   }
 

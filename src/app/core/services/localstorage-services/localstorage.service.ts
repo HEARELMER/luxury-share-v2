@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core'; 
-import { UserAuthorized } from '../../shared/interfaces/user';
+import { Injectable } from '@angular/core';
+import { UserAuthorized } from '../../../shared/interfaces/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocalstorageService {
-
-  
   constructor() {}
 
   getUserAuthorized(): UserAuthorized {
@@ -59,7 +57,4 @@ export class LocalstorageService {
   setBranchId(sucursalId: any) {
     sessionStorage.setItem('sucursalId', sucursalId);
   }
-
-  
-
 }

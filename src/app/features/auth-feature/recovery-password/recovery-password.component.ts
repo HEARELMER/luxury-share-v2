@@ -8,14 +8,14 @@ import {
 } from '@angular/forms';
 
 import { Router } from '@angular/router';
-import { InputOtpModule } from 'primeng/inputotp';
-import { AuthService } from '../../../core/services/auth.service';
+import { InputOtpModule } from 'primeng/inputotp'; 
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { PasswordComponent } from '../../../shared/components/forms/password/password.component';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { MessageAlert } from '../../../shared/interfaces/messageAlert';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
+import { AuthService } from '../../../core/services/auth-services/auth.service';
 @Component({
   selector: 'app-recovery-password',
   standalone: true,

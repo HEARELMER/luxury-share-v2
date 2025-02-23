@@ -1,7 +1,7 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { Popover, PopoverModule } from 'primeng/popover';
-import { UserService } from '../../../core/services/user.service';
-import { User } from '../../../shared/interfaces/user'; 
+import { UserService } from '../../../core/services/users-services/user.service';
+import { User } from '../../../shared/interfaces/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tooltip } from 'primeng/tooltip';
@@ -15,7 +15,7 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
-import { SelectComponent } from "../../../shared/components/forms/select/select.component";
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { SERVICE_TABLE_COLS } from '../constants/table-services.constant';
 
 @Component({
@@ -36,8 +36,8 @@ import { SERVICE_TABLE_COLS } from '../constants/table-services.constant';
     InputFormComponent,
     TagModule,
     AddUserComponent,
-    SelectComponent
-],
+    SelectComponent,
+  ],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
 })
@@ -150,6 +150,4 @@ export class MainServicesPackagesComponent {
   handleRefreshData() {
     this.loadUsersLazy();
   }
-  
-
 }

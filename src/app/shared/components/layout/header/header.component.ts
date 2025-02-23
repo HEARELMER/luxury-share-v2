@@ -7,9 +7,9 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserMenuComponent } from '../user-menu/user-menu.component'; 
+import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UserAuthorized } from '../../../interfaces/user';
-import { LocalstorageService } from '../../../../core/services/localstorage.service';
+import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
 
 @Component({
   selector: 'app-header',

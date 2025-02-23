@@ -8,7 +8,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormsModule } from '@angular/forms';
 import { USER_TABLE_COLS } from '../constants/table-users.constant';
-import { UserService } from '../../../core/services/user.service';
+import { UserService } from '../../../core/services/users-services/user.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { User } from '../../../shared/interfaces/user';
 import { Popover } from 'primeng/popover';
@@ -137,7 +137,7 @@ export class UsersComponent {
     this.selectedRole.set(user.role.roleName);
     this.showModalUser.set(true);
     this.selectedRow = user;
-    console.log(this.selectedRow)
+    console.log(this.selectedRow);
   }
 
   openModalUser(role: string = '') {

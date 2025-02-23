@@ -1,0 +1,68 @@
+<app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
+  <div class="flex w-full justify-between items-center">
+    <h2 class="text-lg font-semibold text-primary-500">
+      {{ isEditing() ? "Editar" : "Agregar" }} Servicio
+    </h2>
+    <button
+      (click)="closeModal()"
+      class="text-gray-400 hover:text-gray-600 transition-colors"
+    >
+      <i class="pi pi-times text-xl"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="w-full py-4">
+    <div class="grid grid-cols-1 pb-4 md:grid-cols-2 gap-4">
+      <app-input-form label="Nombre" formControlName="name" [required]="true" />
+
+      <app-input-form
+        label="Precio Unitario"
+        type="text"
+        formControlName="priceUnit"
+        [required]="true"
+        [isPositive]="true"
+      />
+
+      <app-select
+        label="Tipo de Servicio"
+        formControlName="type"
+        [options]="serviceTypeOptions"
+        [required]="true"
+      />
+
+      <app-input-form
+        label="Descripción"
+        formControlName="description"
+        [required]="true"
+      />
+    </div>
+
+    <div class="mt-6 flex justify-end gap-x-4">
+      <button
+        type="button"
+        class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 duration-300 ease-in-out"
+        (click)="closeModal()"
+      >
+        Cancelar
+      </button>
+      <app-button
+        type="submit"
+        bgColor="bg-primary-500"
+        moreClasses="py-2 px-6"
+        [text]="
+          isSubmitting()
+            ? isEditing()
+              ? 'Actualizando...'
+              : 'Guardando...'
+            : isEditing()
+            ? 'Actualizar'
+            : 'Guardar'
+        "
+        [icon]="isSubmitting() ? 'pi pi-spin pi-spinner' : ''"
+        [disabled]="!serviceForm.valid || isSubmitting()"
+      />
+    </div>
+  </form>
+</app-modal>
+
+<p-toast [life]="3000" [baseZIndex]="100000"></p-toast>

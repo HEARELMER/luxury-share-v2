@@ -7,7 +7,6 @@
         [maxLength]="8"
         label="Buscar por nombre"
         placeholder="Buscar por DNI"
-        [(ngModel)]="filterNumDni"
       />
     </div>
 
@@ -42,14 +41,13 @@
         text="Nuevo Servicio"
         moreClasses="py-2"
         bgColor="bg-primary-500"
-        (click)="openModalUser('ADMIN')"
+        (click)="openModalService()" 
       />
       <app-button
         icon="pi pi-plus"
         text="Nuevo Paquete"
         moreClasses="py-2"
         bgColor="bg-primary-500"
-        (click)="openModalUser('SELLER')"
       />
     </div>
   </div>
@@ -57,22 +55,8 @@
   <div class="bg-white rounded-lg border w-full">
     <div class="w-full py-3 flex px-4 justify-between items-center">
       <div class="flex gap-2">
-        <app-button
-          text="Paquetes Turísticos"
-          icon="pi pi-box"
-          [bgColor]="filterRoles === '' ? 'bg-white' : 'bg-primary-500'"
-          [textColor]="filterRoles === '' ? 'text-primary-500' : 'text-white'"
-          (click)="setFilterRoles('')"
-        />
-        <app-button
-          text="Servicios"
-          icon="pi pi-car"
-          [bgColor]="filterRoles === 'admins' ? 'bg-white' : 'bg-primary-500'"
-          [textColor]="
-            filterRoles === 'admins' ? 'text-primary-500' : 'text-white'
-          "
-          (click)="setFilterRoles('admins')"
-        />
+        <app-button text="Paquetes Turísticos" icon="pi pi-box" />
+        <app-button text="Servicios" icon="pi pi-car" />
 
         @for (item of filters(); track $index) {
         <div
@@ -105,7 +89,7 @@
 
     <p-table
       [columns]="cols"
-      [value]="virtualUsers"
+      [value]="virtualServices()"
       [lazy]="true"
       [scrollable]="true"
       [virtualScroll]="true"
@@ -113,14 +97,14 @@
       [loading]="loading"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
-      (onLazyLoad)="loadUsersLazy()"
+      (onLazyLoad)="loadServices()"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
-      [(selection)]="selectedRow"
+      [(selection)]="selectedService"
       [metaKeySelection]="true"
-      dataKey="numDni"
+      dataKey="serviceId"
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -160,7 +144,6 @@
                 [pTooltip]="'Editar Usuario'"
                 tooltipPosition="left"
                 [showDelay]="300"
-                (click)="editUser(user)"
               >
                 <i class="pi pi-user-edit"></i>
               </button>
@@ -219,9 +202,4 @@
   [total]="totalRecords"
 />
 
-<app-add-user
-  [(showModal)]="showModalUser"
-  [rolePreselected]="selectedRole()"
-  (refreshData)="handleRefreshData()"
-  [userToEdit]="selectedRow"
-/>
+<app-add-service [(showModal)]="showModalService" />

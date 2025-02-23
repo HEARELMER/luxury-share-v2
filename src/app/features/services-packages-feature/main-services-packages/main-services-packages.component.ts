@@ -1,7 +1,5 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
-import { Popover, PopoverModule } from 'primeng/popover';
-import { UserService } from '../../../core/services/users-services/user.service';
-import { User } from '../../../shared/interfaces/user';
+import { Popover, PopoverModule } from 'primeng/popover'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tooltip } from 'primeng/tooltip';
@@ -17,6 +15,8 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { SERVICE_TABLE_COLS } from '../constants/table-services.constant';
+import { ServicesService } from '../../../core/services/services_packages-services/services.service';
+import { AddServiceComponent } from "../add-service/add-service.component";
 
 @Component({
   selector: 'app-main-services-packages',
@@ -35,79 +35,90 @@ import { SERVICE_TABLE_COLS } from '../constants/table-services.constant';
     ExportExcelComponent,
     InputFormComponent,
     TagModule,
-    AddUserComponent,
     SelectComponent,
-  ],
+    AddServiceComponent
+],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
 })
 export class MainServicesPackagesComponent {
-  private readonly _userService = inject(UserService);
+  private readonly _servicesService = inject(ServicesService);
   @ViewChild('op') op!: Popover;
-  USERS_DATA = [];
-  users: User[] = [];
+
+  // Configuración de tabla y paginación
   cols = SERVICE_TABLE_COLS;
-  items: any[] | undefined;
   currentPage: number = 1;
-  pageSize: number = 5; // Inicializado para coincidir con el valor inicial de rows
   totalRecords: number = 0;
   rowsPerPageOptions = [5, 10, 20, 50];
   first: number = 0;
   rows: number = 5;
-  virtualUsers: User[] = [];
   loading: boolean = false;
-  selectedRow: any;
+
+  // Vista y datos
+  layout = signal<'grid' | 'list'>('grid');
+  layoutOptions = ['list', 'grid'];
+  virtualServices = signal<any[]>([]);
+  selectedService = signal<any>(null);
   showModal = signal<boolean>(false);
-  showModalUser = signal<boolean>(false);
+  showModalService = signal<boolean>(false);
+
+  // Filtros
   filters = signal<{ key: string; value: string }[]>([]);
-  filterNumDni = '';
-  filterRoles = '';
-  selectedRole = signal<string>('');
+  filterName = '';
+  filterStatus = '';
+
+  ngOnInit() {
+    this.loadServices();
+  }
+
   onPageChange(event: any) {
-    this.currentPage = event.page + 1; // Usa el índice de página del evento directamente
-    this.rows = event.rows; // Actualiza el tamaño de página
-    this.first = event.first; // Actualiza el desplazamiento inicial
-    this.loadUsersLazy();
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+    this.loadServices();
+  }
+
+  loadServices(): void {
+    this.loading = true;
+    this._servicesService.getServices(this.currentPage, this.rows).subscribe({
+      next: (response) => {
+        this.virtualServices.set(response.data.services);
+        this.totalRecords = response.data.total;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error cargando servicios:', error);
+        this.loading = false;
+      },
+    });
   }
 
   setFilter() {
-    if (this.filterNumDni.length == 8) {
-      this.filters.set([{ key: 'numDni', value: this.filterNumDni }]);
-      this.loadUsersLazy();
+    if (this.filterName) {
+      this.filters.set([{ key: 'name', value: this.filterName }]);
+      this.loadServices();
     }
   }
 
-  setFilterRoles(item: any) {
-    this.filterRoles = item;
-    this.loadUsersLazy();
+  setFilterStatus(status: string) {
+    this.filterStatus = status;
+    this.loadServices();
   }
 
   clearFilters() {
-    this.filterNumDni = '';
+    this.filterName = '';
+    this.filterStatus = '';
     this.filters.set([]);
-    this.loadUsersLazy();
+    this.loadServices();
   }
 
-  loadUsersLazy(): void {
-    this.loading = true;
-    this._userService
-      .paginateUsers(
-        this.currentPage,
-        this.rows,
-        this.filterNumDni,
-        this.filterRoles
-      )
-      .subscribe({
-        next: (response) => {
-          this.virtualUsers = response.data.users;
-          this.totalRecords = response.data.total;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          this.loading = false;
-        },
-      });
+  getSeverity(status: string): string {
+    const severities: { [key: string]: string } = {
+      ACTIVE: 'success',
+      INACTIVE: 'danger',
+      PENDING: 'warning',
+    };
+    return severities[status] || 'info';
   }
 
   toggle(event: Event) {
@@ -115,39 +126,25 @@ export class MainServicesPackagesComponent {
   }
 
   exportData() {
-    this.openModal();
-  }
-
-  openModal() {
     this.showModal.set(true);
   }
 
   handleExport(quantity: number) {
-    this._userService.exportToExcel(1, quantity).subscribe({
-      next: () => {
-        console.log('Exportación completada');
-        this.showModal.set(false);
-      },
-      error: (error) => {
-        console.error('Error en la exportación:', error);
-      },
-    });
+    // Implementar lógica de exportación específica para servicios
+    this.showModal.set(false);
   }
 
-  editUser(user: any) {
-    this.selectedRole.set(user.role.roleName);
-    this.showModalUser.set(true);
-    this.selectedRow = user;
-    console.log(this.selectedRow);
+  editService(service: any) {
+    this.selectedService.set(service);
+    this.showModalService.set(true);
   }
 
-  openModalUser(role: string = '') {
-    this.selectedRow = null;
-    this.selectedRole.set(role);
-    this.showModalUser.set(true);
+  openModalService() {
+    this.selectedService.set(null);
+    this.showModalService.set(true);
   }
 
   handleRefreshData() {
-    this.loadUsersLazy();
+    this.loadServices();
   }
 }

@@ -10,7 +10,7 @@ export const USER_TABLE_COLS = [
   { field: 'actions', header: 'Acciones', sortable: false },
 ];
 export const SERVICE_TABLE_COLS = [
-  { field: 'photoUrl', header: 'Foto', sortable: false },
+  // { field: 'photoUrl', header: 'Foto', sortable: false },
   { field: 'name', header: 'Nombre', sortable: true },
   { field: 'description', header: 'Descripción', sortable: true },
   { field: 'status', header: 'Estado', sortable: true },

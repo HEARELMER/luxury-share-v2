@@ -1,5 +1,5 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
-import { Popover, PopoverModule } from 'primeng/popover'; 
+import { Popover, PopoverModule } from 'primeng/popover';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tooltip } from 'primeng/tooltip';
@@ -16,8 +16,14 @@ import { AddUserComponent } from '../../users-feature/add-user/add-user.componen
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { SERVICE_TABLE_COLS } from '../constants/table-services.constant';
 import { ServicesService } from '../../../core/services/services_packages-services/services.service';
-import { AddServiceComponent } from "../add-service/add-service.component";
-
+import { AddServiceComponent } from '../add-service/add-service.component';
+import {
+  SERVICE_FILTER_BY_PRICE,
+  SERVICE_FILTER_BY_STATUS,
+  SERVICE_FILTER_BY_TYPE,
+} from '../constants/service-types.contant';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-main-services-packages',
   imports: [
@@ -36,13 +42,16 @@ import { AddServiceComponent } from "../add-service/add-service.component";
     InputFormComponent,
     TagModule,
     SelectComponent,
-    AddServiceComponent
-],
+    AddServiceComponent,
+    Toast,
+  ],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
 })
 export class MainServicesPackagesComponent {
   private readonly _servicesService = inject(ServicesService);
+  private readonly _messagesService = inject(MessageService);
+
   @ViewChild('op') op!: Popover;
 
   // Configuración de tabla y paginación
@@ -66,6 +75,12 @@ export class MainServicesPackagesComponent {
   filters = signal<{ key: string; value: string }[]>([]);
   filterName = '';
   filterStatus = '';
+  selectedType = '';
+  selectedPrice = '';
+  selectedStatus = '';
+  filterServiceByType = SERVICE_FILTER_BY_TYPE;
+  filterServiceByPrice = SERVICE_FILTER_BY_PRICE;
+  filterServiceByStatus = SERVICE_FILTER_BY_STATUS;
 
   ngOnInit() {
     this.loadServices();
@@ -130,8 +145,24 @@ export class MainServicesPackagesComponent {
   }
 
   handleExport(quantity: number) {
-    // Implementar lógica de exportación específica para servicios
-    this.showModal.set(false);
+    this._servicesService.exportToExcel(1, quantity).subscribe({
+      next: () => {
+        this._messagesService.add({
+          severity: 'success',
+          summary: 'Exportación completada',
+          detail: 'Los servicios han sido exportados correctamente.',
+        });
+        this.showModal.set(false);
+      },
+      error: (error) => {
+        this._messagesService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Ha ocurrido un error al exportar los servicios.',
+        });
+        this.showModal.set(false);
+      },
+    });
   }
 
   editService(service: any) {

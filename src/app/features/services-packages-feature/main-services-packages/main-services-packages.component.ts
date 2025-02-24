@@ -24,6 +24,7 @@ import {
 } from '../constants/service-types.contant';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { AddPackageComponent } from '../add-package/add-package.component';
 @Component({
   selector: 'app-main-services-packages',
   imports: [
@@ -43,6 +44,7 @@ import { MessageService } from 'primeng/api';
     TagModule,
     SelectComponent,
     AddServiceComponent,
+    AddPackageComponent,
     Toast,
   ],
   templateUrl: './main-services-packages.component.html',

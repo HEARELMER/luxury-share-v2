@@ -12,6 +12,7 @@ export const SERVICE_FILTER_BY_TYPE = [
   { value: 'transporte', label: 'Transporte' },
   { value: 'comida', label: 'Comida' },
   { value: 'otro', label: 'Otro' },
+  { value: '', label: 'Todos' },
 ];
 
 export const SERVICE_FILTER_BY_STATUS = [

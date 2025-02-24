@@ -13,15 +13,20 @@ export class ServicesService {
   private readonly _httpclient = inject(HttpClient);
   private readonly _exportFilesService = inject(ExportFilesService);
 
-  getServices(page: number, size: number, filter?: Filter): Observable<any> {
+  getServices(page: number, size: number, filters?: Filter[]): Observable<any> {
+    let url = `${this._api}services`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-
-    if (filter) {
-      params.set(`filter[${filter?.key}]`, filter?.value || '');
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}`;
     }
-    return this._httpclient.get(`${this._api}services`, { params });
+
+    return this._httpclient.get(url, { params });
   }
 
   createService(data: any): Observable<any> {

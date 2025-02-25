@@ -72,6 +72,7 @@ export class MainServicesPackagesComponent {
   selectedService = signal<any>(null);
   showModal = signal<boolean>(false);
   showModalService = signal<boolean>(false);
+  showModalPackage = signal<boolean>(false);
 
   // Filtros
   filters = signal<{ key: string; value: string }[]>([]);
@@ -175,6 +176,10 @@ export class MainServicesPackagesComponent {
   openModalService() {
     this.selectedService.set(null);
     this.showModalService.set(true);
+  }
+
+  openmodalPackage() {
+    this.showModalPackage.set(true);
   }
 
   handleRefreshData() {

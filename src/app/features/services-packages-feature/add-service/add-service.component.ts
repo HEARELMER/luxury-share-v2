@@ -54,6 +54,7 @@ export class AddServiceComponent {
     description: ['', Validators.required],
     priceUnit: ['', [Validators.required, Validators.min(0)]],
     type: ['', Validators.required],
+    status: [true],
     registeredBy: ['', Validators.minLength(8)],
   });
 

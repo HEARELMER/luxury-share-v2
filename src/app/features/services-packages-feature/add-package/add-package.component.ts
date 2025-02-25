@@ -85,15 +85,11 @@ export class AddPackageComponent {
   });
 
   constructor() {
-    // effect(() => {
-    //   if (this.showModal()) {
-    //     // this.loadServices();
-    //   }
-    // });
-  }
-
-  ngOnInit(): void {
-    this.loadServices();
+    effect(() => {
+      if (this.showModal()) {
+        this.loadServices();
+      }
+    });
   }
 
   loadServices() {

@@ -35,6 +35,23 @@
         formControlName="description"
         [required]="true"
       />
+
+      <app-select
+        label="Estado"
+        formControlName="status"
+        [options]="[
+          {
+            label: 'Activo',
+            value: 'true'
+          },
+          {
+            label: 'Inactivo',
+            value: 'false'
+          }
+        ]"
+        [placeholder]="'Selecciona el estado'"
+    
+      />
     </div>
 
     <div class="mt-6 flex justify-end gap-x-4">

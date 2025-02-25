@@ -1,0 +1,12 @@
+.button-table-actions {
+  @apply hover:bg-primary-50 p-2 rounded-lg border duration-300 ease-in-out w-10 h-10 flex items-center justify-center;
+}
+
+.search-bar {
+  @apply bg-primary-50/50 border border-primary-200 transition-all duration-200;
+}
+
+.search-bar:focus-within {
+  @apply ring-2 ring-primary-200 border-primary-300;
+}
+

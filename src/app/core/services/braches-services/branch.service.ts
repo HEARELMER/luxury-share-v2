@@ -1,78 +1,29 @@
-import { Injectable } from '@angular/core';
-import { environmentDev } from '../../environments/environment.development';
-import { HttpClient } from '@angular/common/http'; 
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { newBranch } from '../../shared/interfaces/branch';
+import { environmentDev } from '../../../environments/environment.development';
+import { Filter } from '../../interfaces/api/filters';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BranchService {
-  apiUrl:String = environmentDev.apiUrl;
-  constructor(private readonly httpClient:HttpClient) { }
-  getBranches():Observable<any>{
-    return this.httpClient.get(`${this.apiUrl}branches`, { withCredentials: true }).pipe();
-  }
+  private readonly _apiUrl: String = environmentDev.apiUrl;
+  private readonly _httpclient = inject(HttpClient);
 
-  deleteBranch(idBranch: string) {
-    return this.httpClient.get(`${this.apiUrl}branches/delete/${idBranch}`, { withCredentials: true }).pipe(
-      map((response: any) => {
-        if (response.status === 200 || 201) {
-          return {
-            type: 'success',
-            title: '¡Sucursal eliminada con éxito!',
-            message: 'La sucursal se eliminó correctamente del sistema.',
-          };
-        } else {
-          return {
-            type: 'error',
-            title: '¡Error al eliminar la sucursal!',
-            message: 'Hubo un error al eliminar la sucursal del sistema.',
-          };
-        }
-      })
-    );
-  }
+  getBranches(page: number, size: number, filters?: Filter[]): Observable<any> {
+    let url = `${this._apiUrl}branches`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', size.toString());
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}`;
+    }
 
-  addBranch(data: newBranch) {
-    return this.httpClient.post(`${this.apiUrl}branches/create`, data, { withCredentials: true }).pipe(
-      map((response: any) => {
-        if (response.status === 200 || 201) {
-
-          return {
-            type: 'success',
-            title: '¡Sucursal agregada con éxito!',
-            message: 'La sucursal se agregó correctamente al sistema.',
-          };
-        } else {
-          return {
-            type: 'error',
-            title: '¡Error al agregar la sucursal!',
-            message: 'Hubo un error al agregar la sucursal al sistema.',
-          };
-        }
-      })
-    );
+    return this._httpclient.get(url, { params });
   }
-
-  updateBranch(data: any) {
-    return this.httpClient.post(`${this.apiUrl}branches/update`, data, { withCredentials: true }).pipe(
-      map((response: any) => {
-        if (response.status === 200 || 201) {
-          return {
-            type: 'success',
-            title: '¡Sucursal actualizada con éxito!',
-            message: 'La sucursal se actualizó correctamente en el sistema.',
-          };
-        } else {
-          return {
-            type: 'error',
-            title: '¡Error al actualizar la sucursal!',
-            message: 'Hubo un error al actualizar la sucursal en el sistema.',
-          };
-        }
-      })
-    );
-  }
-  
 }

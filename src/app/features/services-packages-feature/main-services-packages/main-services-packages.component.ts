@@ -66,8 +66,7 @@ export class MainServicesPackagesComponent {
   loading: boolean = false;
 
   // Vista y datos
-  layout = signal<'grid' | 'list'>('grid');
-  layoutOptions = ['list', 'grid'];
+
   virtualServices = signal<any[]>([]);
   selectedService = signal<any>(null);
   showModal = signal<boolean>(false);

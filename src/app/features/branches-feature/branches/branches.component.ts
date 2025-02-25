@@ -1,88 +1,155 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
-import { Tag } from 'primeng/tag';
-import { Rating } from 'primeng/rating';
-import { ButtonModule } from 'primeng/button';
-import { SelectButton } from 'primeng/selectbutton';
-import { DataView } from 'primeng/dataview';
+import { Component, inject, signal, ViewChild } from '@angular/core';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { BadgeModule } from 'primeng/badge';
+import { TableModule } from 'primeng/table';
+import { Skeleton } from 'primeng/skeleton';
+import { Tooltip } from 'primeng/tooltip';
+import { PaginatorModule } from 'primeng/paginator';
 import { FormsModule } from '@angular/forms';
-
-interface Branch {
-  id: number;
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
-  status: boolean;
-  type: string;
-  createdAt: Date;
-}
-
+import { USER_TABLE_COLS } from '../../users-feature/constants/table-users.constant';
+import { UserService } from '../../../core/services/users-services/user.service';
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
+import { User } from '../../../shared/interfaces/user';
+import { Popover } from 'primeng/popover';
+import { PopoverModule } from 'primeng/popover';
+import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { TagModule } from 'primeng/tag';
+import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
+import { BranchService } from '../../../core/services/braches-services/branch.service';
+import { BRANCH_TABLE_COLS } from '../constants/table-branches.constant';
+import { SelectComponent } from "../../../shared/components/forms/select/select.component";
 @Component({
-  selector: 'app-branches',
+  selector: 'app-users',
   imports: [
-    DataView,
-    Tag,
-    Rating,
-    ButtonModule,
+    TieredMenuModule,
     CommonModule,
-    SelectButton,
-    FormsModule
-  ],
+    BadgeModule,
+    ButtonComponent,
+    TableModule,
+    CommonModule,
+    Skeleton,
+    Tooltip,
+    PaginatorModule,
+    FormsModule,
+    ButtonComponent,
+    PopoverModule,
+    ExportExcelComponent,
+    InputFormComponent,
+    TagModule,
+    SelectComponent
+],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.scss',
 })
 export class BranchesComponent {
-  layout = signal<'grid'| 'list'>('grid');
-  options = ['list', 'grid']; 
-  branches = signal<Branch[]>([
-    {
-      id: 1,
-      name: 'Sucursal Principal Norte',
-      address: 'Av. Los Pinos 123',
-      phone: '912345678',
-      email: 'sucursal1@empresa.com',
-      status: true,
-      type: 'Principal',
-      createdAt: new Date('2024-01-15')
-    },
-    {
-      id: 2,
-      name: 'Sucursal Express Sur',
-      address: 'Av. Las Flores 456',
-      phone: '923456789',
-      email: 'sucursal2@empresa.com',
-      status: true,
-      type: 'Express',
-      createdAt: new Date('2024-02-01')
-    },
-    {
-      id: 3,
-      name: 'Sucursal Secundaria Este',
-      address: 'Av. Central 789',
-      phone: '934567890',
-      email: 'sucursal3@empresa.com',
-      status: false,
-      type: 'Secundaria',
-      createdAt: new Date('2024-02-15')
-    },
-    {
-      id: 4,
-      name: 'Sucursal Principal Oeste',
-      address: 'Av. Libertad 321',
-      phone: '945678901',
-      email: 'sucursal4@empresa.com',
-      status: true,
-      type: 'Principal',
-      createdAt: new Date('2024-02-20')
+  private readonly _branchService = inject(BranchService);
+  // Signals
+  branches = signal<Branch[]>([]);
+  loading = signal<boolean>(false);
+  showModal = signal<boolean>(false);
+  showBranchModal = signal<boolean>(false);
+  filters = signal<{ key: string; value: string }[]>([]);
+  selectedBranch = signal<Branch | null>(null);
+
+  // Configuración de tabla
+  cols = BRANCH_TABLE_COLS;
+  currentPage = 1;
+  pageSize = 5;
+  totalRecords = 0;
+  rowsPerPageOptions = [5, 10, 20, 50];
+  first = 0;
+  rows = 5;
+
+  // Filtros
+  filterName = '';
+  filterStatus = '';
+
+  constructor() {
+    // Constructor vacío
+  }
+
+  ngOnInit() {
+    this.loadBranches();
+  }
+
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+    this.loadBranches();
+  }
+
+  loadBranches(): void {
+    this.loading.set(true);
+
+    this._branchService.getBranches(this.currentPage, this.rows).subscribe({
+      next: (response) => {
+        this.branches.set(response.data.branches);
+        this.totalRecords = response.data.total;
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Error cargando sucursales:', error);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  setFilter() {
+    if (this.filterName) {
+      this.filters.set([{ key: 'name', value: this.filterName }]);
+      this.loadBranches();
     }
-  ]);
-
-  getSeverity(status: boolean): string {
-    return status ? 'success' : 'danger';
   }
 
-  getStatusLabel(status: boolean): string {
-    return status ? 'Activo' : 'Inactivo';
+  clearFilters() {
+    this.filterName = '';
+    this.filterStatus = '';
+    this.filters.set([]);
+    this.loadBranches();
   }
+
+  exportData() {
+    this.showModal.set(true);
+  }
+
+  handleExport(quantity: number) {
+    // this..exportToExcel(this.currentPage, quantity).subscribe({
+    //   next: () => {
+    //     console.log('Exportación completada');
+    //     this.showModal.set(false);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error en la exportación:', error);
+    //   },
+    // });
+  }
+
+  editBranch(branch: Branch) {
+    this.selectedBranch.set(branch);
+    this.showBranchModal.set(true);
+  }
+
+  openBranchModal() {
+    this.selectedBranch.set(null);
+    this.showBranchModal.set(true);
+  }
+
+  handleRefreshData() {
+    this.loadBranches();
+  }
+
+  toggle(event:any){
+    
+  }
+}
+interface Branch {
+  sucursalId: string;
+  name: string;
+  address: string;
+  status: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

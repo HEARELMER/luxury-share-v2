@@ -1,5 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  model,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormsModule,
@@ -15,17 +22,12 @@ import {
   styleUrl: './password.component.scss',
 })
 export class PasswordComponent {
-  private readonly formBuilder = inject(FormBuilder)
-  @Output() password = new EventEmitter<string>();
-
-  ngDoCheck(): void {
-    if (this.form.controls['password'].valid) {
-      this.password.emit(this.form.controls['password'].value || '');
-    } 
-  }
+  private readonly formBuilder = inject(FormBuilder);
+  password = model<string>();
+ 
 
   passwordVisible: boolean = false;
-  errorMessage: string = ''; 
+  errorMessage: string = '';
 
   form = this.formBuilder.group({
     password: [

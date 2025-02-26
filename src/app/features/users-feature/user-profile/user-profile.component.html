@@ -80,7 +80,69 @@
         </form>
       </p-tabpanel>
       <p-tabpanel [value]="1"> Content II </p-tabpanel>
-      <p-tabpanel [value]="2"> Content III </p-tabpanel>
+      <p-tabpanel [value]="2">
+        <div class="grid grid-cols-1 lg:grid-cols-3 h-auto gap-6">
+          <!-- Columna de información de seguridad -->
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl border shadow-sm h-full">
+              <!-- Cabecera -->
+              <div class="p-6 border-b">
+                <div class="flex items-center gap-4 mb-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center"
+                  >
+                    <i class="pi pi-shield text-lg text-primary-500"></i>
+                  </div>
+                  <h3 class="text-base font-medium text-gray-900">Seguridad</h3>
+                </div>
+                <p class="text-sm text-gray-500">
+                  Mantén tu cuenta segura actualizando tu contraseña
+                  regularmente
+                </p>
+              </div>
+
+              <!-- Estado actual -->
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                  <div class="flex justify-center gap-3 w-full">
+                    <app-button
+                      text="Cambiar Contraseña"
+                      bgColor="bg-primary-500"
+                      moreClasses="py-2"
+                      icon="pi pi-lock"
+                      (click)="OpenpasswordRecovery()"
+                    />
+                  </div>
+                </div>
+
+                <!-- Imagen decorativa -->
+                <div class="mt-8 flex justify-center">
+                  <img
+                    src=" ./images/security.webp"
+                    alt="Seguridad"
+                    class="h-64 w-auto opacity-75"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna para el formulario (por ahora vacía) -->
+          <div class="lg:col-span-2 bg-white rounded-xl border shadow-sm p-6">
+            @if(viewPasswordRecoveryForm()){
+            <app-password-recovery></app-password-recovery>> }@else {
+
+            <div class="w-full h-full flex justify-center items-center">
+              <img
+                src=" ./images/password-empty.webp"
+                alt="Seguridad"
+                class="h-64 w-auto opacity-75 m-auto"
+              />
+            </div>
+            }
+          </div>
+        </div>
+      </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
 </div>

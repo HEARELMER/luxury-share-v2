@@ -184,10 +184,13 @@
 </main>
 
 <app-export-excel
-  title="Usuarios"
+  title="Sucursales"
   [(showModal)]="showModal"
   (exportData)="handleExport($event)"
   [total]="totalRecords"
 />
 
-<app-add-branch [(showModal)]="showBranchModal" />
+<app-add-branch
+  [(showModal)]="showBranchModal"
+  (refreshData)="handleRefreshData()"
+/>

@@ -21,6 +21,8 @@ import { BranchService } from '../../../core/services/braches-services/branch.se
 import { BRANCH_TABLE_COLS } from '../constants/table-branches.constant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { AddBranchComponent } from '../add-branch/add-branch.component';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-users',
   imports: [
@@ -41,12 +43,14 @@ import { AddBranchComponent } from '../add-branch/add-branch.component';
     TagModule,
     SelectComponent,
     AddBranchComponent,
+    Toast,
   ],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.scss',
 })
 export class BranchesComponent {
   private readonly _branchService = inject(BranchService);
+  private readonly _messageService = inject(MessageService);
   // Signals
   branches = signal<Branch[]>([]);
   loading = signal<boolean>(false);
@@ -118,15 +122,23 @@ export class BranchesComponent {
   }
 
   handleExport(quantity: number) {
-    // this..exportToExcel(this.currentPage, quantity).subscribe({
-    //   next: () => {
-    //     console.log('Exportación completada');
-    //     this.showModal.set(false);
-    //   },
-    //   error: (error) => {
-    //     console.error('Error en la exportación:', error);
-    //   },
-    // });
+    this._branchService.exportToExcel(1, quantity).subscribe({
+      next: () => {
+        this._messageService.add({
+          severity: 'success',
+          summary: '¡Éxito!',
+          detail: '¡Sucursales exportadas con éxito!',
+        });
+        this.showModal.set(false);
+      },
+      error: () => {
+        this._messageService.add({
+          severity: 'error',
+          summary: '¡Error!',
+          detail: 'Error al exportar sucursales',
+        });
+      },
+    });
   }
 
   editBranch(branch: Branch) {

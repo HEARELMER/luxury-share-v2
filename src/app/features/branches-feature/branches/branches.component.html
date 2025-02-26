@@ -3,10 +3,8 @@
     <div class="flex-none w-64">
       <app-input-form
         type="text"
-        [isPositive]="true"
-        [maxLength]="8"
-        label="Buscar por DNI"
-        placeholder="Buscar por DNI"
+        label="Buscar por Direccion"
+        placeholder="Ej. Av. 9 de Octubre"
       />
     </div>
 
@@ -30,9 +28,15 @@
   <div class="bg-white rounded-lg border w-full">
     <div class="w-full py-5 flex px-4 justify-between items-center">
       <div class="flex gap-2">
-        <app-select class="w-full" label="Tipo" />
-        <app-select class="w-full" label="Precio" />
-        <app-select class="w-full" label="Estado" />
+        <app-select
+          class="w-full"
+          label="Estado"
+          [options]="[
+            { label: 'Activo', value: 'true' },
+            { label: 'Inactivo', value: 'false' },
+            { label: 'Todos', value: '' }
+          ]"
+        />
 
         @for (item of filters(); track $index) {
         <div
@@ -55,13 +59,7 @@
           bgColor="bg-green-500"
           (click)="exportData()"
         />
-        <app-button
-          text="Filtro"
-          icon="pi pi-filter"
-          bgColor="bg-primary-100"
-          textColor="text-primary-500"
-          (click)="toggle($event)"
-        />
+
         <p-popover #op>
           <div class="flex flex-col gap-4">
             <div>

@@ -19,7 +19,8 @@ import { TagModule } from 'primeng/tag';
 import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
 import { BranchService } from '../../../core/services/braches-services/branch.service';
 import { BRANCH_TABLE_COLS } from '../constants/table-branches.constant';
-import { SelectComponent } from "../../../shared/components/forms/select/select.component";
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { AddBranchComponent } from '../add-branch/add-branch.component';
 @Component({
   selector: 'app-users',
   imports: [
@@ -38,8 +39,9 @@ import { SelectComponent } from "../../../shared/components/forms/select/select.
     ExportExcelComponent,
     InputFormComponent,
     TagModule,
-    SelectComponent
-],
+    SelectComponent,
+    AddBranchComponent,
+  ],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.scss',
 })
@@ -141,9 +143,7 @@ export class BranchesComponent {
     this.loadBranches();
   }
 
-  toggle(event:any){
-    
-  }
+  toggle(event: any) {}
 }
 interface Branch {
   sucursalId: string;

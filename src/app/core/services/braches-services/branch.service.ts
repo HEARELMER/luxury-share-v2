@@ -26,4 +26,8 @@ export class BranchService {
 
     return this._httpclient.get(url, { params });
   }
+
+  createBranch(branch: any): Observable<any> {
+    return this._httpclient.post(`${this._apiUrl}branches`, branch);
+  }
 }

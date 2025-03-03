@@ -23,7 +23,7 @@
         text="Nuevo Administrador"
         moreClasses="py-2"
         bgColor="bg-primary-500"
-        (click)="openModalUser('ADMIN')"
+        (click)="openModal()"
       />
       <app-button
         icon="pi pi-plus"
@@ -237,9 +237,4 @@
   [total]="totalRecords"
 />
 
-<app-add-user
-  [(showModal)]="showModalUser"
-  [rolePreselected]="selectedRole()"
-  (refreshData)="handleRefreshData()"
-   [userToEdit]="selectedRow"
-/>
+<app-add-sale [showModal]="true" />

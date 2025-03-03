@@ -17,6 +17,7 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { TagModule } from 'primeng/tag';
 import { USER_TABLE_COLS } from '../../users-feature/constants/table-users.constant';
 import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
+import { AddSaleComponent } from '../add-sale/add-sale.component';
 @Component({
   selector: 'app-users',
   imports: [
@@ -36,11 +37,14 @@ import { AddUserComponent } from '../../users-feature/add-user/add-user.componen
     InputFormComponent,
     TagModule,
     AddUserComponent,
+    AddSaleComponent,
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
 })
 export class SalesComponent {
+  showModalAddSale = signal<boolean>(false);
+
   private readonly _userService = inject(UserService);
   @ViewChild('op') op!: Popover;
   USERS_DATA = [];
@@ -118,7 +122,7 @@ export class SalesComponent {
   }
 
   openModal() {
-    this.showModal.set(true);
+    this.showModalAddSale.set(true);
   }
 
   handleExport(quantity: number) {

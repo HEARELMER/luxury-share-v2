@@ -1,22 +1,30 @@
 import { NgStyle } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-chart-bar',
   standalone: true,
-  imports: [ChartModule, NgStyle],
+  imports: [ChartModule, NgStyle, Tooltip],
   templateUrl: './chart-bar.component.html',
   styleUrl: './chart-bar.component.scss',
 })
 export class ChartBarComponent {
   data: any;
   private _orientation: string = 'x';
-  @Input() title: string = 'Chart Title';
-  @Input() labels: { label: string; color: string; quantity: number }[] = [
-    { label: '', color: '', quantity: 0 },
-  ];
-  @Input() dataValues: number[] = [];
+  readonly title = input<string>();
+  readonly subtitle = input<string>();
+  readonly icon = input<string>();
+  readonly iconBg = input<string>();
+  readonly labels = input<
+    {
+      label: string;
+      color: string;
+      quantity: number;
+    }[]
+  >([{ label: '', color: '', quantity: 0 }]);
+  readonly dataValues = input<number[]>([]);
   @Input() set orientation(value: string) {
     if (value.toLowerCase() === 'x' || value.toLowerCase() === 'y') {
       this._orientation = value.toLowerCase();
@@ -24,12 +32,11 @@ export class ChartBarComponent {
       this._orientation = 'x';
     }
   }
+
   get orientation(): string {
     return this._orientation;
   }
-
   options: any;
-  
 
   ngOnInit() {
     this.chartBar();
@@ -38,15 +45,15 @@ export class ChartBarComponent {
   formatLabels(data: any): string[] {
     return data;
   }
+
   chartBar() {
-    
     this.data = {
-      labels: this.labels.map((item) => item.label),
+      labels: this.labels().map((item) => item.label),
       datasets: [
         {
           label: 'Teams',
-          data:this.labels.map((item) => item.quantity),
-          backgroundColor: this.labels.map((item) => item.color),
+          data: this.labels().map((item) => item.quantity),
+          backgroundColor: this.labels().map((item) => item.color),
           borderRadius: 8,
           barPercentage: 0.6,
         },

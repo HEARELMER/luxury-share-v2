@@ -1,15 +1,31 @@
-
-    <div class="w-full h-full flex flex-col lg:justify-around p-4 bg-white rounded-xl shadow-md   z-20">
-        <div class="w-full flex justify-between items-center ">
-            <h1 class="lg:text-xl text-black font-semibold sm:py-2">{{title}}</h1>
-            <div class="flex gap-2 ">
-                <app-button text="Descargar" icon="pi pi-download" font="text-md" moreClasses="py-2" />
-            </div>
-        </div>
-        
-    
-        <div id="chart" class="w-full">
-            <p-chart class=" h-auto " type="line" [data]="data" [options]="options" />
-        </div>
-        
+<div class="w-full h-full flex flex-col lg:justify-around p-4 bg-white z-20">
+  <div class="w-full flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-10 h-10 rounded-full {{
+          iconBg()
+        }} flex items-center justify-center"
+      >
+        <i class=" {{ icon() }} text-lg  "></i>
+      </div>
+      <div>
+        <h3 class="text-base font-medium text-gray-900">
+          {{ title() }}
+        </h3>
+        <p class="text-sm text-gray-500">{{ subtitle() }}</p>
+      </div>
     </div>
+    <div class="flex gap-2">
+      <app-button
+        text="Descargar"
+        icon="pi pi-download"
+        font="text-md"
+        moreClasses="py-2"
+      />
+    </div>
+  </div>
+
+  <div id="chart" class="w-full">
+    <p-chart class="h-auto" type="line" [data]="data" [options]="options" />
+  </div>
+</div>

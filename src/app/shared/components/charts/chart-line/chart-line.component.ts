@@ -1,6 +1,6 @@
-import { Component, input, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { ButtonComponent } from '../../ui/button/button.component'; 
+import { ButtonComponent } from '../../ui/button/button.component';
 @Component({
   selector: 'app-chart-line',
   standalone: true,
@@ -9,10 +9,13 @@ import { ButtonComponent } from '../../ui/button/button.component';
   styleUrl: './chart-line.component.scss',
 })
 export class ChartLineComponent implements OnInit {
-  data: any;
-  @Input() title: string = 'Chart Title';
+  readonly title = input<string>();
+  readonly icon = input<string>();
+  readonly iconBg = input<string>();
+  readonly subtitle = input<string>();
 
   options: any;
+  data: any;
 
   ngOnInit() {
     this.chartLine();

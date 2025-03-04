@@ -7,7 +7,6 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { FormatDatePipe } from './shared/pipes/format_date.pipe';
 import { TruncateDecimalPipe } from './shared/pipes/truncate-decimal.pipe';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
 import MyPreset from '../../mypreset';
 import { LocalstorageService } from './core/services/localstorage-services/localstorage.service';
 import { MessageService } from 'primeng/api';
@@ -28,7 +27,7 @@ export const appConfig: ApplicationConfig = {
           },
         },
       },
-    }),
+    }), 
     FormatDatePipe,
     TruncateDecimalPipe,
     LocalstorageService,

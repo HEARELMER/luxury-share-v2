@@ -1,6 +1,17 @@
-<div id="chart" class="w-full p-4 bg-white rounded-xl shadow-md">
-  <h1 class="text-xl text-black font-semibold mb-4">{{ title }}</h1>
-
+<div id="chart" class="w-full p-4">
+  <div class="flex items-center gap-3 pb-2">
+    <div
+      class="w-10 h-10 rounded-full {{
+        iconBg()
+      }} flex items-center justify-center"
+    >
+      <i class="{{ icon() }} text-lg "></i>
+    </div>
+    <div>
+      <h3 class="text-base font-medium text-gray-900">{{ title() }}</h3>
+      <p class="text-sm text-gray-500">{{ subtitle() }}</p>
+    </div>
+  </div>
   <p-chart
     type="bar"
     [data]="data"
@@ -9,13 +20,16 @@
   ></p-chart>
 
   <div class="flex justify-around mt-4 gap-2 flex-wrap">
-    @for (legend of labels; track $index) {
+    @for (legend of labels(); track $index) {
     <div class="flex items-center space-x-2">
       <span
         [ngStyle]="{ 'background-color': legend.color }"
         class="inline-block bg-primary-l-500 w-6 h-6 rounded-md"
       ></span>
-      <span class="text-sm text-gray-500">{{ legend.label.slice(0,10) }} {{legend.label.length>10? '...' : '' }} </span>
+      <span class="text-sm text-gray-500"
+        >{{ legend.label.slice(0, 10) }}
+        {{ legend.label.length > 10 ? "..." : "" }}
+      </span>
     </div>
     }
   </div>

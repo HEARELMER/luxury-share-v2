@@ -1,83 +1,135 @@
 <main class="flex w-full gap-4 justify-center flex-col">
-  <div
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    (cdkDropListDropped)="onDrop($event)"
-    class="grid items-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full"
-  >
-    @for (card of cards(); track card.id) {
+  <section class="flex flex-col gap-2 bg-white rounded-xl shadow-sm border p-4">
+    <!-- header dashbaiord -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center"
+        >
+          <i class="pi pi-chart-line text-xl text-primary-500"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+          <p class="text-sm text-gray-500">Resumen general del negocio</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- cards info-->
     <div
-      cdkDrag
-      class="relative group cursor-move"
-      [class.shadow-lg]="card.isDragging"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="onDrop($event)"
+      class="grid items-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full"
     >
-      <!-- Preview mientras se arrastra -->
-      <div *cdkDragPreview class="rounded-xl p-4 opacity-70 {{ card.bg }} ">
+      @for (card of cards(); track card.id) {
+      <div
+        cdkDrag
+        class="relative group cursor-move"
+        [class.shadow-lg]="card.isDragging"
+      >
+        <!-- Preview mientras se arrastra -->
+        <div *cdkDragPreview class="rounded-xl p-4 opacity-70 {{ card.bg }} ">
+          <app-card-home
+            [title]="card.title"
+            [number]="card.number"
+            [bg]="card.bg"
+            [buttonBg]="card.buttonBg"
+            [routerLink]="card.routerLink"
+          />
+        </div>
+
+        <!-- Card real -->
         <app-card-home
           [title]="card.title"
           [number]="card.number"
           [bg]="card.bg"
           [buttonBg]="card.buttonBg"
           [routerLink]="card.routerLink"
-        />
-      </div>
-
-      <!-- Card real -->
-      <app-card-home
-        [title]="card.title"
-        [number]="card.number"
-        [bg]="card.bg"
-        [buttonBg]="card.buttonBg"
-        [routerLink]="card.routerLink"
-      >
-        <div
-          class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200"
         >
-          <i class="pi pi-grip-lines text-white/50"></i>
-        </div>
-      </app-card-home>
-    </div>
-    }
-  </div>
-
-  <div class="flex flex-col lg:flex-row w-full gap-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:w-3/4">
-      @defer {
-      <app-chart-bar
-        class="w-full"
-        [orientation]="'y'"
-        [title]="'Top Paquetes más vendidos'"
-        [labels]="topPackages"
-      ></app-chart-bar>
-
-      } @defer {
-      <app-chart-bar
-        class="w-full"
-        [orientation]="'y'"
-        [title]="'Top Servicios más vendidos'"
-        [labels]="topServices"
-      ></app-chart-bar>
-
+          <div
+            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200"
+          >
+            <i class="pi pi-grip-lines text-white/50"></i>
+          </div>
+        </app-card-home>
+      </div>
       }
+    </div>
+  </section>
 
-      <app-chart-line
-        class="w-full sm:col-span-2"
-        [title]="'Total de ventas realizadas'"
-      ></app-chart-line>
+  <!-- grid bento -->
+  <section class="grid grid-cols-1 lg:grid-cols-6 gap-6">
+    <!-- Card de filtro de fechas -->
+    <app-date-picker
+      class="bg-white rounded-xl col-span-2 shadow-sm border w-full"
+    />
+    <!-- Ventas por Sucursal -->
+    <div
+      class="lg:col-span-4 bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow"
+    >
+      @defer {
+
+      <app-chart-bar
+        [labels]="totalSalesByBranch"
+        title="Ventas por Sucursal"
+        icon="pi pi-map-marker text-red-500"
+        iconBg="bg-red-50"
+      ></app-chart-bar>
+      }
+    </div>
+    <!-- Top Paquetes -->
+    <div
+      class="lg:col-span-3 bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow"
+    >
+      @defer {
+
+      <app-chart-bar
+        [orientation]="'y'"
+        [labels]="topPackages"
+        title="Top Paquetes"
+        subtitle="Más 
+    Vendidos"
+        icon="pi pi-box text-orange-500"
+        iconBg="bg-orange-50"
+        class="h-full"
+      />
+      }
+    </div>
+
+    <!-- Top Servicios -->
+    <div
+      class="lg:col-span-3 bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow"
+    >
+      @defer {
+
+      <app-chart-bar
+        title="Top Servicios"
+        subtitle="Más solicitados"
+        icon="pi pi-cog text-blue-500"
+        iconBg="bg-blue-50"
+        [orientation]="'y'"
+        [labels]="topServices"
+      />
+      }
     </div>
 
     <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 w-full lg:w-1/4"
+      class="col-span-6 bg-white rounded-xl shadow-sm border p-2 hover:shadow-md transition-shadow"
     >
-      @defer {
-      <app-chart-bar
+      <app-chart-line
         class="w-full"
-        [title]="'Ventas por sucursal'"
-        [labels]="totalSalesByBranch"
-      ></app-chart-bar>
-
-      }
-      <!-- <app-date-picker class="w-full"></app-date-picker> -->
+        [title]="'Total de ventas realizadas'"
+        [subtitle]="'Evolución mensual'"
+        icon="pi pi-chart-line text-green-500"
+        iconBg="bg-green-50"
+      ></app-chart-line>
     </div>
-  </div>
+  </section>
+  <p-scrolltop
+    target="parent"
+    [threshold]="100"
+    icon="pi pi-arrow-up"
+    [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
+  />
 </main>

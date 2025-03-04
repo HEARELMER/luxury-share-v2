@@ -1,10 +1,63 @@
-<div
-  class="w-full h-full flex flex-col p-4 bg-white rounded-xl shadow-md z-20 justify-content-center"
+<p-date-picker
+  [inline]="true"
+  [selectionMode]="'range'"
+  styleClass="w-full rounded-xl"
+  [showWeek]="showWeek()"
+  [(ngModel)]="selectedDates"
+  (onSelect)="onRangeSelect($event)"
+  [dateFormat]="'es'"
+
 >
-  <p-calendar
-    class="w-full h-full flex justify-center"
-    [(ngModel)]="date"
-    [inline]="true"
-    [showWeek]="true"
-  />
-</div>
+  <ng-template pTemplate="header">
+    <div class="py-2 border-b bg-gray-50">
+      <h3 class="text-base font-medium text-gray-900">
+        Seleccionar rango de fechas
+      </h3>
+      <!-- Botones de acceso rápido -->
+      <div class="flex justify-between w-full gap-1 pt-3">
+        <button
+          type="button"
+          class="px-3 py-1 text-xs w-full font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+          (click)="selectPreset('week')"
+        >
+          Esta semana
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1 text-xs w-full font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+          (click)="selectPreset('month')"
+        >
+          Este mes
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1 text-xs w-full font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+          (click)="selectPreset('year')"
+        >
+          Este año
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="p-3 flex justify-between items-center border-t bg-gray-50">
+      <button
+        type="button"
+        class="text-xs text-gray-600 hover:text-gray-900 px-2 py-1 cursor-pointer duration-300 rounded ease-in-out hover:bg-gray-100"
+        (click)="clearSelection()"
+      >
+        <i class="pi pi-trash mr-1"></i>
+        Limpiar
+      </button>
+      <button
+        type="button"
+        class="px-3 py-1.5 text-xs font-medium text-white bg-primary-500 cursor-pointer duration-300 ease-in-out hover:bg-primary-600 rounded-lg transition-colors flex items-center gap-1"
+        [disabled]="!isValidRange()"
+        (click)="applySelection()"
+      >
+        <i class="pi pi-calendar-plus"></i>
+        Aplicar
+      </button>
+    </div>
+  </ng-template>
+</p-date-picker>

@@ -1,1 +1,66 @@
- 
+// <p-calendar
+// [(ngModel)]="selectedDates"
+// [selectionMode]="'range'"
+// [readonlyInput]="true"
+// [showIcon]="true"
+// [showButtonBar]="true"
+// [disabled]="disabled()"
+// [inline]="inline()"
+// [showWeek]="showWeek()"
+// [placeholder]="placeholder()"
+// styleClass="w-full date-picker-modern"
+// inputStyleClass="w-full py-2 px-3 text-sm rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+// (onSelect)="onRangeSelect($event)"
+// >
+// <!-- Header personalizado -->
+// <ng-template pTemplate="header">
+//   <div class="p-4 border-b bg-gray-50">
+//     <h3 class="text-base font-medium text-gray-900">
+//       Seleccionar rango de fechas
+//     </h3>
+//     <p class="text-xs text-gray-500 mt-1">
+//       Haga clic en dos fechas para seleccionar un rango
+//     </p>
+//     <!-- Botones de acceso rápido -->
+//     <div class="flex gap-2 mt-3">
+//       <button
+//         type="button"
+//         class="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+//         (click)="selectPreset('week')"
+//       >
+//         Esta semana
+//       </button>
+//       <button
+//         type="button"
+//         class="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50"
+//         (click)="selectPreset('month')"
+//       >
+//         Este mes
+//       </button>
+//     </div>
+//   </div>
+// </ng-template>
+
+// <!-- Footer personalizado -->
+// <ng-template pTemplate="footer">
+//   <div class="p-3 flex justify-between items-center border-t bg-gray-50">
+//     <button
+//       type="button"
+//       class="text-xs text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100"
+//       (click)="clearSelection()"
+//     >
+//       <i class="pi pi-trash mr-1"></i>
+//       Limpiar
+//     </button>
+//     <button
+//       type="button"
+//       class="px-3 py-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors flex items-center gap-1"
+//       [disabled]="!isValidRange()"
+//       (click)="applySelection()"
+//     >
+//       <i class="pi pi-check"></i>
+//       Aplicar
+//     </button>
+//   </div>
+// </ng-template>
+// </p-calendar>

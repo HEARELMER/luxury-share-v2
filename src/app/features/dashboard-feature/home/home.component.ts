@@ -2,19 +2,17 @@ import { Component, inject, signal } from '@angular/core';
 import { DashboardService } from '../../../core/services/dashboard-services/dashbaord.service';
 import { ChartBarComponent } from '../../../shared/components/charts/chart-bar/chart-bar.component';
 import { ChartLineComponent } from '../../../shared/components/charts/chart-line/chart-line.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { CardHomeComponent } from '../../../shared/components/ui/card-home/card-home.component';
 import { DragDropService } from '../../../core/ui-services/drapg-drop.service';
 import {
   CdkDrag,
   CdkDragDrop,
-  CdkDragHandle,
-  CdkDragPlaceholder,
   CdkDragPreview,
   CdkDropList,
-  DragDropModule,
-  moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DatePickerComponent } from "../../../shared/components/forms/date-picker/date-picker.component";
+import { ScrollTop } from 'primeng/scrolltop';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -25,7 +23,10 @@ import {
     CdkDrag,
     CdkDragPreview,
     CdkDropList,
-  ],
+    DatePickerModule, 
+    DatePickerComponent,
+    ScrollTop,
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -61,47 +62,40 @@ export class HomeComponent {
   topPackages: any[] = [];
   totalSalesByBranch: any[] = [];
 
-  ngOnInit(): void {
-    this.getData();
+  ngOnInit(): void {}
+
+  dateRange: Date[] = [];
+
+  setDateRange(period: 'week' | 'month') {
+    const today = new Date();
+    const start = new Date();
+
+    if (period === 'week') {
+      start.setDate(today.getDate() - 7);
+    } else {
+      start.setMonth(today.getMonth() - 1);
+    }
+
+    this.dateRange = [start, today];
   }
 
-  getData() {
-    this.dashboardService.getDashboardData().subscribe((data) => {
-      console.log(data);
-      this.countPackages = data.data.countPackages;
-      this.countServices = data.data.countServices;
-      this.totalAdmins = data.usersData.totalAdmins;
-      this.totalGerents = data.usersData.totalGerents;
-      this.totalSellers = data.usersData.totalSellers;
-      this.totalSales = data.data.totalSales;
-      this.topServices = data.data.topSellingServices.map(
-        (item: any, index: any) => {
-          return {
-            label: item.servicename,
-            color: this.COLORS[index],
-            quantity: item.soldquantity,
-          };
-        }
-      );
-      this.topPackages = data.data.topSellingPackages.map(
-        (item: any, index: any) => {
-          return {
-            label: item.packagename,
-            color: this.COLORS[index],
-            quantity: item.soldquantity,
-          };
-        }
-      );
-      this.totalSalesByBranch = data.data.totalSalesByBranch.map(
-        (item: any, index: any) => {
-          return {
-            label: item.address,
-            color: this.COLORS[index],
-            quantity: item.totalsales,
-          };
-        }
-      );
-    });
+  getSelectedDateRange(): string {
+    if (!this.dateRange?.length) return '';
+
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+      });
+    };
+
+    if (this.dateRange.length === 2) {
+      return `${formatDate(this.dateRange[0])} - ${formatDate(
+        this.dateRange[1]
+      )}`;
+    }
+
+    return '';
   }
 
   onDrop(event: CdkDragDrop<any[]>) {
@@ -134,20 +128,20 @@ export class HomeComponent {
       routerLink: 'admins',
     },
     {
-      id: 'sales',
-      title: 'Ventas',
-      number: 0,
-      bg: 'bg-fuchsia-500',
-      buttonBg: 'bg-fuchsia-600',
-      routerLink: 'sales',
-    },
-    {
       id: 'services',
       title: 'Total de Servicios',
       number: 0,
       bg: 'bg-slate-800',
       buttonBg: 'bg-slate-950',
       routerLink: 'services_packages',
+    },
+    {
+      id:'branches',
+      title:'Sucursales',
+      number:0,
+      bg:'bg-blue-400',
+      buttonBg:'bg-blue-500',
+      routerLink:'branches'
     },
     {
       id: 'packages',

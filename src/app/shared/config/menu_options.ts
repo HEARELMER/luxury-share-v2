@@ -1,5 +1,4 @@
-
-export interface MenuNode  {
+export interface MenuNode {
   key: string;
   label: string;
   icon?: string;
@@ -12,7 +11,7 @@ export const MENU_OPTIONS: MenuNode[] = [
     key: 'home',
     label: 'Inicio',
     icon: 'pi pi-home',
-    routerLink: '/home'
+    routerLink: '/home',
   },
   {
     key: 'users',
@@ -25,50 +24,50 @@ export const MENU_OPTIONS: MenuNode[] = [
         key: 'admins',
         label: 'Administradores',
         icon: 'pi pi-user',
-        routerLink: '/users/admins'
+        routerLink: '/users/admins',
       },
       {
         key: 'sellers',
         label: 'Vendedores',
         icon: 'pi pi-user',
-        routerLink: '/users/sellers'
+        routerLink: '/users/sellers',
       },
       {
         key: 'gerents',
         label: 'Gerentes',
         icon: 'pi pi-user',
-        routerLink: '/users/gerents'
-      }
-    ]
+        routerLink: '/users/gerents',
+      },
+    ],
   },
   {
     key: 'clients',
     label: 'Clientes',
     icon: 'pi pi-user-plus',
-    routerLink: '/clients'
+    routerLink: '/clients',
   },
   {
     key: 'sales',
     label: 'Ventas',
     icon: 'pi pi-shopping-cart',
-    routerLink: '/sales'
+    routerLink: '/sales',
   },
   {
     key: 'services_packages',
     label: 'Paquetes y Servicios',
     icon: 'pi pi-box',
-    routerLink: '/services_packages'
-  },
+    routerLink: '/services_packages',
+  }, 
   {
-    key: 'calendar',
-    label: 'Calendario',
-    icon: 'pi pi-calendar',
-    routerLink: '/calendar'
+    key: 'reports',
+    label: 'Reportes',
+    icon: 'pi pi-chart-line',
+    routerLink: '/reports',
   },
   {
     key: 'branches',
     label: 'Sucursales',
     icon: 'pi pi-building',
-    routerLink: '/branches'
-  }
+    routerLink: '/branches',
+  },
 ];

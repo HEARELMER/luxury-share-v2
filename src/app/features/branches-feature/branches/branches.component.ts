@@ -68,9 +68,7 @@ export class BranchesComponent {
   first = 0;
   rows = 5;
 
-  // Filtros
-  filterName = '';
-  filterStatus = '';
+  filterValue = signal<string>('');
 
   constructor() {
     // Constructor vacío
@@ -90,7 +88,7 @@ export class BranchesComponent {
   loadBranches(): void {
     this.loading.set(true);
 
-    this._branchService.getBranches(this.currentPage, this.rows).subscribe({
+    this._branchService.getBranches(this.currentPage, this.rows,this.filters()).subscribe({
       next: (response) => {
         this.branches.set(response.data.branches);
         this.totalRecords = response.data.total;
@@ -104,15 +102,14 @@ export class BranchesComponent {
   }
 
   setFilter() {
-    if (this.filterName) {
-      this.filters.set([{ key: 'name', value: this.filterName }]);
+    if (this.filterValue()) {
+      this.filters.set([{ key: 'status', value: this.filterValue() }]);
       this.loadBranches();
     }
   }
 
   clearFilters() {
-    this.filterName = '';
-    this.filterStatus = '';
+    this.filterValue.set('');
     this.filters.set([]);
     this.loadBranches();
   }

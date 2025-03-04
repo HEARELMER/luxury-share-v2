@@ -31,6 +31,8 @@
         <app-select
           class="w-full"
           label="Estado"
+          [(value)]="filterValue"
+          (valueChange)="setFilter()"
           [options]="[
             { label: 'Activo', value: 'true' },
             { label: 'Inactivo', value: 'false' },

@@ -5,7 +5,6 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-photo-profile',
-  standalone: true,
   imports: [InputFileComponent, Tooltip, NgClass],
   templateUrl: './photo-profile.component.html',
   styleUrl: './photo-profile.component.scss',
@@ -13,7 +12,7 @@ import { NgClass } from '@angular/common';
 export class PhotoProfileComponent {
   readonly photo = input<string>('');
   loading = signal<boolean>(false);
-  
+
   onFileSelect(event: any) {
     const file = event.target.files[0];
     if (file) {

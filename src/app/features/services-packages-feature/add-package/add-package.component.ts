@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   effect,
   inject,
@@ -32,7 +31,7 @@ import { Tag } from 'primeng/tag';
 import { PickList } from 'primeng/picklist';
 import { PaginatorModule } from 'primeng/paginator';
 import { Filter } from '../../../core/interfaces/api/filters';
-import { Tooltip } from 'primeng/tooltip';
+import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
 @Component({
   selector: 'app-add-package',
   imports: [
@@ -48,7 +47,6 @@ import { Tooltip } from 'primeng/tooltip';
     Tag,
     PickList,
     PaginatorModule,
-    Tooltip,
   ],
   templateUrl: './add-package.component.html',
   styleUrl: './add-package.component.scss',
@@ -57,7 +55,7 @@ export class AddPackageComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _serviceService = inject(ServicesService);
   private readonly _messageService = inject(MessageService);
-  private readonly _cdr = inject(ChangeDetectorRef);
+  private readonly _packagesService = inject(PackagesService);
 
   sourceServices = signal<any[]>([]);
   targetServices = signal<any[]>([]);
@@ -79,7 +77,7 @@ export class AddPackageComponent {
     name: ['', Validators.required],
     description: ['', Validators.required],
     priceUnit: ['', [Validators.required, Validators.min(0)]],
-    registeredBy: ['', Validators.minLength(8)],
+    registeredBy: ['34855749'],
     services: [[]],
     status: [true],
   });
@@ -131,7 +129,6 @@ export class AddPackageComponent {
 
   formatValues() {
     this.packageForm.patchValue({
-      registeredBy: '34855749',
       priceUnit: parseFloat(this.packageForm.value.priceUnit),
     });
   }
@@ -182,8 +179,6 @@ export class AddPackageComponent {
     this.packageForm.patchValue({
       services: selectedServices.map((service) => service.serviceId),
     });
-
-    // Calcular precio total (opcional)
     const totalPrice = selectedServices.reduce(
       (sum, service) => sum + (service.priceUnit || 0),
       0
@@ -193,13 +188,26 @@ export class AddPackageComponent {
     });
   }
 
-  // Modificar el método save para incluir los servicios
   save(data: any) {
     this.isSubmitting.set(true);
-    const payload = {
-      ...data,
-      services: this.targetServices().map((service) => service.serviceId),
-    };
+    this._packagesService.createPackage(data).subscribe({
+      next: (response) => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: response.message,
+        });
+        this.closeModal();
+      },
+      error: (error) => {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'Error al crear el paquete',
+        });
+        this.isSubmitting.set(false);
+      },
+    });
   }
 
   calculateTotalPrice(): number {

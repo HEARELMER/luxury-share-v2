@@ -15,12 +15,7 @@
 
     <!-- Main Content with Scroll -->
     <div class="flex-1 overflow-y-auto p-4">
-      <form
-        [formGroup]="packageForm"
-        (ngSubmit)="onSubmit()"
-        class="flex flex-col h-full"
-      >
-        <!-- Form Fields -->
+      <form [formGroup]="packageForm" class="flex flex-col h-full">
         <div class="grid grid-cols-1 pb-4 md:grid-cols-2 gap-4">
           <app-input-form
             label="Nombre del Paquete"
@@ -29,6 +24,7 @@
             [required]="true"
             placeholder="Ej. Paquete Básico"
           />
+          
           <app-input-form
             label="Descripción"
             type="text"
@@ -50,8 +46,6 @@
                 value: 'false'
               }
             ]"
-         
-
           />
 
           <app-input-form
@@ -68,7 +62,9 @@
           <div class="flex justify-between items-center pb-3">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-medium text-gray-700">Servicios</h3>
-              <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              <span
+                class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
+              >
                 {{ totalRecords }}
               </span>
             </div>
@@ -133,7 +129,7 @@
                 </div>
                 <app-select
                   [options]="filterServiceByType"
-                  [placeholder]="'Filtrar por tipo'" 
+                  [placeholder]="'Filtrar por tipo'"
                   [(value)]="selectedType"
                   (valueChange)="onFilterChange($event)"
                 />
@@ -141,7 +137,6 @@
             </ng-template>
 
             <!-- Target Header -->
-
             <ng-template pTemplate="targetHeader">
               <div class="p-3 border-b">
                 <div class="flex justify-between items-center">
@@ -183,6 +178,7 @@
         <app-button
           type="submit"
           bgColor="bg-primary-500"
+          (click)="onSubmit()"
           moreClasses="py-2 px-6"
           [text]="
             isSubmitting()

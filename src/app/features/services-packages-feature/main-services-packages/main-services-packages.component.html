@@ -56,9 +56,16 @@
   <div class="bg-white rounded-lg border w-full">
     <div class="w-full py-3 flex px-4 justify-between items-center">
       <div class="flex gap-2">
-        <app-button text="Paquetes Turísticos" icon="pi pi-box" bgColor="bg-primary-500"/>
-        <app-button text="Servicios" icon="pi pi-car" bgColor="bg-primary-500" />
-
+        <app-button
+          text="Paquetes Turísticos"
+          icon="pi pi-box"
+          bgColor="bg-primary-500"
+        />
+        <app-button
+          text="Servicios"
+          icon="pi pi-car"
+          bgColor="bg-primary-500"
+        />
         @for (item of filters(); track $index) {
         <div
           class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"

@@ -180,15 +180,29 @@
               >
                 <i class="pi pi-file-edit"></i>
               </button>
-              <!-- <button
-                  class="button-table-actions"
-                  class="button-table-actions"
-                  [pTooltip]="'Ver Usuario'"
-                  tooltipPosition="left"
-                  [showDelay]="300"
-                >
-                  <i class="pi pi-eye"></i>
-                </button> -->
+              @if(currentView()=== 'packages') {
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Añadir Servicios'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-plus"></i>
+              </button>
+
+              }
+              <button
+                class="button-table-actions"
+                [pTooltip]="
+                  currentView() === 'services'
+                    ? 'Ver Servicio'
+                    : 'Ver Paquete Turístico'
+                "
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-eye"></i>
+              </button>
             </div>
 
             } @else {

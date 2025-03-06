@@ -57,14 +57,34 @@
     <div class="w-full py-3 flex px-4 justify-between items-center">
       <div class="flex gap-2">
         <app-button
-          text="Paquetes Turísticos"
-          icon="pi pi-box"
-          bgColor="bg-primary-500"
-        />
-        <app-button
           text="Servicios"
           icon="pi pi-car"
-          bgColor="bg-primary-500"
+          [bgColor]="
+            currentView() === 'services' ? 'bg-white' : 'bg-primary-500'
+          "
+          [textColor]="
+            currentView() === 'services' ? 'text-primary-500' : 'text-white'
+          "
+          (click)="changeView('services')"
+          [moreClasses]="
+            currentView() === 'services' ? 'ring-2  ring-primary-100' : ''
+          "
+        />
+        <app-button
+          text="Paquetes Turísticos"
+          icon="pi pi-box"
+          [bgColor]="
+            currentView() === 'packages'
+              ? 'bg-white text-primary-500'
+              : 'bg-primary-500'
+          "
+          (click)="changeView('packages')"
+          [textColor]="
+            currentView() === 'packages' ? 'text-primary-500' : 'text-white'
+          "
+          [moreClasses]="
+            currentView() === 'packages' ? 'ring-2  ring-primary-100' : ''
+          "
         />
         @for (item of filters(); track $index) {
         <div
@@ -102,9 +122,8 @@
         [options]="filterServiceByStatus"
       />
     </div>
-
     <p-table
-      [columns]="cols"
+      [columns]="currentView() === 'services' ? cols : packageCols"
       [value]="virtualServices()"
       [lazy]="true"
       [scrollable]="true"
@@ -113,7 +132,7 @@
       [loading]="loading"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
-      (onLazyLoad)="loadServices()"
+      (onLazyLoad)="loadData()"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
@@ -151,7 +170,11 @@
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
-                [pTooltip]="'Editar Usuario'"
+                [pTooltip]="
+                  currentView() === 'services'
+                    ? 'Editar Servicio'
+                    : 'Editar Paquete Turístico'
+                "
                 tooltipPosition="left"
                 [showDelay]="300"
               >
@@ -206,7 +229,7 @@
 </main>
 
 <app-export-excel
-  title="Servicios"
+  [title]="currentView() === 'services' ? 'Servicios' : 'Paquetes Turísticos'"
   [(showModal)]="showModal"
   (exportData)="handleExport($event)"
   [total]="totalRecords"

@@ -50,6 +50,7 @@
           icon="pi pi-users"
           [bgColor]="filterRoles === '' ? 'bg-white' : 'bg-primary-500'"
           [textColor]="filterRoles === '' ? 'text-primary-500' : 'text-white'"
+          [moreClasses]="filterRoles === '' ? 'ring-2 ring-primary-100' : ''"
           (click)="setFilterRoles('')"
         />
         <app-button
@@ -59,6 +60,9 @@
           [textColor]="
             filterRoles === 'admins' ? 'text-primary-500' : 'text-white'
           "
+          [moreClasses]="
+            filterRoles === 'admins' ? 'ring-2 ring-primary-100' : ''
+          "
           (click)="setFilterRoles('admins')"
         />
         <app-button
@@ -67,6 +71,9 @@
           [bgColor]="filterRoles === 'sellers' ? 'bg-white' : 'bg-primary-500'"
           [textColor]="
             filterRoles === 'sellers' ? 'text-primary-500' : 'text-white'
+          "
+          [moreClasses]="
+            filterRoles === 'sellers' ? 'ring-2 ring-primary-100' : ''
           "
           (click)="setFilterRoles('sellers')"
         />
@@ -241,5 +248,5 @@
   [(showModal)]="showModalUser"
   [rolePreselected]="selectedRole()"
   (refreshData)="handleRefreshData()"
-   [userToEdit]="selectedRow"
+  [userToEdit]="selectedRow"
 />

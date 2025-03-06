@@ -14,7 +14,7 @@ export interface SelectOption {
   standalone: true,
   imports: [FormsModule],
   templateUrl: './select.component.html',
-  styleUrl: './select.component.css',
+  styleUrl: './select.component.scss',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => SelectComponent),

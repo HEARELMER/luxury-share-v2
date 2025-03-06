@@ -1,178 +1,149 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
-  <!-- Header del modal -->
-  <div class="flex w-full justify-between items-center border-b pb-4">
-    <div class="flex items-center gap-2">
-      <i class="pi pi-shopping-cart text-xl text-primary-500"></i>
-      <h2 class="text-lg font-semibold text-gray-900">
-        {{ true ? "Editar" : "Nueva" }} Venta
-      </h2>
-    </div>
-    <button
-      class="hover:bg-primary-50 hover:rotate-90 text-gray-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
-      (click)="closeModal()"
-    >
-      <i class="pi pi-times"></i>
-    </button>
-  </div>
+  <main class="flex flex-col h-[90vh] w-[90vw] max-w-7xl mx-auto">
+    <!-- Header del modal -->
+    <section class="flex w-full justify-between items-center border-b pb-4">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-shopping-cart text-xl text-primary-500"></i>
+        <h2 class="text-lg font-semibold text-gray-900">
+          {{ true ? "Editar" : "Nueva" }} Venta
+        </h2>
+      </div>
+      <button
+        class="hover:bg-primary-50 hover:rotate-90 text-gray-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
+        (click)="closeModal()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </section>
 
-  <!-- Contenido del modal con scroll -->
-  <div class="overflow-y-auto w-full h-full py-6">
-    <form class="w-full">
-      <p-stepper [value]="1" class="basis-[50rem]">
-        <p-step-list>
-          @for (step of addSaleSteps; track $index) {
-          <p-step [value]="step.value">
-            {{ step.label }}
-          </p-step>
-          }
-        </p-step-list>
-        <p-step-panels>
-          <p-step-panel [value]="1">
-            <ng-template #content let-activateCallback="activateCallback">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="space-y-6">
-                  <div class="bg-gray-50 p-4 rounded-lg">
-                    <h3
-                      class="text-sm font-medium text-gray-900 mb-4 flex items-center gap-2"
-                    >
-                      <i class="pi pi-user text-primary-500"></i>
-                      Datos del Cliente
-                    </h3>
-                    <div class="space-y-4">
+    <!-- Contenido del modal con scroll -->
+    <section class="overflow-y-auto w-full h-full py-6">
+      <form class="w-full">
+        <p-stepper [value]="1" class="basis-[50rem]">
+          <p-step-list>
+            @for (step of addSaleSteps; track $index) {
+            <p-step [value]="step.value">
+              {{ step.label }}
+            </p-step>
+            }
+          </p-step-list>
+          <p-step-panels>
+            <p-step-panel [value]="1">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <!-- Sección del formulario -->
+                  <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <app-select
                         label="Tipo de Documento"
                         [required]="true"
-                        placeholder="Seleccione..."
+                        [options]="[
+                          { label: 'Dni', value: 'dni' },
+                          { label: 'Carnet de Extranjeria', value: 'ce' }
+                        ]"
+                        class="w-full"
                       />
-                      <div class="flex gap-2">
-                        <app-input-form
-                          type="text"
-                          label="N° Documento"
-                          placeholder="Ingrese número"
-                          [required]="true"
-                          [isPositive]="true"
-                        />
-                        <button
-                          class="bg-primary-500 hover:bg-primary-400 text-white ease-in-out duration-300 px-3 rounded-lg mt-6"
-                          pTooltip="Buscar cliente"
-                        >
-                          <i class="pi pi-search"></i>
-                        </button>
-                      </div>
+                      <app-input-form
+                        [required]="true"
+                        label="N° Documento"
+                        [isPositive]="true"
+                        class="w-full"
+                      />
+            
+                      <app-input-form [required]="true" label="Nombres" class="w-full" />
+                      <app-input-form
+                        [required]="true"
+                        label="Primer Apellido"
+                        class="w-full"
+                      />
+                      <app-input-form
+                        [required]="true"
+                        label="Segundo Apellido"
+                        class="w-full"
+                      />
+                      <app-input-form label="Fecha de nacimiento" class="w-full" />
+                      <app-input-form label="Correo Electrónico" class="w-full" />
+                      <app-input-form [required]="true" label="Teléfono" class="w-full" />
+                    </form>
+            
+                    <div class="flex pt-6 justify-end">
+                      <p-button
+                        label="Siguiente"
+                        icon="pi pi-arrow-right"
+                        iconPos="right"
+                        (onClick)="activateCallback(2)"
+                      />
                     </div>
                   </div>
+            
+                  <!-- Sección del comprobante -->
+                  <div
+                    class="bg-gray-100 p-4 rounded-lg shadow-md h-auto flex items-center justify-center text-gray-600 text-sm"
+                  >
+                    <p class="text-center">Vista previa del comprobante (PDF)</p>
+                  </div>
                 </div>
-
-                <!-- Columna 2: Información personal -->
+              </ng-template>
+            </p-step-panel>
+            
+            <p-step-panel [value]="2">
+              <ng-template #content let-activateCallback="activateCallback">
                 <div class="space-y-6">
                   <div class="bg-gray-50 p-4 rounded-lg">
                     <h3
                       class="text-sm font-medium text-gray-900 mb-4 flex items-center gap-2"
                     >
-                      <i class="pi pi-id-card text-primary-500"></i>
-                      Información Personal
+                      <i class="pi pi-shopping-cart text-primary-500"></i>
+                      Resumen de Venta
                     </h3>
-                    <div class="space-y-4">
-                      <app-input-form
-                        label="Nombres"
-                        placeholder="Nombres completos"
-                        [required]="true"
+                    <!-- Placeholder para el resumen -->
+                    <div
+                      class="flex flex-col items-center justify-center py-8 text-center space-y-4"
+                    >
+                      <img
+                        src="./images/car_sale_emppty.webp"
+                        alt="Resumen"
+                        class="w-32 h-32 opacity-50"
                       />
-                      <app-input-form
-                        label="Primer Apellido"
-                        placeholder="Primer apellido"
-                        [required]="true"
-                      />
-                      <app-input-form
-                        label="Segundo Apellido"
-                        placeholder="Segundo apellido"
-                        [required]="true"
-                      />
-                      <app-input-form
-                        label="Correo"
-                        type="email"
-                        placeholder="ejemplo@correo.com"
-                      />
-                      <app-input-form
-                        label="Teléfono"
-                        placeholder="123456789"
-                        [required]="true"
-                        [isPositive]="true"
-                        [maxLength]="9"
-                      />
+                      <p class="text-sm text-gray-500">
+                        El resumen de la venta aparecerá aquí
+                      </p>
                     </div>
                   </div>
                 </div>
-
-                <!-- Columna 3: Resumen de venta -->
-              </div>
-              <div class="flex pt-6 justify-end">
-                <p-button
-                  label="Enviar"
-                  icon="pi pi-envelope"
-                  iconPos="right"
-                  (onClick)="activateCallback(2)"
-                />
-              </div>
-            </ng-template>
-          </p-step-panel>
-          <p-step-panel [value]="2">
-            <ng-template #content let-activateCallback="activateCallback">
-              <div class="space-y-6">
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <h3
-                    class="text-sm font-medium text-gray-900 mb-4 flex items-center gap-2"
-                  >
-                    <i class="pi pi-shopping-cart text-primary-500"></i>
-                    Resumen de Venta
-                  </h3>
-                  <!-- Placeholder para el resumen -->
-                  <div
-                    class="flex flex-col items-center justify-center py-8 text-center space-y-4"
-                  >
-                    <img
-                      src="./images/car_sale_emppty.webp"
-                      alt="Resumen"
-                      class="w-32 h-32 opacity-50"
-                    />
-                    <p class="text-sm text-gray-500">
-                      El resumen de la venta aparecerá aquí
-                    </p>
-                  </div>
+                <div class="flex justify-between items-center pt-4">
+                  <p-button
+                    label="Regresar"
+                    icon="pi pi-arrow-left"
+                    iconPos="right"
+                    (onClick)="activateCallback(1)"
+                  />
+                  <p-button
+                    icon="pi pi-check-circle"
+                    label="Verificar"
+                    iconPos="right"
+                    (onClick)="activateCallback(3)"
+                  />
                 </div>
-              </div>
-              <div class="flex justify-between items-center pt-4">
-                <p-button
-                  label="Regresar"
-                  icon="pi pi-arrow-left"
-                  iconPos="right"
-                  (onClick)="activateCallback(1)"
-                />
-                <p-button
-                  icon="pi pi-check-circle"
-                  label="Verificar"
-                  iconPos="right"
-                  (onClick)="activateCallback(3)"
-                />
-              </div>
-            </ng-template>
-          </p-step-panel>
-          <p-step-panel [value]="3">
-            <ng-template #content let-activateCallback="activateCallback">
-              <div class="flex pt-6 justify-end">
-                <p-button
-                  label="Guardar"
-                  icon="pi pi-lock"
-                  iconPos="right"
-                  (onClick)="activateCallback(2)"
-                />
-              </div>
-            </ng-template>
-          </p-step-panel>
-        </p-step-panels>
-      </p-stepper>
-    </form>
-  </div>
+              </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="3">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex pt-6 justify-end">
+                  <p-button
+                    label="Guardar"
+                    icon="pi pi-lock"
+                    iconPos="right"
+                    (onClick)="activateCallback(2)"
+                  />
+                </div>
+              </ng-template>
+            </p-step-panel>
+          </p-step-panels>
+        </p-stepper>
+      </form>
+    </section>
+  </main>
 </app-modal>
 
 <p-toast [life]="2000" />

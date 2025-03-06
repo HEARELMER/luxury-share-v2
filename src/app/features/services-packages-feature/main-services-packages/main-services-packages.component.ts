@@ -28,7 +28,6 @@ import {
   SERVICE_TABLE_COLS,
   PACKAGE_TABLE_COLS,
 } from '../constants/table-services.constant';
-import { ServicesComponent } from "../services/services.component";
 @Component({
   selector: 'app-main-services-packages',
   imports: [
@@ -50,8 +49,7 @@ import { ServicesComponent } from "../services/services.component";
     AddServiceComponent,
     AddPackageComponent,
     Toast,
-    ServicesComponent
-],
+  ],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
 })

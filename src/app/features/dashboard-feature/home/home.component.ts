@@ -48,16 +48,7 @@ export class HomeComponent {
   totalUsers = 0;
   salesData = [];
   totalSales = 0;
-  COLORS = [
-    '#FABE7A',
-    '#F6866A',
-    '#59E6F6',
-    '#7661E2',
-    '#FABE7A',
-    '#F6866A',
-    '#59E6F6',
-    '#7661E2',
-  ];
+   
   topServices: any[] = [];
   topPackages: any[] = [];
   totalSalesByBranch: any[] = [];
@@ -142,7 +133,7 @@ export class HomeComponent {
       bg:'bg-blue-400',
       buttonBg:'bg-blue-500',
       routerLink:'branches'
-    },
+    }, 
     {
       id: 'packages',
       title: 'Total de Paquetes',
@@ -150,6 +141,7 @@ export class HomeComponent {
       color: 'text-orange-700',
       bg: 'bg-red-400',
       routerLink: 'services_packages',
+      buttonBg: 'bg-red-500',
     },
   ]);
 }

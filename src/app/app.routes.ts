@@ -8,6 +8,7 @@ import { MainServicesPackagesComponent } from './features/services-packages-feat
 import { UserProfileComponent } from './features/users-feature/user-profile/user-profile.component';
 import { BranchesComponent } from './features/branches-feature/branches/branches.component';
 import { SalesComponent } from './features/sales-feature/sales/sales.component';
+import { ClientsComponent } from './features/clients-feature/clients/clients.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'services_packages', component: MainServicesPackagesComponent },
       { path: 'branches', component: BranchesComponent },
       { path: 'sales', component: SalesComponent },
+      { path: 'clients', component: ClientsComponent },
     ],
   },
 ];

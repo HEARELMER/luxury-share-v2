@@ -5,7 +5,7 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { PhotoProfileComponent } from '../../../shared/components/layout/photo-profile/photo-profile.component';
 import { TabsModule } from 'primeng/tabs';
 import { USER_PROFILE_CONFIG } from '../constants/user.profile-config.constant';
-import { PasswordRecoveryComponent } from "../../../password-recovery/password-recovery.component";
+import { PasswordRecoveryComponent } from '../../auth-feature/password-recovery/password-recovery.component';
 @Component({
   selector: 'app-user-profile',
   imports: [
@@ -13,8 +13,8 @@ import { PasswordRecoveryComponent } from "../../../password-recovery/password-r
     InputFormComponent,
     PhotoProfileComponent,
     TabsModule,
-    PasswordRecoveryComponent
-],
+    PasswordRecoveryComponent,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })

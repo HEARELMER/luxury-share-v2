@@ -16,10 +16,9 @@ import { ExportExcelComponent } from '../../../shared/components/layout/export-e
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { TagModule } from 'primeng/tag';
 import { USER_TABLE_COLS } from '../../users-feature/constants/table-users.constant';
-import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
-import { AddSaleComponent } from '../add-sale/add-sale.component';
+import { FormSaleComponent } from '../form-sale/form-sale.component';
 @Component({
-  selector: 'app-users',
+  selector: 'app-sales',
   imports: [
     TieredMenuModule,
     CommonModule,
@@ -36,8 +35,7 @@ import { AddSaleComponent } from '../add-sale/add-sale.component';
     ExportExcelComponent,
     InputFormComponent,
     TagModule,
-    AddUserComponent,
-    AddSaleComponent,
+    FormSaleComponent,
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -135,13 +133,6 @@ export class SalesComponent {
         console.error('Error en la exportación:', error);
       },
     });
-  }
-
-  editUser(user: any) {
-    this.selectedRole.set(user.role.roleName);
-    this.showModalUser.set(true);
-    this.selectedRow = user;
-    console.log(this.selectedRow);
   }
 
   openModalUser(role: string = '') {

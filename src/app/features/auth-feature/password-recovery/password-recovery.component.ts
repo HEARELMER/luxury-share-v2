@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
-import { InputFormComponent } from '../shared/components/forms/input-form/input-form.component';
-import { ButtonComponent } from '../shared/components/ui/button/button.component';
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 
 import { InputOtpModule } from 'primeng/inputotp';
-import { PasswordComponent } from '../shared/components/forms/password/password.component';
+import { PasswordComponent } from '../../../shared/components/forms/password/password.component';
 @Component({
   selector: 'app-password-recovery',
   imports: [

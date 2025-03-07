@@ -3,31 +3,52 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { FormBuilder } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Toast } from 'primeng/toast';
 import { StepperModule } from 'primeng/stepper';
 import { ADD_SALES_STEPS } from '../constants/add-sales.constant';
-import { CommonModule } from '@angular/common';
 import { Button } from 'primeng/button';
+import { DatePipe, JsonPipe } from '@angular/common';
+import { Tag } from 'primeng/tag';
 @Component({
   selector: 'app-add-sale',
   imports: [
-    InputFormComponent ,
+    InputFormComponent,
     ModalComponent,
     SelectComponent,
     ButtonComponent,
     Toast,
-    StepperModule, 
-    Button
+    StepperModule,
+    Button,
+    FormsModule,
+    ReactiveFormsModule,
+    Tag,
+    DatePipe,
   ],
-  templateUrl: './add-sale.component.html',
-  styleUrl: './add-sale.component.scss',
+  templateUrl: './form-sale.component.html',
+  styleUrl: './form-sale.component.scss',
 })
-export class AddSaleComponent {
+export class FormSaleComponent {
   private readonly _fb = inject(FormBuilder);
   addSaleSteps = ADD_SALES_STEPS;
-
   showModal = model<boolean>(false);
+  today = new Date();
+  // forms
+  clientForm = this._fb.group({
+    documentType: ['', [Validators.required]],
+    documentNumber: ['', [Validators.minLength(8), Validators.maxLength(20)]],
+    name: ['', [Validators.required]],
+    firstLastname: ['', [Validators.required]],
+    secondLastname: ['', [Validators.required]],
+    email: ['', [Validators.email]],
+    cellphone: ['', [Validators.required, Validators.minLength(9)]],
+    birthDate: [''],
+  });
 
   closeModal() {
     this.showModal.set(false);

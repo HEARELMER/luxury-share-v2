@@ -6,10 +6,9 @@
   [(ngModel)]="selectedDates"
   (onSelect)="onRangeSelect($event)"
   [dateFormat]="'es'"
-
 >
   <ng-template pTemplate="header">
-    <div class="py-2 border-b bg-gray-50">
+    <div class="py-2 border-b">
       <h3 class="text-base font-medium text-gray-900">
         Seleccionar rango de fechas
       </h3>
@@ -40,7 +39,7 @@
     </div>
   </ng-template>
   <ng-template pTemplate="footer">
-    <div class="p-3 flex justify-between items-center border-t bg-gray-50">
+    <div class="p-3 flex justify-between items-center border-t">
       <button
         type="button"
         class="text-xs text-gray-600 hover:text-gray-900 px-2 py-1 cursor-pointer duration-300 rounded ease-in-out hover:bg-gray-100"
@@ -51,7 +50,7 @@
       </button>
       <button
         type="button"
-        class="px-3 py-1.5 text-xs font-medium text-white bg-primary-500 cursor-pointer duration-300 ease-in-out hover:bg-primary-600 rounded-lg transition-colors flex items-center gap-1"
+        class="px-3 py-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-400 cursor-pointer duration-300 ease-in-out rounded-lg transition-colors flex items-center gap-1"
         [disabled]="!isValidRange()"
         (click)="applySelection()"
       >

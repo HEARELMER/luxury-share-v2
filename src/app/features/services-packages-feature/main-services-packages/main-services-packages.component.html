@@ -139,7 +139,7 @@
       selectionMode="single"
       [(selection)]="selectedService"
       [metaKeySelection]="true"
-      dataKey="serviceId"
+      [dataKey]="currentView() === 'services' ? 'serviceId' : 'packageId'"
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -154,18 +154,18 @@
           }
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-service let-columns="columns">
-        <tr [pSelectableRow]="service">
+      <ng-template pTemplate="body" let-item let-columns="columns">
+        <tr [pSelectableRow]="item">
           @for (col of columns; track $index) {
           <td>
-            @if (col.field == "status") { @if (service[col.field] === true ) {
+            @if (col.field == "status") { @if (item[col.field] === true ) {
             <p-tag severity="success" value="Activo"></p-tag>
-            } @else if (service[col.field] === false) {
+            } @else if (item[col.field] === false) {
             <p-tag severity="info" value="Inactivo"></p-tag>
             } } @else if (col.field == "createdAt") {
-            {{ service[col.field] | date : "dd/MM/yyyy hh:mm a" }}
+            {{ item[col.field] | date : "dd/MM/yyyy hh:mm a" }}
             } @else if (col.field == "updatedAt") {
-            {{ service[col.field] | date : "dd/MM/yyyy hh:mm a" }}
+            {{ item[col.field] | date : "dd/MM/yyyy hh:mm a" }}
             } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
@@ -177,20 +177,15 @@
                 "
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="
+                  currentView() === 'services'
+                    ? editService(item)
+                    : editPackage(item)
+                "
               >
                 <i class="pi pi-file-edit"></i>
               </button>
-              @if(currentView()=== 'packages') {
-              <button 
-                class="button-table-actions"
-                [pTooltip]="'Añadir Servicios'"
-                tooltipPosition="left"
-                [showDelay]="300"
-              >
-                <i class="pi pi-plus"></i>
-              </button>
 
-              }
               <button
                 class="button-table-actions"
                 [pTooltip]="
@@ -200,13 +195,18 @@
                 "
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="
+                  currentView() === 'services'
+                    ? viewServicesDetails(item)
+                    : viewPackageDetails(item)
+                "
               >
                 <i class="pi pi-eye"></i>
               </button>
             </div>
 
             } @else {
-            {{ service[col.field] }}
+            {{ item[col.field] }}
 
             }
           </td>
@@ -250,6 +250,9 @@
 />
 
 <app-add-service [(showModal)]="showModalService" />
-<app-add-package [(showModal)]="showModalPackage" />
+<app-add-package
+  [(showModal)]="showModalPackage"
+  [packageDataToEdit]="selectedRow()"
+/>
 
 <p-toast [life]="2000" />

@@ -1,7 +1,7 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
-  <div class="flex flex-col h-[90vh] w-[90vw] max-w-7xl mx-auto">
+  <div class="flex flex-col h-[90vh] w-[90vw] max-w-7xl mx-auto bg-white">
     <!-- Header -->
-    <div class="flex w-full justify-between items-center pt-0 p-4 border-b">
+    <div class="flex w-full justify-between items-center p-4 border-b shrink-0">
       <h2 class="text-lg font-semibold text-primary-500">
         {{ isEditing() ? "Editar" : "Agregar" }} Paquete
       </h2>
@@ -13,10 +13,11 @@
       </button>
     </div>
 
-    <!-- Main Content with Scroll -->
-    <div class="flex-1 overflow-y-auto p-4">
-      <form [formGroup]="packageForm" class="flex flex-col h-full">
-        <div class="grid grid-cols-1 pb-4 md:grid-cols-2 gap-4">
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto min-h-0">
+      <form [formGroup]="packageForm" class="flex flex-col h-full p-4">
+        <!-- Form Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <app-input-form
             label="Nombre del Paquete"
             type="text"
@@ -24,7 +25,7 @@
             [required]="true"
             placeholder="Ej. Paquete Básico"
           />
-          
+
           <app-input-form
             label="Descripción"
             type="text"
@@ -37,14 +38,8 @@
             label="Estado"
             formControlName="status"
             [options]="[
-              {
-                label: 'Activo',
-                value: 'true'
-              },
-              {
-                label: 'Inactivo',
-                value: 'false'
-              }
+              { label: 'Activo', value: 'true' },
+              { label: 'Inactivo', value: 'false' }
             ]"
           />
 
@@ -57,9 +52,29 @@
           />
         </div>
 
+        <!--section tabla servcios asocidos -->
+        <div class="pt-4 flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2 py-2">
+              <h3 class="font-semibold">
+                Servicios actuales en el Paquete(Guardados)
+              </h3>
+              <i class="pi pi-box text-primary-500"></i>
+            </div>
+            <app-button
+              text="Añadir Servicios"
+              icon="pi pi-plus"
+              bgColor="bg-primary-500"
+              moreClasses="py-2"
+              (click)="addService.set(!addService())"
+            />
+          </div>
+          <app-view-services-to-package [dataTable]="packageDataToEdit()" />
+        </div>
+        @if (addService() && isEditing()) {
         <!-- Services Section -->
-        <div class="flex-1 mt-4">
-          <div class="flex justify-between items-center pb-3">
+        <div class="flex-1 flex flex-col pt-4 min-h-96">
+          <div class="flex justify-between items-center mb-3">
             <div class="flex items-center gap-2">
               <h3 class="text-base font-medium text-gray-700">Servicios</h3>
               <span
@@ -76,15 +91,16 @@
             [target]="targetServices()"
             [dragdrop]="true"
             [responsive]="true"
-            [sourceStyle]="{ height: '24rem' }"
-            [targetStyle]="{ height: '24rem' }"
+            [sourceStyle]="{ height: '100%' }"
+            [targetStyle]="{ height: '100%' }"
             sourceHeader="Todos los Servicios"
             targetHeader="Servicios en Paquete"
             [showSourceControls]="false"
             [showTargetControls]="false"
             (onMoveToTarget)="updateSelectedServices()"
             (onMoveToSource)="updateSelectedServices()"
-            styleClass="w-full"
+            styleClass="w-full h-full"
+            class="flex-1 flex"
           >
             <!-- Item Template -->
             <ng-template let-service pTemplate="item">
@@ -103,12 +119,12 @@
                       class="text-xs"
                     ></p-tag>
                   </div>
-                  <span class="text-sm text-gray-500 line-clamp-2">{{
-                    service.description
-                  }}</span>
+                  <span class="text-sm text-gray-500 line-clamp-2">
+                    {{ service.description }}
+                  </span>
                 </div>
                 <div class="flex flex-col items-end gap-2">
-                  <span class="font-bold text-primary-500 text-SM">
+                  <span class="font-bold text-primary-500 text-sm">
                     {{ service.priceUnit | currency : "S/." }}
                   </span>
                   <span class="text-xs text-gray-400">
@@ -118,6 +134,7 @@
               </div>
             </ng-template>
 
+            <!-- Source Header -->
             <ng-template pTemplate="sourceHeader">
               <div class="p-3 border-b">
                 <div class="flex items-center justify-between pb-2">
@@ -152,7 +169,7 @@
           </p-pickList>
 
           <!-- Paginator -->
-          <div class="mt-4 w-full justify-start flex">
+          <div class="mt-4">
             <p-paginator
               [rows]="pageSize"
               [totalRecords]="totalRecords"
@@ -162,11 +179,12 @@
             ></p-paginator>
           </div>
         </div>
+        }
       </form>
     </div>
 
     <!-- Footer Actions -->
-    <div class="p-4 border-t mt-auto">
+    <div class="p-4 border-t shrink-0 bg-white">
       <div class="flex justify-end gap-x-4">
         <button
           type="button"
@@ -186,7 +204,7 @@
                 ? 'Actualizando...'
                 : 'Guardando...'
               : isEditing()
-              ? 'Actualizar'
+              ? 'Guardar Cambios'
               : 'Guardar'
           "
           [icon]="isSubmitting() ? 'pi pi-spin pi-spinner' : ''"

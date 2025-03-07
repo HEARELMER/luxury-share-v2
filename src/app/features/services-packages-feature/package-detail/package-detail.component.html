@@ -1,0 +1,117 @@
+<main class="w-full min-h-96 h-full p-4">
+  <!-- Header con diseño minimalista -->
+  <div class="pb-4 flex justify-between items-start">
+    <div class="space-y-1">
+      <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+        <i class="pi pi-box text-primary-500"></i>
+        {{ packageData()?.name }}
+      </h2>
+      <p class="text-gray-500 text-sm flex items-center gap-1">
+        <i class="pi pi-info-circle text-gray-400"></i>
+        {{ packageData()?.description }}
+      </p>
+    </div>
+    <div class="flex flex-col items-end gap-2">
+      <p-tag
+        [severity]="packageData()?.status ? 'success' : 'danger'"
+        [value]="packageData()?.status ? 'Activo' : 'Inactivo'"
+        [rounded]="true"
+        class="text-sm"
+      >
+      </p-tag>
+      <div class="flex items-center gap-1">
+        <i class="pi pi-money-bill text-gray-400"></i>
+        <span class="text-xl font-medium text-primary-700">
+          S/. {{ packageData()?.priceUnit.toFixed(2) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalles del paquete -->
+  <div class="mt-6">
+    <div class="overflow-hidden rounded-lg border border-gray-100">
+      <table class="min-w-full divide-y divide-gray-100">
+        <thead class="bg-gray-50/50">
+          <tr>
+            <th colspan="2" class="px-6 py-3">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-info-circle text-primary-500"></i>
+                <h3 class="text-sm font-medium text-gray-700">
+                  Información del Paquete
+                </h3>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <!-- Detalles generales -->
+          <tr>
+            <td class="px-6 py-3 w-1/2">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="pi pi-id-card text-gray-400"></i>
+                <span class="text-sm">ID Paquete</span>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-sm font-medium text-gray-900">
+              {{ packageData()?.packageId | slice : 0 : 8 }}...
+            </td>
+          </tr>
+          <tr>
+            <td class="px-6 py-3">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="pi pi-user text-gray-400"></i>
+                <span class="text-sm">Registrado por</span>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-sm font-medium text-gray-900">
+              {{ packageData()?.registeredBy }}
+            </td>
+          </tr>
+          <!-- Fechas -->
+          <tr>
+            <td class="px-6 py-3">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="pi pi-clock text-gray-400"></i>
+                <span class="text-sm">Fecha de creación</span>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-sm font-medium text-gray-900">
+              {{ packageData()?.createdAt | date : "dd MMM yyyy, HH:mm" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="px-6 py-3">
+              <div class="flex items-center gap-2 text-gray-500">
+                <i class="pi pi-sync text-gray-400"></i>
+                <span class="text-sm">Última actualización</span>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-sm font-medium text-gray-900">
+              {{ packageData()?.updatedAt | date : "dd MMM yyyy, HH:mm" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Servicios incluidos -->
+  <div class="my-6 py-4">
+    <div class="flex items-center justify-between pb-4">
+      <h3 class="text-sm font-medium text-gray-600 flex items-center gap-2">
+        <i class="pi pi-list text-primary-500"></i>
+        Servicios Incluidos
+      </h3>
+      <span
+        class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+      >
+        <i class="pi pi-check-circle"></i>
+        {{ packageData()?.services.length }} servicios
+      </span>
+    </div>
+    <app-view-services-to-package
+      [dataTable]="packageData()"
+    ></app-view-services-to-package>
+  </div>
+</main>

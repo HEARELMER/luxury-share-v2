@@ -32,6 +32,7 @@ import { PickList } from 'primeng/picklist';
 import { PaginatorModule } from 'primeng/paginator';
 import { Filter } from '../../../core/interfaces/api/filters';
 import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
+import { ViewServicesToPackageComponent } from '../templates/view-services-to-package/view-services-to-package.component';
 @Component({
   selector: 'app-add-package',
   imports: [
@@ -47,6 +48,7 @@ import { PackagesService } from '../../../core/services/services_packages-servic
     Tag,
     PickList,
     PaginatorModule,
+    ViewServicesToPackageComponent,
   ],
   templateUrl: './add-package.component.html',
   styleUrl: './add-package.component.scss',
@@ -69,10 +71,11 @@ export class AddPackageComponent {
   showModal = model<boolean>(false);
   refreshData = output<void>();
   isEditing = signal<boolean>(false);
-  serviceToEdit = input<any>(null);
   serviceTypeOptions = SERVICE_TYPES;
   isSubmitting = signal<boolean>(false);
+  packageDataToEdit = input<any>({});
 
+  addService = signal<boolean>(false);
   packageForm: FormGroup = this._fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
@@ -84,7 +87,11 @@ export class AddPackageComponent {
 
   constructor() {
     effect(() => {
-      if (this.showModal()) {
+      if (this.showModal() && !this.packageDataToEdit()) {
+        this.loadServices();
+      } else if (this.showModal() && this.packageDataToEdit()) {
+        this.isEditing.set(true);
+        this.packageForm.patchValue(this.packageDataToEdit());
         this.loadServices();
       }
     });
@@ -145,7 +152,6 @@ export class AddPackageComponent {
 
   update(data: any) {
     this.isSubmitting.set(true);
-    data.serviceId = this.serviceToEdit()?.serviceId;
     this._serviceService.updateService(data).subscribe({
       next: () => {
         this._messageService.add({
@@ -203,7 +209,7 @@ export class AddPackageComponent {
         this._messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: error.message || 'Error al crear el paquete',
+          detail: error.message.message || 'Error al crear el paquete',
         });
         this.isSubmitting.set(false);
       },

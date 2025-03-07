@@ -28,6 +28,9 @@ import {
   SERVICE_TABLE_COLS,
   PACKAGE_TABLE_COLS,
 } from '../constants/table-services.constant';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PackageDetailComponent } from '../package-detail/package-detail.component';
+import { ServiceDetailComponent } from '../service-detail/service-detail.component';
 @Component({
   selector: 'app-main-services-packages',
   imports: [
@@ -50,6 +53,7 @@ import {
     AddPackageComponent,
     Toast,
   ],
+  providers: [DialogService],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
 })
@@ -57,6 +61,8 @@ export class MainServicesPackagesComponent {
   private readonly _servicesService = inject(ServicesService);
   private readonly _messagesService = inject(MessageService);
   private readonly _packagesService = inject(PackagesService);
+  public readonly dialogService = inject(DialogService);
+  ref: DynamicDialogRef | undefined;
 
   @ViewChild('op') op!: Popover;
 
@@ -76,7 +82,7 @@ export class MainServicesPackagesComponent {
   showModal = signal<boolean>(false);
   showModalService = signal<boolean>(false);
   showModalPackage = signal<boolean>(false);
-  currentView = signal<'services' | 'packages'>('services');
+  currentView = signal<'services' | 'packages'>('packages');
   // Filtros
   filters = signal<{ key: string; value: string }[]>([]);
   filterName = '';
@@ -87,6 +93,7 @@ export class MainServicesPackagesComponent {
   filterServiceByType = SERVICE_FILTER_BY_TYPE;
   filterServiceByPrice = SERVICE_FILTER_BY_PRICE;
   filterServiceByStatus = SERVICE_FILTER_BY_STATUS;
+  selectedRow = signal<any>(null);
 
   ngOnInit() {
     this.loadData();
@@ -203,20 +210,62 @@ export class MainServicesPackagesComponent {
   }
 
   editService(service: any) {
-    this.selectedService.set(service);
+    this.selectedRow.set(service);
     this.showModalService.set(true);
   }
 
+  editPackage(packageData: any) {
+    this.selectedRow.set(packageData);
+    this.showModalPackage.set(true);
+  }
+
   openModalService() {
-    this.selectedService.set(null);
+    this.selectedRow.set(null);
     this.showModalService.set(true);
   }
 
   openmodalPackage() {
+    this.selectedRow.set(null);
     this.showModalPackage.set(true);
   }
 
   handleRefreshData() {
     this.loadData();
+  }
+
+  viewPackageDetails(packageData: any) {
+    this.ref = this.dialogService.open(PackageDetailComponent, {
+      data: packageData,
+      header: 'Detalles del paquete ',
+      width: '50vw',
+      height: 'auto',
+      modal: true,
+      closable: true,
+      resizable: true,
+      maximizable: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
+
+  viewServicesDetails(serviceData: any) {
+    this.ref = this.dialogService.open(ServiceDetailComponent, {
+      data: serviceData,
+      header: 'Detalles del servicio',
+      width: '50vw',
+      height: 'auto',
+      modal: true,
+      closable: true,
+      resizable: true,
+      maximizable: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
   }
 }

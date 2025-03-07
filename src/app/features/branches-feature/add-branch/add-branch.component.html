@@ -55,11 +55,9 @@
         moreClasses="py-2 px-6"
         [text]="
           isSubmitting()
-            ? isEditing()
-              ? 'Actualizando...'
-              : 'Guardando...'
+            ? 'Guardando...'
             : isEditing()
-            ? 'Actualizar'
+            ? 'Guardar Cambios'
             : 'Guardar'
         "
         [icon]="isSubmitting() ? 'pi pi-spin pi-spinner' : ''"

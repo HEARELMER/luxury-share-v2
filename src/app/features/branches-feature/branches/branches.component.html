@@ -55,23 +55,12 @@
         }
       </div>
       <div class="gap-2 flex">
-        <app-button
+        <!-- <app-button
           text="Descargar Excel"
           icon="pi pi-file-excel"
           bgColor="bg-green-500"
           (click)="exportData()"
-        />
-
-        <p-popover #op>
-          <div class="flex flex-col gap-4">
-            <div>
-              <span class="font-medium block mb-2">Team Members</span>
-              <ul class="list-none p-0 m-0 flex flex-col">
-                <h1>hola</h1>
-              </ul>
-            </div>
-          </div>
-        </p-popover>
+        /> -->
       </div>
     </div>
 
@@ -90,9 +79,6 @@
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
-      [(selection)]="selectedBranch"
-      [metaKeySelection]="true"
-      dataKey="sucursalId"
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -107,33 +93,27 @@
           }
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-user let-columns="columns">
-        <tr [pSelectableRow]="user">
+      <ng-template pTemplate="body" let-branch let-columns="columns">
+        <tr [pSelectableRow]="branch">
           @for (col of columns; track $index) {
           <td>
             @if (col.field=="photoUrl") {
             <img
-              [src]="user[col.field]"
-              alt="user"
+              [src]="branch[col.field]"
+              alt="branch"
               class="w-8 h-8 rounded-full cursor-pointer"
               loading="lazy"
             />
-            } @else if (col.field == "role") { @if (user[col.field].roleName ===
-            'ADMIN') {
-            <p-tag severity="warn" value="Administrador"></p-tag>
-            } @else if (user[col.field].roleName === 'SELLER') {
-            <p-tag severity="info" value="Vendedor"></p-tag>
-            } @else if (user[col.field].roleName === 'GERENT') {
-            <p-tag severity="success" value="Gerente"></p-tag>
-            } } @else if (col.field=="actions") {
+            } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
-                [pTooltip]="'Editar Usuario'"
+                [pTooltip]="'Editar Sucursal'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="editBranch(branch)"
               >
-                <i class="pi pi-user-edit"></i>
+                <i class="pi pi-file-edit"></i>
               </button>
               <!-- <button
                 class="button-table-actions"
@@ -147,7 +127,7 @@
             </div>
 
             } @else {
-            {{ user[col.field] }}
+            {{ branch[col.field] }}
 
             }
           </td>
@@ -182,15 +162,16 @@
     </div>
   </div>
 </main>
-
+<!-- 
 <app-export-excel
   title="Sucursales"
   [(showModal)]="showModal"
   (exportData)="handleExport($event)"
   [total]="totalRecords"
-/>
+/> -->
 
 <app-add-branch
   [(showModal)]="showBranchModal"
   (refreshData)="handleRefreshData()"
+  [branchToEdit]="selectedBranch()"
 />

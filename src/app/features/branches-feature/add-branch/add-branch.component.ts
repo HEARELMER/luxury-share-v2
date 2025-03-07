@@ -36,7 +36,7 @@ export class AddBranchComponent {
   showModal = model<boolean>(false);
   refreshData = output<void>();
   isEditing = signal<boolean>(false);
-  serviceToEdit = input<any>(null);
+  branchToEdit = input<any>(null);
   isSubmitting = signal<boolean>(false);
 
   branchForm: FormGroup = this._fb.group({
@@ -48,9 +48,9 @@ export class AddBranchComponent {
 
   constructor() {
     effect(() => {
-      if (this.showModal() && this.serviceToEdit()) {
+      if (this.showModal() && this.branchToEdit()) {
         this.isEditing.set(true);
-        this.branchForm.patchValue(this.serviceToEdit());
+        this.branchForm.patchValue(this.branchToEdit());
       } else {
         this.isEditing.set(false);
         this.branchForm.reset();

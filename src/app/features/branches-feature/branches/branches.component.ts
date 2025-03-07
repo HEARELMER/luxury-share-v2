@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
@@ -7,22 +7,17 @@ import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormsModule } from '@angular/forms';
-import { USER_TABLE_COLS } from '../../users-feature/constants/table-users.constant';
-import { UserService } from '../../../core/services/users-services/user.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { User } from '../../../shared/interfaces/user';
-import { Popover } from 'primeng/popover';
 import { PopoverModule } from 'primeng/popover';
-import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { TagModule } from 'primeng/tag';
-import { AddUserComponent } from '../../users-feature/add-user/add-user.component';
 import { BranchService } from '../../../core/services/braches-services/branch.service';
 import { BRANCH_TABLE_COLS } from '../constants/table-branches.constant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { AddBranchComponent } from '../add-branch/add-branch.component';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Branch } from '../interfaces/branch.interface';
 @Component({
   selector: 'app-users',
   imports: [
@@ -38,7 +33,6 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     ButtonComponent,
     PopoverModule,
-    ExportExcelComponent,
     InputFormComponent,
     TagModule,
     SelectComponent,
@@ -70,10 +64,6 @@ export class BranchesComponent {
 
   filterValue = signal<string>('');
 
-  constructor() {
-    // Constructor vacío
-  }
-
   ngOnInit() {
     this.loadBranches();
   }
@@ -88,17 +78,18 @@ export class BranchesComponent {
   loadBranches(): void {
     this.loading.set(true);
 
-    this._branchService.getBranches(this.currentPage, this.rows,this.filters()).subscribe({
-      next: (response) => {
-        this.branches.set(response.data.branches);
-        this.totalRecords = response.data.total;
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error cargando sucursales:', error);
-        this.loading.set(false);
-      },
-    });
+    this._branchService
+      .getBranches(this.currentPage, this.rows, this.filters())
+      .subscribe({
+        next: (response) => {
+          this.branches.set(response.data.branches);
+          this.totalRecords = response.data.total;
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.loading.set(false);
+        },
+      });
   }
 
   setFilter() {
@@ -118,26 +109,6 @@ export class BranchesComponent {
     this.showModal.set(true);
   }
 
-  handleExport(quantity: number) {
-    this._branchService.exportToExcel(1, quantity).subscribe({
-      next: () => {
-        this._messageService.add({
-          severity: 'success',
-          summary: '¡Éxito!',
-          detail: '¡Sucursales exportadas con éxito!',
-        });
-        this.showModal.set(false);
-      },
-      error: () => {
-        this._messageService.add({
-          severity: 'error',
-          summary: '¡Error!',
-          detail: 'Error al exportar sucursales',
-        });
-      },
-    });
-  }
-
   editBranch(branch: Branch) {
     this.selectedBranch.set(branch);
     this.showBranchModal.set(true);
@@ -153,12 +124,4 @@ export class BranchesComponent {
   }
 
   toggle(event: any) {}
-}
-interface Branch {
-  sucursalId: string;
-  name: string;
-  address: string;
-  status: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }

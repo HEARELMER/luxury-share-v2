@@ -82,7 +82,7 @@ export class MainServicesPackagesComponent {
   showModal = signal<boolean>(false);
   showModalService = signal<boolean>(false);
   showModalPackage = signal<boolean>(false);
-  currentView = signal<'services' | 'packages'>('packages');
+  currentView = signal<'services' | 'packages'>('services');
   // Filtros
   filters = signal<{ key: string; value: string }[]>([]);
   filterName = '';

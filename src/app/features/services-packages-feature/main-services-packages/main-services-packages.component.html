@@ -249,7 +249,7 @@
   [total]="totalRecords"
 />
 
-<app-add-service [(showModal)]="showModalService" />
+<app-add-service [serviceToEdit]="selectedRow()" [(showModal)]="showModalService" />
 <app-add-package
   [(showModal)]="showModalPackage"
   [packageDataToEdit]="selectedRow()"

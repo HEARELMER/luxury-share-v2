@@ -97,14 +97,17 @@
         <tr [pSelectableRow]="branch">
           @for (col of columns; track $index) {
           <td>
-            @if (col.field=="photoUrl") {
-            <img
-              [src]="branch[col.field]"
-              alt="branch"
-              class="w-8 h-8 rounded-full cursor-pointer"
-              loading="lazy"
-            />
-            } @else if (col.field=="actions") {
+            @if (col.field == "status") { @if (branch[col.field] === true ) {
+            <p-tag severity="success" value="Activo"></p-tag>
+            } @else if (branch[col.field] === false) {
+            <p-tag severity="info" value="Inactivo"></p-tag>
+            } } 
+            @else if (col.field == "createdAt") {
+              {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+              } @else if (col.field == "updatedAt") {
+              {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+              }
+            @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
                 class="button-table-actions"

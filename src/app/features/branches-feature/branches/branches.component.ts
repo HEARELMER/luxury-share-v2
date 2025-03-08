@@ -18,6 +18,7 @@ import { AddBranchComponent } from '../add-branch/add-branch.component';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Branch } from '../interfaces/branch.interface';
+import { Tag } from 'primeng/tag';
 @Component({
   selector: 'app-users',
   imports: [
@@ -38,6 +39,7 @@ import { Branch } from '../interfaces/branch.interface';
     SelectComponent,
     AddBranchComponent,
     Toast,
+    Tag
   ],
   templateUrl: './branches.component.html',
   styleUrl: './branches.component.scss',

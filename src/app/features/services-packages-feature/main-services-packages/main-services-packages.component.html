@@ -163,9 +163,9 @@
             } @else if (item[col.field] === false) {
             <p-tag severity="info" value="Inactivo"></p-tag>
             } } @else if (col.field == "createdAt") {
-            {{ item[col.field] | date : "dd/MM/yyyy hh:mm a" }}
+            {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field == "updatedAt") {
-            {{ item[col.field] | date : "dd/MM/yyyy hh:mm a" }}
+            {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button

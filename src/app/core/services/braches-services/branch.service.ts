@@ -14,21 +14,21 @@ export class BranchService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getBranches(page: number, size: number, filters?: Filter[]): Observable<any> {
-    let url = `${this._apiUrl}branches`;
+    // Construir params base
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-    let filtersFormat = '';
-    if (filters) {
+  
+    // Agregar filtros a los params en lugar de concatenar a la URL
+    if (filters?.length) {
       filters.forEach((filter) => {
-        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+        params = params.append(`filters[${filter.key}]`, filter.value);
       });
-      url = `${url}?${filtersFormat}`;
     }
-
-    return this._httpclient.get(url, { params });
+  
+    // Usar params en la llamada HTTP
+    return this._httpclient.get(`${this._apiUrl}branches`, { params });
   }
-
   exportToExcel(page: number, size: number): Observable<any> {
     return this.getBranches(page, size).pipe(
       map((response) => {
@@ -60,5 +60,12 @@ export class BranchService {
 
   createBranch(branch: any): Observable<any> {
     return this._httpclient.post(`${this._apiUrl}branches`, branch);
+  }
+
+  updateBranch(branch: any): Observable<any> {
+    return this._httpclient.put(
+      `${this._apiUrl}branches/${branch.sucursalId}`,
+      branch
+    );
   }
 }

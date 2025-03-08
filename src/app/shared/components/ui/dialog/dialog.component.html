@@ -1,0 +1,20 @@
+<div class="flex flex-col items-center">
+  <div class="text-center pb-6">
+    <p class="text-gray-600 mt-3 text-base">{{ dialogData().message }}</p>
+  </div>
+  <div class="flex justify-between w-full gap-2">
+    <button
+      (click)="onCancel()"
+      class="px-4 py-2 w-full bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 ease-in-out duration-300 transition-colors"
+    >
+      {{ dialogData().cancelText }}
+    </button>
+
+    <button
+      (click)="onConfirm()"
+      class="px-4 py-2 w-full bg-primary-500 text-white rounded-lg hover:bg-primary-300 ease-in-out duration-300 transition-colors"
+    >
+      {{ dialogData().confirmText }}
+    </button>
+  </div>
+</div>

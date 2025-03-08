@@ -5,11 +5,12 @@
         type="text"
         label="Buscar por Direccion"
         placeholder="Ej. Av. 9 de Octubre"
+        [(ngModel)]="filterBranchByAddress"
       />
     </div>
 
     <button
-      (click)="setFilter()"
+      (click)="searchBranch()"
       class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
     >
       <i class="pi pi-search"></i>
@@ -26,25 +27,13 @@
   </div>
 
   <div class="bg-white rounded-lg border w-full">
-    <div class="w-full py-5 flex px-4 justify-between items-center">
+    <div class="w-full py-5 flex px-4 justify-between">
       <div class="flex gap-2">
-        <app-select
-          class="w-full"
-          label="Estado"
-          [(value)]="filterValue"
-          (valueChange)="setFilter()"
-          [options]="[
-            { label: 'Activo', value: 'true' },
-            { label: 'Inactivo', value: 'false' },
-            { label: 'Todos', value: '' }
-          ]"
-        />
-
         @for (item of filters(); track $index) {
         <div
           class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
         >
-          <p-tag [value]="item.key"></p-tag>
+          <p-tag [value]="item.value"></p-tag>
           <button
             (click)="clearFilters()"
             class="hover:text-red-500 text-sm text-red-300"
@@ -53,14 +42,6 @@
           </button>
         </div>
         }
-      </div>
-      <div class="gap-2 flex">
-        <!-- <app-button
-          text="Descargar Excel"
-          icon="pi pi-file-excel"
-          bgColor="bg-green-500"
-          (click)="exportData()"
-        /> -->
       </div>
     </div>
 
@@ -71,10 +52,8 @@
       [scrollable]="true"
       [virtualScroll]="true"
       [virtualScrollItemSize]="50"
-      [loading]="loading()"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
-      (onLazyLoad)="loadBranches()"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
@@ -101,13 +80,25 @@
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (branch[col.field] === false) {
             <p-tag severity="info" value="Inactivo"></p-tag>
-            } } 
-            @else if (col.field == "createdAt") {
-              {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
-              } @else if (col.field == "updatedAt") {
-              {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
-              }
-            @else if (col.field=="actions") {
+            } } @else if (col.field == "createdAt") {
+            {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field == "updatedAt") {
+            {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field=="registeredBy") {
+
+            <div class="flex items-center gap-2">
+              <p-tag
+                [value]="branch[col.field]"
+                [pTooltip]="'Click para ver + '"
+                tooltipPosition="top"
+                [rounded]="true"
+                (click)="viewUserDetails(branch[col.field])"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+              />
+            </div>
+
+            } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
@@ -118,15 +109,16 @@
               >
                 <i class="pi pi-file-edit"></i>
               </button>
-              <!-- <button
+              <button
                 class="button-table-actions"
                 class="button-table-actions"
-                [pTooltip]="'Ver Usuario'"
+                [pTooltip]="'Eliminar Sucursal'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="deleteBranch(branch)"
               >
-                <i class="pi pi-eye"></i>
-              </button> -->
+                <i class="pi pi-trash"></i>
+              </button>
             </div>
 
             } @else {

@@ -44,23 +44,27 @@ export class AddBranchComponent {
     description: ['', Validators.required],
     status: [true],
     registeredBy: ['', Validators.minLength(8)],
+    sucursalId: [''],
   });
 
   constructor() {
     effect(() => {
       if (this.showModal() && this.branchToEdit()) {
         this.isEditing.set(true);
-        this.branchForm.patchValue(this.branchToEdit());
+        this.branchForm.patchValue({
+          ...this.branchToEdit(),
+          status: this.branchToEdit().status ? 'true' : 'false',
+        });
       } else {
         this.isEditing.set(false);
         this.branchForm.reset();
       }
     });
-  }
-
+  } 
   formatValues() {
     this.branchForm.patchValue({
-      registeredBy: '34855749',
+      registeredBy: '34203588',
+      status: this.branchForm.value.status === 'true' ? true : false,
       priceUnit: parseFloat(this.branchForm.value.priceUnit),
     });
   }
@@ -74,7 +78,7 @@ export class AddBranchComponent {
       this.save(this.branchForm.value);
     }
   }
-  
+
   save(data: any) {
     this.isSubmitting.set(true);
     this._branchService.createBranch(data).subscribe({
@@ -84,7 +88,9 @@ export class AddBranchComponent {
           summary: 'Éxito',
           detail: 'Sucursal creada correctamente',
         });
+        this.isSubmitting.set(false);
         this.closeModal();
+        this.refreshData.emit();
       },
       error: (response) => {
         this._messageService.add({
@@ -96,35 +102,29 @@ export class AddBranchComponent {
       },
     });
   }
-
+  
   update(data: any) {
-    // this.isSubmitting.set(true);
-    // data.serviceId = this.serviceToEdit()?.serviceId;
-    // this._serviceService.updateService(data).subscribe({
-    //   next: () => {
-    //     this._messageService.add({
-    //       severity: 'success',
-    //       summary: 'Éxito',
-    //       detail: 'Servicio actualizado correctamente',
-    //     });
-    //     this.closeModal();
-    //   },
-    //   error: (response) => {
-    //     this._messageService.add({
-    //       severity: 'error',
-    //       summary: 'Error',
-    //       detail: response.error.message || 'Error al actualizar el servicio',
-    //     });
-    //     this.isSubmitting.set(false);
-    //   },
-    // });
+    this.isSubmitting.set(true);
+    const formatedData = {
+      ...data,
+    };
+    this._branchService.updateBranch(formatedData).subscribe({
+      next: () => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Sucursal actualizada correctamente',
+        });
+        this.isSubmitting.set(false);
+        this.refreshData.emit();
+        this.closeModal();
+      },
+    });
   }
 
   closeModal() {
     this.showModal.set(false);
     this.branchForm.reset();
     this.isEditing.set(false);
-    this.refreshData.emit();
-    this.isSubmitting.set(false);
   }
 }

@@ -4,6 +4,7 @@ import { environmentDev } from '../../../environments/environment.development';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { NewAdmin } from '../../../shared/interfaces/user';
 import { ExportFilesService } from '../files-services/export-files.service';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -101,6 +102,22 @@ export class UserService {
           return throwError(error);
         })
       );
+  }
+
+  findUserById(userId: string): Observable<any> {
+    // Validamos que userId sea un valor válido
+    if (!userId) {
+      return throwError(() => new Error('ID de usuario no válido'));
+    }
+
+    // Aseguramos que el ID sea una cadena
+    const id = userId.toString();
+
+    return this.httpClient.get(`${this.url}users/${id}`).pipe(
+      map((response: any) => {
+        return response.data;
+      })
+    );
   }
 
   exportToExcel(page: number, size: number): Observable<any> {

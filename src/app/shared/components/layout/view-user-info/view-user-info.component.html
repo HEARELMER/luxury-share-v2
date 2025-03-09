@@ -1,4 +1,4 @@
-<div class="bg-white  p-4">
+<div class="bg-white p-4">
   <!-- Header con foto y datos -->
   <div class="px-4 py-3 bg-indigo-50 rounded-xl flex items-center gap-4">
     <div class="relative">
@@ -7,11 +7,17 @@
         alt="Profile"
         class="w-14 h-14 rounded-full object-cover ring-4 ring-green-400"
       />
-      <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></span>
+      <span
+        class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
+      ></span>
     </div>
     <div class="flex-1">
-      <p class="font-semibold text-gray-800">Elmer Jesus Huaman Rojas</p>
-      <p class="text-gray-500 text-xs">elmerddev.com</p>
+      <p class="font-semibold text-gray-800">
+        {{
+          userInfo().name + userInfo().firstLastname + userInfo().secondLastname
+        }}
+      </p>
+      <p class="text-gray-500 text-xs">{{ userInfo().email }}</p>
     </div>
   </div>
 
@@ -29,27 +35,51 @@
   <div class="grid grid-cols-2 gap-6 pt-6">
     <div class="text-center p-3 bg-gray-50 rounded-lg">
       <p class="text-xs font-medium text-gray-500 mb-1">DNI</p>
-      <p class="text-sm font-semibold text-gray-700">79904388</p>
+      <p class="text-sm font-semibold text-gray-700">{{ userInfo().numDni }}</p>
     </div>
     <div class="text-center p-3 bg-gray-50 rounded-lg">
       <p class="text-xs font-medium text-gray-500 mb-1">Teléfono</p>
-      <p class="text-sm font-semibold text-gray-700">980765432</p>
+      <p class="text-sm font-semibold text-gray-700">{{ userInfo().phone }}</p>
     </div>
     <div class="text-center p-3 bg-gray-50 rounded-lg">
       <p class="text-xs font-medium text-gray-500 mb-1">Email</p>
-      <p class="text-sm font-semibold text-gray-700">elmerddev.com</p>
+      <p class="text-sm font-semibold text-gray-700">{{ userInfo().email }}</p>
     </div>
     <div class="text-center p-3 bg-gray-50 rounded-lg">
       <p class="text-xs font-medium text-gray-500 mb-1">Nacimiento</p>
-      <p class="text-sm font-semibold text-gray-700">16/02/2025</p>
+      <p class="text-sm font-semibold text-gray-700">
+        {{ userInfo().birthDate }}
+      </p>
     </div>
   </div>
 
   <!-- Estado de verificación -->
   <div class="pt-6">
-    <div class="py-2.5 px-4 bg-yellow-50 rounded-lg flex items-center justify-center gap-2">
-      <i class="pi pi-exclamation-circle text-yellow-600 text-xs"></i>
-      <span class="text-xs font-medium text-yellow-600">Email no verificado</span>
+    <div
+      [class]="
+        userInfo().emailVerified
+          ? 'py-2.5 px-4 bg-green-50 rounded-lg flex items-center justify-center gap-2'
+          : 'py-2.5 px-4 bg-yellow-50 rounded-lg flex items-center justify-center gap-2'
+      "
+    >
+      <i
+        [class]="
+          userInfo().emailVerified
+            ? 'pi pi-check-circle text-green-500 text-xs'
+            : 'pi pi-exclamation-circle text-yellow-600 text-xs'
+        "
+      ></i>
+      <span
+        [class]="
+          userInfo().emailVerified
+            ? 'text-xs font-medium text-green-500'
+            : 'text-xs font-medium text-yellow-600'
+        "
+      >
+        {{
+          userInfo().emailVerified ? "Email verificado" : "Email no verificado"
+        }}
+      </span>
     </div>
   </div>
 </div>

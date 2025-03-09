@@ -10,6 +10,7 @@ import { providePrimeNG } from 'primeng/config';
 import MyPreset from '../../mypreset';
 import { LocalstorageService } from './core/services/localstorage-services/localstorage.service';
 import { MessageService } from 'primeng/api';
+import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,5 +33,6 @@ export const appConfig: ApplicationConfig = {
     TruncateDecimalPipe,
     LocalstorageService,
     MessageService,
+    CapitalizePipe
   ],
 };

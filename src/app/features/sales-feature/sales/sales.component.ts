@@ -17,6 +17,7 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { TagModule } from 'primeng/tag';
 import { USER_TABLE_COLS } from '../../users-feature/constants/table-users.constant';
 import { FormSaleComponent } from '../form-sale/form-sale.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -39,8 +40,29 @@ import { FormSaleComponent } from '../form-sale/form-sale.component';
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
+  providers: [DialogService],
 })
 export class SalesComponent {
+  public readonly dialogService = inject(DialogService);
+  ref: DynamicDialogRef | undefined;
+
+  addSaleModalOpen() {
+    const ref = this.dialogService.open(FormSaleComponent, {
+      header: 'Nueva Venta',
+      width: '90%',
+      height: '95%',
+      modal: true,
+      closable: true,
+      resizable: true,
+      maximizable: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
+
   showModalAddSale = signal<boolean>(false);
 
   private readonly _userService = inject(UserService);

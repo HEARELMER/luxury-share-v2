@@ -19,25 +19,11 @@
     </button>
     <div class="flex gap-2 ml-auto">
       <app-button
-        icon="pi pi-plus"
-        text="Nuevo Administrador"
+        icon="pi pi-cart"
+        text="Nueva Venta"
         moreClasses="py-2"
         bgColor="bg-primary-500"
-        (click)="openModal()"
-      />
-      <app-button
-        icon="pi pi-plus"
-        text="Nuevo Vendedor"
-        moreClasses="py-2"
-        bgColor="bg-primary-500"
-        (click)="openModalUser('SELLER')"
-      />
-      <app-button
-        icon="pi pi-plus"
-        text="Nuevo Gerente"
-        moreClasses="py-2"
-        bgColor="bg-primary-500"
-        (click)="openModalUser('GERENT')"
+        (click)="addSaleModalOpen()"
       />
     </div>
   </div>
@@ -177,7 +163,7 @@
                 class="button-table-actions"
                 [pTooltip]="'Editar Usuario'"
                 tooltipPosition="left"
-                [showDelay]="300" 
+                [showDelay]="300"
               >
                 <i class="pi pi-user-edit"></i>
               </button>
@@ -235,5 +221,3 @@
   (exportData)="handleExport($event)"
   [total]="totalRecords"
 />
-
-<app-add-sale [showModal]="true" />

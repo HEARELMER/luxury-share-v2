@@ -15,6 +15,7 @@ import { ADD_SALES_STEPS } from '../constants/add-sales.constant';
 import { Button } from 'primeng/button';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { Tag } from 'primeng/tag';
+import { ServicesPackagesSaleFormComponent } from "../templates/services-packages-sale-form/services-packages-sale-form.component";
 @Component({
   selector: 'app-add-sale',
   imports: [
@@ -29,7 +30,8 @@ import { Tag } from 'primeng/tag';
     ReactiveFormsModule,
     Tag,
     DatePipe,
-  ],
+    ServicesPackagesSaleFormComponent
+],
   templateUrl: './form-sale.component.html',
   styleUrl: './form-sale.component.scss',
 })

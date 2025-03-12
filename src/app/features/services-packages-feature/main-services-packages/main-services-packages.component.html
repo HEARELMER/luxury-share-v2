@@ -6,7 +6,7 @@
         [isPositive]="true"
         [maxLength]="8"
         label="Buscar por nombre"
-        placeholder="Buscar por DNI"
+        placeholder="Buscar por nombre"
       />
     </div>
 
@@ -109,12 +109,13 @@
         />
       </div>
     </div>
-    <div class="w-full pb-4 flex px-4 gap-2 items-center">
+    <div class="pb-4 flex px-4 gap-2 items-center">
       <app-select
         [class.hidden]="currentView() == 'packages'"
-        class="w-full"
         label="Tipo"
         [options]="filterServiceByType"
+        [value]="selectedStatus()"
+        (valueChange)="applyFilters('type', $event)"
       />
       <!-- <app-select
         class="w-full"
@@ -122,9 +123,10 @@
         [options]="filterServiceByPrice"
       /> -->
       <app-select
-        class="w-full"
         label="Estado"
         [options]="filterServiceByStatus"
+        [value]="selectedStatus()"
+        (valueChange)="applyFilters('status', $event)"
       />
     </div>
     <p-table

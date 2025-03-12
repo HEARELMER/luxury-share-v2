@@ -83,18 +83,17 @@ export class MainServicesPackagesComponent {
   showModalService = signal<boolean>(false);
   showModalPackage = signal<boolean>(false);
   currentView = signal<'services' | 'packages'>('services');
-  // Filtros
-  filters = signal<{ key: string; value: string }[]>([]);
+
   filterName = '';
   filterStatus = '';
-  selectedType = '';
-  selectedPrice = '';
-  selectedStatus = '';
   filterServiceByType = SERVICE_FILTER_BY_TYPE;
   filterServiceByPrice = SERVICE_FILTER_BY_PRICE;
   filterServiceByStatus = SERVICE_FILTER_BY_STATUS;
   selectedRow = signal<any>(null);
-
+  // Estado de filtros
+  filters = signal<{ key: string; value: string }[]>([]);
+  selectedType = signal<string>('');
+  selectedStatus = signal<string>('');
   ngOnInit() {
     this.loadData();
   }
@@ -108,9 +107,9 @@ export class MainServicesPackagesComponent {
 
   loadData(): void {
     this.loading = true;
-
+    const filters = this.filters();
     if (this.currentView() === 'services') {
-      this._servicesService.getServices(this.currentPage, this.rows).subscribe({
+      this._servicesService.getServices(this.currentPage, this.rows,filters).subscribe({
         next: (response) => {
           this.virtualServices.set(response.data.services);
           this.totalRecords = response.data.total;
@@ -122,7 +121,7 @@ export class MainServicesPackagesComponent {
         },
       });
     } else {
-      this._packagesService.getPackages(this.currentPage, this.rows).subscribe({
+      this._packagesService.getPackages(this.currentPage, this.rows,filters).subscribe({
         next: (response) => {
           this.virtualServices.set(response.data.packages);
           this.totalRecords = response.data.total;
@@ -156,13 +155,6 @@ export class MainServicesPackagesComponent {
 
   setFilterStatus(status: string) {
     this.filterStatus = status;
-    this.loadData();
-  }
-
-  clearFilters() {
-    this.filterName = '';
-    this.filterStatus = '';
-    this.filters.set([]);
     this.loadData();
   }
 
@@ -273,6 +265,41 @@ export class MainServicesPackagesComponent {
         },
       });
     }
+  }
+
+  // Método para aplicar filtros
+  applyFilters(type: string, value: any) {
+    let currentFilters = this.filters();
+
+    if (type === 'type') {
+      // Actualizar filtro de tipo
+      currentFilters = currentFilters.filter((f) => f.key !== 'type');
+      if (value) {
+        currentFilters.push({ key: 'type', value });
+      }
+      this.selectedType.set(value);
+    }
+
+    if (type === 'status') {
+      // Actualizar filtro de estado
+      currentFilters = currentFilters.filter((f) => f.key !== 'status');
+      if (value) {
+        currentFilters.push({ key: 'status', value });
+      }
+      this.selectedStatus.set(value);
+    }
+
+    this.filters.set(currentFilters);
+    this.currentPage = 1;
+    this.first = 0;
+    this.loadData();
+  }
+
+  clearFilters() {
+    this.selectedType.set('');
+    this.selectedStatus.set('');
+    this.filters.set([]);
+    this.loadData();
   }
 
   onPackageChanged(event: boolean) {

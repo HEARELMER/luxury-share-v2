@@ -55,6 +55,7 @@ export class AddServiceComponent {
     type: ['', Validators.required],
     status: [true],
     registeredBy: ['', Validators.minLength(8)],
+    serviceId: [''],
   });
 
   constructor() {
@@ -110,8 +111,7 @@ export class AddServiceComponent {
 
   update(data: any) {
     this.isSubmitting.set(true);
-    data.serviceId = this.serviceToEdit()?.serviceId;
-    this._serviceService.updateService(data).subscribe({
+    this._serviceService.updateService(data.serviceId, data).subscribe({
       next: () => {
         this._messageService.add({
           severity: 'success',
@@ -135,7 +135,7 @@ export class AddServiceComponent {
   closeModal() {
     this.showModal.set(false);
     this.serviceForm.reset();
-    this.isEditing.set(false); 
+    this.isEditing.set(false);
     this.isSubmitting.set(false);
   }
 }

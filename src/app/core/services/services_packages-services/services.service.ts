@@ -33,8 +33,8 @@ export class ServicesService {
     return this._httpclient.post(`${this._api}services`, data);
   }
 
-  updateService(data: any): Observable<any> {
-    return this._httpclient.put(`${this._api}services`, data);
+  updateService(serviceId: string, data: any): Observable<any> {
+    return this._httpclient.put(`${this._api}services/${serviceId}`, data);
   }
 
   exportToExcel(page: number, size: number): Observable<any> {

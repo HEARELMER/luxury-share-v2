@@ -1,4 +1,12 @@
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  model,
+  output,
+  WritableSignal,
+} from '@angular/core';
 import { SERVICE_TABLE_COLS } from '../../constants/table-services.constant';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -21,25 +29,35 @@ export class ViewServicesToPackageComponent {
   private readonly _packageService = inject(PackagesService);
 
   ref: DynamicDialogRef | undefined;
-  dataTable = input<any>(null);
+  dataTable = model<any>(null);
   SERVICES_COLS = SERVICE_TABLE_COLS;
 
+  serviceRemoved = output<{ success: boolean; newPrice?: number }>();
   formatDataInput = computed(() => {
     if (!this.dataTable() == null) return [];
 
     return (
       this.dataTable()?.services.map(
-        ({ service }: { service: { priceUnit: number } }) => ({
+        ({
+          service,
+          packageId,
+        }: {
+          service: { priceUnit: number };
+          packageId: string;
+        }) => ({
           ...service,
-          price: `S/. ${service.priceUnit.toFixed(2)}`,
+          packageId,
         })
       ) || []
     );
   });
 
   deleteService(service: any): void {
+    const packagePrice = this.dataTable()?.priceUnit || 0;
+    const servicePrice = service.priceUnit || 0;
+    const newPrice = Math.max(0, packagePrice - servicePrice);
     const ref = this.dialogService.open(DialogComponent, {
-      header: 'Eliminar servcio del paquete',
+      header: 'Eliminar servicio del paquete',
       modal: true,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
@@ -49,14 +67,42 @@ export class ViewServicesToPackageComponent {
       },
       data: {
         type: 'success',
-        message: `¿Estás seguro de eliminar el servicio del paquete?`,
-        confirmText: 'Continuar',
+        message: `¿Estás seguro de eliminar el servicio "${service.name}"? El precio del paquete se actualizará a ${newPrice}`,
+        confirmText: 'Eliminar',
         showCancel: false,
       },
     });
     ref.onClose.subscribe((result: boolean) => {
       if (result) {
-        // Usuario confirmó
+        const data = {
+          serviceIds: [service.serviceId],
+          newPrice: newPrice,
+        };
+
+        this._packageService
+          .removeServiceFromPackage(service.packageId, data)
+          .subscribe({
+            next: (response) => {
+              // Notificar éxito al padre
+              this.serviceRemoved.emit({
+                success: true,
+                newPrice: newPrice,
+              });
+
+              // Actualizar la lista local
+              this.dataTable.update((current: any) => ({
+                ...current,
+                priceUnit: newPrice,
+                services: current.services.filter(
+                  (s: any) => s.service.serviceId !== service.serviceId
+                ),
+              }));
+            },
+            error: (error) => {
+              this.serviceRemoved.emit({ success: false });
+              console.error('Error removing service:', error);
+            },
+          });
       } else {
         // Usuario canceló
       }

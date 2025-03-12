@@ -274,4 +274,10 @@ export class MainServicesPackagesComponent {
       });
     }
   }
+
+  onPackageChanged(event: boolean) {
+    if (event) {
+      this.loadData();
+    }
+  }
 }

@@ -257,6 +257,7 @@
 <app-add-package
   [(showModal)]="showModalPackage"
   [packageDataToEdit]="selectedRow()"
+  (changed)="onPackageChanged($event)"
 /> 
 
-<p-toast [life]="2000" />
+<p-toast   [baseZIndex]="10000" [life]="2000" />

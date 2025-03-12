@@ -74,6 +74,7 @@ export class AddPackageComponent {
   serviceTypeOptions = SERVICE_TYPES;
   isSubmitting = signal<boolean>(false);
   packageDataToEdit = input<any>({});
+  changed = output<boolean>();
 
   addService = signal<boolean>(false);
   packageForm: FormGroup = this._fb.group({
@@ -98,7 +99,7 @@ export class AddPackageComponent {
   }
 
   loadServices() {
-    if (!this.showModal()) return; 
+    if (!this.showModal()) return;
     this.loading.set(true);
     const filters: Filter[] = [{ key: 'status', value: 'true' }];
 
@@ -135,6 +136,7 @@ export class AddPackageComponent {
 
   formatValues() {
     this.packageForm.patchValue({
+      registeredBy: '34855749',
       priceUnit: parseFloat(this.packageForm.value.priceUnit),
     });
   }
@@ -220,6 +222,27 @@ export class AddPackageComponent {
       (sum, service) => sum + (parseFloat(service.priceUnit) || 0),
       0
     );
+  }
+
+  onServiceRemoved(event: { success: boolean; newPrice?: number }) {
+    if (event.success && event.newPrice !== undefined) {
+      // Actualizar el precio en el formulario
+      this.packageForm.patchValue({
+        priceUnit: event.newPrice,
+      });
+      this.changed.emit(true);
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Servicio eliminado',
+        detail: 'El servicio se eliminó correctamente del paquete',
+      });
+    } else {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo eliminar el servicio del paquete',
+      });
+    }
   }
 
   onPageChange(event: any) {

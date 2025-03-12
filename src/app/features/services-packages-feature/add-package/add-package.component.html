@@ -71,9 +71,11 @@
           </div>
 
           @if (packageDataToEdit() && isEditing()) {
-          <app-view-services-to-package [dataTable]="packageDataToEdit()" />
+          <app-view-services-to-package
+            [dataTable]="packageDataToEdit()"
+            (serviceRemoved)="onServiceRemoved($event)"
+          />
           }
-          
         </div>
         @if (addService() && isEditing() || !isEditing() ) {
         <!-- Services Section -->
@@ -218,5 +220,3 @@
     </div>
   </div>
 </app-modal>
-
-<p-toast [life]="3000" [baseZIndex]="100000"></p-toast>

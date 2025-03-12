@@ -37,8 +37,8 @@ export class PackagesService {
     return this._httpclient.post(`${this._api}packages/add-services`, data);
   }
 
-  updateService(data: any): Observable<any> {
-    return this._httpclient.put(`${this._api}services`, data);
+  updatePackage(packageId: string, data: any): Observable<any> {
+    return this._httpclient.put(`${this._api}packages/${packageId}`, data);
   }
 
   exportToExcel(page: number, size: number): Observable<any> {

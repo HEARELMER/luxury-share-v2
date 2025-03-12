@@ -139,7 +139,6 @@
       [loading]="loading"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
-      (onLazyLoad)="loadData()"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{ 'min-width': '50rem' }"
@@ -169,7 +168,23 @@
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (item[col.field] === false) {
             <p-tag severity="info" value="Inactivo"></p-tag>
-            } } @else if (col.field == "createdAt") {
+            } }
+            @else if (col.field=="registeredBy") {
+
+              <div class="flex items-center gap-2">
+                <p-tag
+                  [value]="item[col.field]"
+                  [pTooltip]="'Click para ver + '"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  (click)="viewUserDetails(item[col.field])"
+                  styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                  class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+                />
+              </div>
+  
+              }
+            @else if (col.field == "createdAt") {
             {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field == "updatedAt") {
             {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}

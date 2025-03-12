@@ -1,28 +1,13 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
-import { Popover, PopoverModule } from 'primeng/popover';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Popover } from 'primeng/popover';
 import { Tooltip } from 'primeng/tooltip';
-import { BadgeModule } from 'primeng/badge';
-import { PaginatorModule } from 'primeng/paginator';
-import { Skeleton } from 'primeng/skeleton';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
-import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { ServicesService } from '../../../core/services/services_packages-services/services.service';
-import { AddServiceComponent } from '../add-service/add-service.component';
 import {
   SERVICE_FILTER_BY_PRICE,
   SERVICE_FILTER_BY_STATUS,
   SERVICE_FILTER_BY_TYPE,
 } from '../constants/service-types.contant';
-import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AddPackageComponent } from '../add-package/add-package.component';
 import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
 import {
   SERVICE_TABLE_COLS,
@@ -31,28 +16,11 @@ import {
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PackageDetailComponent } from '../package-detail/package-detail.component';
 import { ServiceDetailComponent } from '../service-detail/service-detail.component';
+import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
+import { SERVICES_PACKAGES_IMPORTS } from '../imports/services_packages.import';
 @Component({
   selector: 'app-main-services-packages',
-  imports: [
-    TieredMenuModule,
-    CommonModule,
-    BadgeModule,
-    TableModule,
-    CommonModule,
-    Skeleton,
-    Tooltip,
-    PaginatorModule,
-    FormsModule,
-    ButtonComponent,
-    PopoverModule,
-    ExportExcelComponent,
-    InputFormComponent,
-    TagModule,
-    SelectComponent,
-    AddServiceComponent,
-    AddPackageComponent,
-    Toast,
-  ],
+  imports: [SERVICES_PACKAGES_IMPORTS, Tooltip],
   providers: [DialogService],
   templateUrl: './main-services-packages.component.html',
   styleUrl: './main-services-packages.component.scss',
@@ -109,29 +77,33 @@ export class MainServicesPackagesComponent {
     this.loading = true;
     const filters = this.filters();
     if (this.currentView() === 'services') {
-      this._servicesService.getServices(this.currentPage, this.rows,filters).subscribe({
-        next: (response) => {
-          this.virtualServices.set(response.data.services);
-          this.totalRecords = response.data.total;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error cargando servicios:', error);
-          this.loading = false;
-        },
-      });
+      this._servicesService
+        .getServices(this.currentPage, this.rows, filters)
+        .subscribe({
+          next: (response) => {
+            this.virtualServices.set(response.data.services);
+            this.totalRecords = response.data.total;
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Error cargando servicios:', error);
+            this.loading = false;
+          },
+        });
     } else {
-      this._packagesService.getPackages(this.currentPage, this.rows,filters).subscribe({
-        next: (response) => {
-          this.virtualServices.set(response.data.packages);
-          this.totalRecords = response.data.total;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error cargando paquetes:', error);
-          this.loading = false;
-        },
-      });
+      this._packagesService
+        .getPackages(this.currentPage, this.rows, filters)
+        .subscribe({
+          next: (response) => {
+            this.virtualServices.set(response.data.packages);
+            this.totalRecords = response.data.total;
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Error cargando paquetes:', error);
+            this.loading = false;
+          },
+        });
     }
   }
 
@@ -306,5 +278,22 @@ export class MainServicesPackagesComponent {
     if (event) {
       this.loadData();
     }
+  }
+
+  viewUserDetails(userId: string) {
+    console.log('User ID:', userId);
+    const ref = this.dialogService.open(ViewUserInfoComponent, {
+      header: 'Información del usuario',
+      modal: true,
+      closable: true,
+      dismissableMask: true,
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '80vw',
+      },
+      data: {
+        userId: userId,
+      },
+    });
   }
 }

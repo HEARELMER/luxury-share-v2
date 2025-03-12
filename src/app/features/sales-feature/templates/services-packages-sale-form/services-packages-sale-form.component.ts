@@ -23,6 +23,7 @@ import { Badge } from 'primeng/badge';
 import { InputFormComponent } from '../../../../shared/components/forms/input-form/input-form.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
+import { ButtonComponent } from "../../../../shared/components/ui/button/button.component";
 interface TableState {
   first: number;
   rows: number;
@@ -61,7 +62,8 @@ interface SaleItem {
     FormsModule,
     CapitalizePipe,
     ReactiveFormsModule,
-  ],
+    ButtonComponent
+],
   templateUrl: './services-packages-sale-form.component.html',
   styleUrl: './services-packages-sale-form.component.scss',
 })

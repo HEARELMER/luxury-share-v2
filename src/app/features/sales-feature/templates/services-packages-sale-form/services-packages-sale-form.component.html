@@ -1,138 +1,144 @@
-<main class="grid grid-cols-4 gap-3">
-  <form
-    class="col-span-4 grid gap-2 grid-cols-1 lg:grid-cols-2"
-    [formGroup]="formSale"
-  >
-    <app-input-form
-      label="Fecha de Salida o Servicio"
-      formControlName="departureDate"
-      type="date"
-      [required]="true"
-      class="col-span-1"
-    />
-    <app-input-form
-      class="col-span-1"
-      label="Observaciones"
-      formControlName="observation"
-    />
-  </form>
-  <div class="bg-white rounded-lg min-h-96 h-auto max-h-[60vh] shadow-sm border col-span-3">
-    <div class="flex flex-col h-full gap-4">
-      <div class="p-4 border-b">
-        <div class="flex gap-3">
-          <button
-            pButton
-            [label]="'Servicios'"
-            [icon]="'pi pi-car'"
-            [outlined]="currentView() !== 'services'"
-            [class]="
-              currentView() === 'services'
-                ? 'p-button-primary'
-                : 'p-button-secondary'
-            "
-            (click)="toggleView('services')"
-          ></button>
+<main class="grid grid-cols-4 h-[70vh] gap-3">
+  <section class="col-span-3 h-full">
+    <form
+      class="grid gap-2 grid-cols-1 pb-4 lg:grid-cols-2"
+      [formGroup]="formSale"
+    >
+      <app-input-form
+        label="Fecha de Salida o Servicio"
+        formControlName="departureDate"
+        type="date"
+        [required]="true"
+        class="col-span-1"
+      />
+      <app-input-form
+        class="col-span-1"
+        label="Observaciones"
+        formControlName="observation"
+      />
+    </form>
 
-          <button
-            pButton
-            [label]="'Paquetes'"
-            [icon]="'pi pi-box'"
-            [outlined]="currentView() !== 'packages'"
-            [class]="
-              currentView() === 'packages'
-                ? 'p-button-primary'
-                : 'p-button-secondary'
-            "
-            (click)="toggleView('packages')"
-          ></button>
+    <!-- tabla  -->
+    <div class="bg-white rounded-lg min-h-96 shadow-sm border">
+      <div class="flex flex-col h-full gap-4">
+        <div class="p-4 border-b">
+          <div class="flex gap-3">
+            <button
+              pButton
+              [label]="'Servicios'"
+              [icon]="'pi pi-car'"
+              [outlined]="currentView() !== 'services'"
+              [class]="
+                currentView() === 'services'
+                  ? 'p-button-primary'
+                  : 'p-button-secondary'
+              "
+              (click)="toggleView('services')"
+            ></button>
+
+            <button
+              pButton
+              [label]="'Paquetes'"
+              [icon]="'pi pi-box'"
+              [outlined]="currentView() !== 'packages'"
+              [class]="
+                currentView() === 'packages'
+                  ? 'p-button-primary'
+                  : 'p-button-secondary'
+              "
+              (click)="toggleView('packages')"
+            ></button>
+          </div>
         </div>
-      </div>
-      <!-- Tabla -->
-      <div class="flex flex-col justify-between h-full">
-        <p-table
-          [value]="items()"
-          [columns]="
-            currentView() === 'services' ? serviceColumns : packageColumns
-          "
-          [lazy]="true"
-          [rows]="tableState().rows"
-          [totalRecords]="totalRecords()"
-          [loading]="loading()"
-          [first]="tableState().first"
-          [resizableColumns]="true"
-          [globalFilterFields]="['name', 'type', 'description']"
-          [rowHover]="true"
-          styleClass="p-datatable-sm"
-          [metaKeySelection]="true"
-          selectionMode="single"
-          size="small"
-          class="flex-1"
-        >
-          <!-- Header de tabla -->
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              @for (col of columns; track $index) {
-              <th
-                pResizableColumn
-                class="text-primary-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-100"
-              >
-                {{ col.header }}
-              </th>
-
-              }
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-item let-columns="columns">
-            <tr [pSelectableRow]="item">
-              @for (col of columns; track $index) {
-              <td>
-                @if (col.field == "status") { @if (item[col.field] === true ) {
-                <p-tag severity="success" value="Activo"></p-tag>
-                } @else if ( col.field=="priceUnit"){
-
-                {{ item[col.field] | currency : "S/." }}
-
-                } @else if (item[col.field] === false) {
-                <p-tag severity="info" value="Inactivo"></p-tag>
-                } } @else if (col.field=="actions") {
-                <button
-                  pButton
-                  icon="pi pi-plus"
-                  class="p-button-rounded p-button-text p-button-sm w-10 h-10 bg-primary-500 hover:bg-primary-400 text-white"
-                  (click)="addToSale(item)"
-                  [pTooltip]="'Agregar a venta'"
-                  [tooltipPosition]="'left'"
-                ></button>
-                } @else {
-                {{ item[col.field] }}
+        <!-- Tabla -->
+        <div class="flex flex-col justify-between h-full">
+          <p-table
+            [value]="items()"
+            [columns]="
+              currentView() === 'services' ? serviceColumns : packageColumns
+            "
+            [lazy]="true"
+            [rows]="tableState().rows"
+            [totalRecords]="totalRecords()"
+            [loading]="loading()"
+            [first]="tableState().first"
+            [resizableColumns]="true"
+            [globalFilterFields]="['name', 'type', 'description']"
+            [rowHover]="true"
+            styleClass="p-datatable-sm"
+            [metaKeySelection]="true"
+            selectionMode="single"
+            size="small"
+            class="flex-1"
+          >
+            <!-- Header de tabla -->
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                @for (col of columns; track $index) {
+                <th
+                  pResizableColumn
+                  class="text-primary-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-100"
+                >
+                  {{ col.header }}
+                </th>
 
                 }
-              </td>
-              }
-            </tr>
-          </ng-template>
-        </p-table>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-columns="columns">
+              <tr [pSelectableRow]="item">
+                @for (col of columns; track $index) {
+                <td>
+                  @if (col.field == "status") { @if (item[col.field] === true )
+                  {
+                  <p-tag severity="success" value="Activo"></p-tag>
+                  } @else if ( col.field=="priceUnit"){
 
-        <!-- Paginador -->
-        <div class="flex justify-between items-center p-4 border-t">
-          <p-paginator
-            [rows]="tableState().rows"
-            [first]="tableState().first"
-            [totalRecords]="totalRecords()"
-            [rowsPerPageOptions]="[5, 10, 20, 50]"
-            (onPageChange)="onPageChange($event)"
-          >
-          </p-paginator>
-          <span class="text-sm text-gray-600">
-            Total: {{ totalRecords() }} registros
-          </span>
+                  {{ item[col.field] | currency : "S/." }}
+
+                  } @else if (item[col.field] === false) {
+                  <p-tag severity="info" value="Inactivo"></p-tag>
+                  } } @else if (col.field=="actions") {
+                  <button
+                    pButton
+                    icon="pi pi-plus"
+                    class="p-button-rounded p-button-text p-button-sm w-10 h-10 bg-primary-500 hover:bg-primary-400 text-white"
+                    (click)="addToSale(item)"
+                    [pTooltip]="'Agregar a venta'"
+                    [tooltipPosition]="'left'"
+                  ></button>
+                  } @else {
+                  {{ item[col.field] }}
+
+                  }
+                </td>
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <!-- Paginador -->
+          <div class="flex justify-between items-center p-4 border-t">
+            <p-paginator
+              [rows]="tableState().rows"
+              [first]="tableState().first"
+              [totalRecords]="totalRecords()"
+              [rowsPerPageOptions]="[5, 10, 20, 50]"
+              (onPageChange)="onPageChange($event)"
+            >
+            </p-paginator>
+            <span class="text-sm text-gray-600">
+              Total: {{ totalRecords() }} registros
+            </span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Resumen de venta mejorado -->
-  <aside class="col-span-1 min-h-96 max-h-[60vh] h-auto">
-    <div class="bg-white rounded-xl border shadow-sm top-4">
+  </section>
+
+  <!-- Resumen de venta   -->
+  <aside class="col-span-1 h-full min-h-96">
+    <div class="bg-white rounded-xl h-full border shadow-sm top-4">
       <!-- Header del resumen -->
       <div class="p-4 bg-gray-50/50 border-b flex items-center justify-between">
         <h3 class="font-medium text-gray-800 flex items-center gap-2">
@@ -200,7 +206,9 @@
           }
         </div>
         } @else {
-        <div class="p-8 h-full bg-gray-50 text-center">
+        <div
+          class="p-8 h-full bg-gray-50 flex items-center flex-col text-center"
+        >
           <img
             src="./images/car_sale_emppty.webp"
             alt="Carrito vacío"
@@ -241,11 +249,11 @@
             }}</span>
           </div>
           <!-- <div class="flex justify-between text-sm">
-            <span class="text-gray-600">IGV (18%)</span>
-            <span class="font-medium">{{
-              totalAmount() * 0.18 | currency : "S/."
-            }}</span>
-          </div> -->
+                <span class="text-gray-600">IGV (18%)</span>
+                <span class="font-medium">{{
+                  totalAmount() * 0.18 | currency : "S/."
+                }}</span>
+              </div> -->
           <div class="flex justify-between items-center pt-3 border-t mt-3">
             <span class="font-medium text-gray-800">TOTAL</span>
             <span class="text-lg font-bold text-primary-600">
@@ -253,6 +261,23 @@
             </span>
           </div>
         </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="py-4 px-2 w-full flex gap-2 justify-between">
+        <button
+          pButton
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-secondary w-full"
+        ></button>
+        <button
+          pButton
+          label="Confirmar"
+          icon="pi pi-receipt"
+          [disabled]="!selectedItems().length"
+          class="p-button-primary w-full"
+        ></button>
       </div>
     </div>
   </aside>

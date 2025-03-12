@@ -249,10 +249,14 @@
   [total]="totalRecords"
 />
 
-<app-add-service [serviceToEdit]="selectedRow()" [(showModal)]="showModalService" />
+<app-add-service
+  [serviceToEdit]="selectedRow()"
+  [(showModal)]="showModalService"
+/>
+ 
 <app-add-package
   [(showModal)]="showModalPackage"
   [packageDataToEdit]="selectedRow()"
-/>
+/> 
 
 <p-toast [life]="2000" />

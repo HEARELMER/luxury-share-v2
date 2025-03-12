@@ -210,8 +210,10 @@ export class MainServicesPackagesComponent {
   }
 
   editService(service: any) {
-    this.selectedRow.set(service);
-    this.showModalService.set(true);
+    if (this.currentView() === 'services') {
+      this.selectedRow.set(service);
+      this.showModalService.set(true);
+    }
   }
 
   editPackage(packageData: any) {
@@ -234,38 +236,42 @@ export class MainServicesPackagesComponent {
   }
 
   viewPackageDetails(packageData: any) {
-    this.ref = this.dialogService.open(PackageDetailComponent, {
-      data: packageData,
-      header: 'Detalles del paquete ',
-      width: '50vw',
-      height: 'auto',
-      modal: true,
-      closable: true,
-      resizable: true,
-      maximizable: true,
-      contentStyle: { overflow: 'auto' },
-      breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
-      },
-    });
+    if (this.currentView() === 'packages') {
+      this.ref = this.dialogService.open(PackageDetailComponent, {
+        data: packageData,
+        header: 'Detalles del paquete ',
+        width: '50vw',
+        height: 'auto',
+        modal: true,
+        closable: true,
+        resizable: true,
+        maximizable: true,
+        contentStyle: { overflow: 'auto' },
+        breakpoints: {
+          '960px': '75vw',
+          '640px': '90vw',
+        },
+      });
+    }
   }
 
   viewServicesDetails(serviceData: any) {
-    this.ref = this.dialogService.open(ServiceDetailComponent, {
-      data: serviceData,
-      header: 'Detalles del servicio',
-      width: '50vw',
-      height: 'auto',
-      modal: true,
-      closable: true,
-      resizable: true,
-      maximizable: true,
-      contentStyle: { overflow: 'auto' },
-      breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
-      },
-    });
+    if (this.currentView() === 'services') {
+      this.ref = this.dialogService.open(ServiceDetailComponent, {
+        data: serviceData,
+        header: 'Detalles del servicio',
+        width: '50vw',
+        height: 'auto',
+        modal: true,
+        closable: true,
+        resizable: true,
+        maximizable: true,
+        contentStyle: { overflow: 'auto' },
+        breakpoints: {
+          '960px': '75vw',
+          '640px': '90vw',
+        },
+      });
+    }
   }
 }

@@ -1,5 +1,5 @@
 <p-table
-  [columns]="SERVICES_COLS_FORMATTED()"
+  [columns]="SERVICES_COLS"
   [value]="formatDataInput()"
   [scrollable]="true"
   [virtualScrollItemSize]="50"
@@ -40,6 +40,12 @@
         } @else if (col.field == "type") {
         <p-tag severity="info" [value]="item[col.field]"></p-tag>
 
+        }@else if (col.field=="actions") {
+        <div class="flex justify-center gap-1 items-center">
+          <button class="button-table-actions" tooltipPosition="left">
+            <i class="pi pi-trash"></i>
+          </button> 
+        </div>
         } @else {
         {{ item[col.field] }}
         }

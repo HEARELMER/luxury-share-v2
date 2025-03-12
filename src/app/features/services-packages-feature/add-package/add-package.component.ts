@@ -98,8 +98,7 @@ export class AddPackageComponent {
   }
 
   loadServices() {
-    if (!this.showModal()) return;
-    console.log('loadServices');
+    if (!this.showModal()) return; 
     this.loading.set(true);
     const filters: Filter[] = [{ key: 'status', value: 'true' }];
 

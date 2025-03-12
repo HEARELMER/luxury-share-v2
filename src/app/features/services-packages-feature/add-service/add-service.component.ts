@@ -22,7 +22,6 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SERVICE_TYPES } from '../constants/service-types.contant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-// import { TextareaModule } from 'primeng/textarea'; esto podemos usarllo mas adelante
 @Component({
   selector: 'app-add-service',
   imports: [

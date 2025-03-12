@@ -81,4 +81,11 @@ export class PackagesService {
       })
     );
   }
+
+  removeServiceFromPackage(packageId: string, data: any): Observable<any> {
+    return this._httpclient.patch(
+      `${this._api}packages/${packageId}/remove-services`,
+      data
+    );
+  }
 }

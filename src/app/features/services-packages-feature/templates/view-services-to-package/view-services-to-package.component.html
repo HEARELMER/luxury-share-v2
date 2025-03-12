@@ -42,7 +42,7 @@
 
         }@else if (col.field=="actions") {
         <div class="flex justify-center gap-1 items-center">
-          <button class="button-table-actions" tooltipPosition="left">
+          <button class="button-table-actions" (click)="deleteService(item)" pTooltip="Remover Servicio del paquete" tooltipPosition="left">
             <i class="pi pi-trash"></i>
           </button> 
         </div>

@@ -16,7 +16,7 @@
     >
       <i class="pi pi-search"></i>
     </button>
-    <div class="flex-none w-64">
+    <!-- <div class="flex-none w-64">
       <app-select
         label="Ordernar Por:"
         [options]="[
@@ -34,7 +34,7 @@
         }
       ]"
       />
-    </div>
+    </div> -->
     <div class="flex gap-2 ml-auto">
       <app-button
         icon="pi pi-plus"
@@ -110,12 +110,17 @@
       </div>
     </div>
     <div class="w-full pb-4 flex px-4 gap-2 items-center">
-      <app-select class="w-full" label="Tipo" [options]="filterServiceByType" />
       <app-select
+        [class.hidden]="currentView() == 'packages'"
+        class="w-full"
+        label="Tipo"
+        [options]="filterServiceByType"
+      />
+      <!-- <app-select
         class="w-full"
         label="Precio"
         [options]="filterServiceByPrice"
-      />
+      /> -->
       <app-select
         class="w-full"
         label="Estado"
@@ -252,12 +257,13 @@
 <app-add-service
   [serviceToEdit]="selectedRow()"
   [(showModal)]="showModalService"
+  (refreshData)="handleRefreshData()"
 />
- 
+
 <app-add-package
   [(showModal)]="showModalPackage"
   [packageDataToEdit]="selectedRow()"
-  (changed)="onPackageChanged($event)"
-/> 
+  (refreshData)="handleRefreshData()"
+/>
 
-<p-toast   [baseZIndex]="10000" [life]="2000" />
+<p-toast [baseZIndex]="10000" [life]="2000" />

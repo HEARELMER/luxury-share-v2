@@ -74,7 +74,6 @@ export class AddPackageComponent {
   serviceTypeOptions = SERVICE_TYPES;
   isSubmitting = signal<boolean>(false);
   packageDataToEdit = input<any>({});
-  changed = output<boolean>();
 
   addService = signal<boolean>(false);
   packageForm: FormGroup = this._fb.group({
@@ -84,6 +83,7 @@ export class AddPackageComponent {
     registeredBy: ['34855749'],
     services: [[]],
     status: [true],
+    packageId: [''],
   });
 
   constructor() {
@@ -153,20 +153,21 @@ export class AddPackageComponent {
 
   update(data: any) {
     this.isSubmitting.set(true);
-    this._serviceService.updateService(data).subscribe({
-      next: () => {
+    this._packagesService.updatePackage(data.packageId, data).subscribe({
+      next: (response) => {
         this._messageService.add({
           severity: 'success',
           summary: 'Éxito',
-          detail: 'Servicio actualizado correctamente',
+          detail: response.message,
         });
         this.closeModal();
+        this.refreshData.emit();
       },
-      error: (response) => {
+      error: (error) => {
         this._messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: response.error.message || 'Error al actualizar el servicio',
+          detail: error.message.message || 'Error al actualizar el paquete',
         });
         this.isSubmitting.set(false);
       },
@@ -177,7 +178,6 @@ export class AddPackageComponent {
     this.showModal.set(false);
     this.packageForm.reset();
     this.isEditing.set(false);
-    this.refreshData.emit();
     this.isSubmitting.set(false);
   }
 
@@ -205,6 +205,7 @@ export class AddPackageComponent {
           detail: response.message,
         });
         this.closeModal();
+        this.refreshData.emit();
       },
       error: (error) => {
         this._messageService.add({
@@ -230,7 +231,7 @@ export class AddPackageComponent {
       this.packageForm.patchValue({
         priceUnit: event.newPrice,
       });
-      this.changed.emit(true);
+      this.refreshData.emit();
       this._messageService.add({
         severity: 'success',
         summary: 'Servicio eliminado',

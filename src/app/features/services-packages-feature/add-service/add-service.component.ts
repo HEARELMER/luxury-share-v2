@@ -95,6 +95,7 @@ export class AddServiceComponent {
           detail: 'Servicio creado correctamente',
         });
         this.closeModal();
+        this.refreshData.emit();
       },
       error: (response) => {
         this._messageService.add({
@@ -118,6 +119,7 @@ export class AddServiceComponent {
           detail: 'Servicio actualizado correctamente',
         });
         this.closeModal();
+        this.refreshData.emit();
       },
       error: (response) => {
         this._messageService.add({
@@ -133,8 +135,7 @@ export class AddServiceComponent {
   closeModal() {
     this.showModal.set(false);
     this.serviceForm.reset();
-    this.isEditing.set(false);
-    this.refreshData.emit();
+    this.isEditing.set(false); 
     this.isSubmitting.set(false);
   }
 }

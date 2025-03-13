@@ -9,6 +9,7 @@ import { UserProfileComponent } from './features/users-feature/user-profile/user
 import { BranchesComponent } from './features/branches-feature/branches/branches.component';
 import { SalesComponent } from './features/sales-feature/sales/sales.component';
 import { ClientsComponent } from './features/clients-feature/clients/clients.component';
+import { ReportsComponent } from './features/reports-feature/reports/reports.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'branches', component: BranchesComponent },
       { path: 'sales', component: SalesComponent },
       { path: 'clients', component: ClientsComponent },
+      { path: 'reports', component: ReportsComponent },
     ],
   },
 ];

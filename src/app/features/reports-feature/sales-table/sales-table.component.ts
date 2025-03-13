@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { Skeleton } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 export interface SaleReport {
@@ -31,13 +32,14 @@ export interface TableState {
     ButtonModule,
     TagModule,
     InputTextModule,
+    Skeleton
   ],
   templateUrl: './sales-table.component.html',
   styleUrl: './sales-table.component.scss',
 })
 export class SalesTableComponent {
   // Inputs
-  data = input.required<SaleReport[]>();
+  data = input.required<SaleReport[]>( );
   loading = input<boolean>(false);
   totalRecords = input<number>(0);
 

@@ -1,148 +1,188 @@
-<main class="flex flex-col gap-4">
-  <!-- Header con tabs -->
-  <div class="bg-white rounded-lg shadow-sm p-4 border">
-    <div class="flex gap-4">
-      <button
-        pButton
-        [label]="'Ventas'"
-        [icon]="'pi pi-chart-line'"
-        [outlined]="activeTab() !== 'sales'"
-        [class]="
-          activeTab() === 'sales' ? 'p-button-primary' : 'p-button-secondary'
-        "
-        (click)="activeTab.set('sales')"
-      ></button>
-      <button
-        pButton
-        [label]="'Rendimiento'"
-        [icon]="'pi pi-users'"
-        [outlined]="activeTab() !== 'performance'"
-        [class]="
-          activeTab() === 'performance'
-            ? 'p-button-primary'
-            : 'p-button-secondary'
-        "
-        (click)="activeTab.set('performance')"
-      ></button>
-      <button
-        pButton
-        [label]="'Clientes'"
-        [icon]="'pi pi-user'"
-        [outlined]="activeTab() !== 'clients'"
-        [class]="
-          activeTab() === 'clients' ? 'p-button-primary' : 'p-button-secondary'
-        "
-        (click)="activeTab.set('clients')"
-      ></button>
+<main class="flex flex-col bg-white rounded-xl gap-4">
+  <header class="border-b py-2 px-4 flex justify-between items-center">
+    <div>
+      <h1 class="text-xl font-bold">Reportes</h1>
+      <p class="text-sm text-gray-500">
+        Aquí podrás ver los reportes de los usuarios.
+      </p>
     </div>
-  </div>
-
-  <!-- Filtros -->
-  <form [formGroup]="filtersForm" class="bg-white rounded-lg shadow-sm border">
-    <div class="p-4 border-b">
-      <h2 class="text-lg font-medium text-gray-800">Filtros</h2>
-    </div>
-
-    <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Rango de fechas -->
-      <div class="col-span-1">
-        <app-select
-          label="Rango de fechas"
-          [options]="dateRangeOptions"
-          formControlName="dateRange"
-          icon="pi pi-calendar"
-        />
+    <div class="flex items-center gap-2">
+      <div class="flex flex-col text-sm">
+        <span class="text-gray-500">Última actualización</span>
+        <span class="font-medium text-gray-700">
+          {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
+        </span>
       </div>
 
-      <!-- Fechas personalizadas -->
-      @if (filtersForm.get('dateRange')?.value === 'custom') {
-      <div class="col-span-2 grid grid-cols-2 gap-4">
-        <app-input-form
-          label="Fecha inicio"
-          type="date"
-          formControlName="customDateStart"
+      <button
+        pButton
+        icon="pi pi-cloud-download"
+        size="small"
+        class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+        label="Exportar "
+      ></button>
+
+      <button
+        pButton
+        icon="pi pi-refresh"
+        size="small"
+        class="border-2 shadow-sm rounded-lg border-slate-100 hover:bg-primary-400 hover:shadow-md transition-all duration-200"
+        label="Actualizar Reporte "
+        (click)="updateReport()"
+      ></button>
+    </div>
+  </header>
+
+  <!-- section filters -->
+  <section class="px-6 py-4 border-b">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <h2 class="text-sm font-medium text-gray-700">Filtros activos</h2>
+        <span
+          class="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full"
+        >
+          {{ activeFiltersCount() }} aplicados
+        </span>
+      </div>
+      <button
+        pButton
+        icon="pi pi-filter-slash"
+        label="Limpiar filtros"
+        class="p-button-text p-button-sm border shadow-sm text-gray-600"
+        [disabled]="activeFiltersCount() === 0"
+        (click)="filtersForm.reset()"
+      ></button>
+    </div>
+    <form
+      [formGroup]="filtersForm"
+      class="grid gap-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+    >
+      <!-- Selector de período -->
+      <div class="col-span-1 space-y-2">
+        <label
+          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+        >
+          <i class="pi pi-calendar text-primary-500"></i>
+          Período
+        </label>
+        <div class="flex flex-col gap-2">
+          <app-select
+            [options]="dateRangeOptions"
+            [value]="filtersForm.get('dateRange')?.value || ''"
+            (valueChange)="onDateRangeChange($event)"
+            formControlName="dateRange"
+            placeholder="Seleccione un período"
+          />
+          @if (filtersForm.get('dateRange')?.value === 'custom') {
+          <div class="grid grid-cols-2 gap-2">
+            <div class="flex flex-col gap-1">
+              <label
+                class="text-sm font-medium text-gray-700 flex items-center gap-2"
+              >
+                <i class="pi pi-calendar text-primary-500"></i>
+                Desde
+              </label>
+              <p-datepicker
+                formControlName="customDateStart"
+                (onSelect)="onCustomDateChange()"
+              />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label
+                class="text-sm font-medium text-gray-700 flex items-center gap-2"
+              >
+                <i class="pi pi-calendar text-primary-500"></i>
+                Hasta
+              </label>
+              <p-datepicker
+                formControlName="customDateEnd"
+                (onSelect)="onCustomDateChange()"
+              />
+            </div>
+          </div>
+          } @if (filtersForm.get('dateRange')?.value) {
+          <p class="text-xs text-gray-500 italic">
+            Mostrando datos para: {{ getDateRangeText() }}
+          </p>
+          }
+        </div>
+      </div>
+
+      <!-- Tipo de servicio con descripción -->
+      <div class="col-span-1 space-y-2">
+        <label
+          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+        >
+          <i class="pi pi-tag text-primary-500"></i>
+          Tipo de servicio
+        </label>
+        <app-select
+          [options]="serviceTypeOptions"
+          formControlName="serviceType"
+          placeholder="Todos los tipos"
         />
-        <app-input-form
-          label="Fecha fin"
-          type="date"
-          formControlName="customDateEnd"
+        <p class="text-xs text-gray-500">
+          Opcional: Filtra por categoría de servicio
+        </p>
+      </div>
+
+      <!-- Servicios específicos -->
+      @if (filtersForm.get('serviceType')?.value) {
+      <div class="col-span-1 space-y-2">
+        <label
+          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+        >
+          <i class="pi pi-list text-primary-500"></i>
+          Servicios
+        </label>
+        <app-select
+          [options]="serviceOptions"
+          formControlName="service"
+          placeholder="Todos los servicios"
         />
       </div>
       }
-
-      <!-- Tipo de servicio -->
-      <div class="col-span-1">
+      <div class="col-span-1 space-y-2">
+        <label
+          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+        >
+          <i class="pi pi-box text-primary-500"></i>
+          Paquetes
+        </label>
         <app-select
-          label="Tipo de servicio"
-          [options]="serviceTypeOptions"
-          formControlName="serviceType"
-          icon="pi pi-tag"
+          [options]="packageOptions"
+          placeholder="Todos los Paquetes"
+          formControlName="package"
         />
       </div>
 
       <!-- Vendedor -->
-      <div class="col-span-1">
+      <div class="col-span-1 space-y-2">
+        <label
+          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+        >
+          <i class="pi pi-user text-primary-500"></i>
+          Vendedor
+        </label>
         <app-select
-          label="Vendedor"
-          [options]="[]"
+          [options]="sellersOptions"
           formControlName="seller"
-          icon="pi pi-user"
+          placeholder="Todos los vendedores"
         />
       </div>
+    </form>
+  </section>
 
-      <!-- Sucursal -->
-      <div class="col-span-1">
-        <app-select
-          label="Sucursal"
-          [options]="[]"
-          formControlName="branch"
-          icon="pi pi-building"
-        />
-      </div>
+  <section class="px-6 py-4">
+    <app-kpi-cards [data]="kpiData()"></app-kpi-cards>
+  </section>
 
-      <!-- Tipo de cliente -->
-      <div class="col-span-1">
-        <app-select
-          label="Tipo de cliente" 
-          formControlName="clientType"
-          icon="pi pi-users"
-        />
-      </div>
-    </div>
-
-    <!-- Acciones -->
-    <div class="p-4 border-t bg-gray-50/50 flex justify-between items-center">
-      <button
-        pButton
-        label="Limpiar filtros"
-        icon="pi pi-filter-slash"
-        class="p-button-outlined p-button-secondary"
-        (click)="filtersForm.reset()"
-      ></button>
-
-      <div class="flex gap-2">
-        <button
-          pButton
-          label="Exportar"
-          icon="pi pi-file-excel"
-          class="p-button-success"
-        ></button>
-        <button
-          pButton
-          label="Aplicar filtros"
-          icon="pi pi-search"
-          class="p-button-primary"
-        ></button>
-      </div>
-    </div>
-  </form>
-  <app-sales-table
-    [data]="salesData()"
-    [loading]="loading()"
-    [totalRecords]="totalRecords()"
-    (stateChange)="loadData($event)"
-    (export)="onExport($event)"
-  />
-  <!-- Contenedor para los gráficos/datos -->
-  
+  <!-- section table data -->
+  <section>
+    <app-sales-table
+      [data]="salesData()"
+      [loading]="loading()"
+      [totalRecords]="totalRecords()"
+    ></app-sales-table>
+  </section>
 </main>

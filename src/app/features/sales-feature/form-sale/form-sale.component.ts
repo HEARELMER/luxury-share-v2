@@ -28,7 +28,8 @@ import { ClientsService } from '../../../core/services/clients-services/clients.
     FormsModule,
     ReactiveFormsModule,
     ServicesPackagesSaleFormComponent,
-    ModalComponent, ButtonModule
+    ModalComponent,
+    ButtonModule,
   ],
   templateUrl: './form-sale.component.html',
   styleUrl: './form-sale.component.scss',
@@ -56,7 +57,7 @@ export class FormSaleComponent {
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: [''],
     registeredBy: [''],
-    clientId:['']
+    clientId: [''],
   });
 
   closeModal() {
@@ -68,7 +69,10 @@ export class FormSaleComponent {
       this.clientForm.patchValue({
         registeredBy: '34203588',
       });
-      this._clientsService.createClient(this.clientForm.value).subscribe(() => {
+      console.log(this.clientForm.value);
+      const filteredValues = this.filterEmptyValues(this.clientForm.value);
+      console.log(filteredValues);
+      this._clientsService.createClient(filteredValues).subscribe(() => {
         console.log('Cliente creado');
       });
     }
@@ -77,21 +81,29 @@ export class FormSaleComponent {
   searchClientByDni() {
     const dni = this.clientForm.get('numberDocument')?.value;
     if (dni) {
-      this._clientsService.searchClientByDniOnlyForSales(dni).subscribe((client) => {
+      this._clientsService.searchClientByDni(dni).subscribe((client) => {
         if (client) {
-          console.log(client);
-          this.clientForm.patchValue({
-            name: client.name,
-            firstLastname: client.firstLastname,
-            secondLastname: client.secondLastname,
-            email: client.email,
-            phone: client.phone,
-            birthDate: client.birthDate,
-          });
+          this.clientForm.patchValue(client);
         } else {
-          console.log('Cliente no encontrado');
+          this._clientsService
+            .searchClientByDniApiExternal(dni)
+            .subscribe((client) => {
+              console.log(client);
+              if (client) {
+                this.clientForm.patchValue(client);
+              }
+            });
         }
       });
     }
+  }
+
+  private filterEmptyValues(formValues: any): any {
+    return Object.keys(formValues)
+      .filter((key) => formValues[key] !== null && formValues[key] !== '')
+      .reduce((obj: any, key) => {
+        obj[key] = formValues[key];
+        return obj;
+      }, {});
   }
 }

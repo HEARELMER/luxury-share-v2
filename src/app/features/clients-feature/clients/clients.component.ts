@@ -6,16 +6,47 @@ import { CLIENT_TABLE_COLS } from '../constants/table-clients.constant';
 import { FilterOptions } from '../../../core/interfaces/api/filters';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Tooltip } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
+import { PaginatorModule } from 'primeng/paginator';
+import { PopoverModule } from 'primeng/popover';
+import { Skeleton } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import { TagModule, Tag } from 'primeng/tag';
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
+import { FormClientComponent } from "../form-client/form-client.component";
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-clients',
-  imports: [],
+  imports: [
+    TieredMenuModule,
+    CommonModule,
+    BadgeModule,
+    ButtonComponent,
+    TableModule,
+    CommonModule,
+    Skeleton,
+    Tooltip,
+    PaginatorModule,
+    FormsModule,
+    ButtonComponent,
+    PopoverModule,
+    InputFormComponent,
+    TagModule,
+    Tag,
+    FormClientComponent,Toast
+],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
-  providers:[DialogService]
+  providers: [DialogService],
 })
 export class ClientsComponent {
-    private readonly _clientsService = inject(ClientsService)
+  private readonly _clientsService = inject(ClientsService);
   private readonly _messageService = inject(MessageService);
   public readonly dialogService = inject(DialogService);
   ref: DynamicDialogRef | undefined;
@@ -31,9 +62,9 @@ export class ClientsComponent {
   showClientModal = signal<boolean>(false);
   filters = signal<{ key: string; value: string }[]>([]);
   selectedClient = signal<any | null>(null);
-  filterClientByAddress = signal<string>('');
+  filterClientByDocumentNumber = signal<string>('');
   filterValue = signal<string>('');
-
+  selectedRow: any;
   // Configuración de tabla
   cols = CLIENT_TABLE_COLS;
   currentPage = 1;
@@ -68,7 +99,7 @@ export class ClientsComponent {
     // Resetear filtros si es necesario
     if (options.resetFilters) {
       this.filterValue.set('');
-      this.filterClientByAddress.set('');
+      this.filterClientByDocumentNumber.set('');
       this.filters.set([]);
     }
 
@@ -94,14 +125,15 @@ export class ClientsComponent {
   /**
    * Busca clientes por dirección
    */
-  searchClient(): void {
-    if (this.filterClientByAddress()) {
+  searchClient()  {
+    if (this.filterClientByDocumentNumber()) {
       this.filters.set([
-        { key: 'address', value: this.filterClientByAddress() },
+        { key: 'numberDocument', value: this.filterClientByDocumentNumber() },
       ]);
       this.loadClients({ resetPage: true });
     }
-    this.filterClientByAddress.set('');
+    this.filterClientByDocumentNumber.set('');
+    
   }
 
   /**
@@ -154,24 +186,21 @@ export class ClientsComponent {
    * @param user
    * @returns void
    */
-  viewUserDetails(userId:string){
+  viewUserDetails(userId: string) {
     console.log('User ID:', userId);
-    const ref = this.dialogService.open(
-      ViewUserInfoComponent,
-      {
-        header: 'Información del usuario', 
-        modal: true,
-        closable: true,
-        dismissableMask: true,
-        breakpoints: {
-          '960px': '65vw',
-          '640px': '80vw',
-        },
-        data: {
-          userId: userId,
-        },
-      }
-    )
+    const ref = this.dialogService.open(ViewUserInfoComponent, {
+      header: 'Información del usuario',
+      modal: true,
+      closable: true,
+      dismissableMask: true,
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '80vw',
+      },
+      data: {
+        userId: userId,
+      },
+    });
   }
 
   /**

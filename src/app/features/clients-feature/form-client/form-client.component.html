@@ -1,0 +1,102 @@
+<app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
+  <div class="flex w-full justify-between items-center">
+    <h2 class="text-lg font-semibold text-primary-500">
+      {{ isEditing() ? "Editar" : "Registrar" }} Cliente
+    </h2>
+    <button
+      class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
+      (click)="closeModal()"
+    >
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+  <form
+    [formGroup]="clientForm"
+    class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 flex-grow"
+  >
+    <app-select
+      label="Tipo de Documento"
+      [required]="true"
+      [options]="[
+        { label: 'Dni', value: 'dni' },
+        { label: 'Carnet de Extranjeria', value: 'ce' },
+        { label: 'otros', value: 'otros' }
+      ]"
+      class="w-full"
+      formControlName="typeDocument"
+    />
+
+    <div class="flex items-start gap-2">
+      <app-input-form
+        [required]="true"
+        label="N° Documento"
+        [isPositive]="true"
+        class="w-full"
+        formControlName="numberDocument"
+      />
+      <button
+        pButton
+        type="button"
+        icon="pi pi-search"
+        class="p-button-rounded p-button-primary w-12 p-1 h-12  "
+        (click)="searchClientByDni()"
+      ></button>
+    </div>
+    <app-input-form
+      [required]="true"
+      label="Nombres"
+      class="w-full"
+      formControlName="name"
+    />
+    <app-input-form
+      [required]="true"
+      label="Primer Apellido"
+      class="w-full"
+      formControlName="firstLastname"
+    />
+    <app-input-form
+      [required]="true"
+      label="Segundo Apellido"
+      class="w-full"
+      formControlName="secondLastname"
+    />
+    <app-input-form
+      label="Fecha de nacimiento"
+      class="w-full"
+      formControlName="birthDate"
+      type="date"
+    />
+    <app-input-form
+      label="Correo Electrónico"
+      class="w-full"
+      type="email"
+      formControlName="email"
+    />
+    <app-input-form
+      [required]="true"
+      label="Número de Celular"
+      class="w-full"
+      formControlName="phone"
+      [isPositive]="true"
+      [maxLength]="9"
+    />
+
+    <div class="flex pt-6 gap-3 justify-end col-span-2">
+      <app-button
+        text="Cancelar"
+        moreClasses="py-2"
+        bgColor="bg-gray-100"
+        textColor="text-black"
+        (click)="closeModal()"
+      />
+      <app-button
+        text="Guardar"
+        moreClasses="py-2"
+        bgColor="bg-primary-500"
+        textColor="text-white"
+        (click)="createClient()"
+        [disabled]="!clientForm.valid"
+      />
+    </div>
+  </form>
+</app-modal>

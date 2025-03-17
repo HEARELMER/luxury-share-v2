@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { Filter } from '../../interfaces/api/filters';
 import { ExportFilesService } from '../files-services/export-files.service';
@@ -14,28 +14,31 @@ export class ClientsService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getClients(page: number, size: number, filters?: Filter[]): Observable<any> {
+    let url = `${this._apiUrl}clients`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-
-    if (filters?.length) {
+    let filtersFormat = '';
+    if (filters) {
       filters.forEach((filter) => {
-        params = params.append(`filters[${filter.key}]`, filter.value);
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
       });
+      url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(`${this._apiUrl}clients`, { params });
+    return this._httpclient.get(url, { params });
   }
- 
-  searchClientByDniOnlyForSales(dni: string): Observable<any> {
-    return this._httpclient.get(`${this._apiUrl}clients/search/${dni}`).pipe(
-      map((response: any) => response.data),
-      catchError(() =>
-        this._httpclient.get(`${this._apiUrl}clients/search/api-dni/${dni}`).pipe(
-          map((response: any) => response.data)
-        )
-      )
-    );
+
+  searchClientByDni(dni: string): Observable<any> {
+    return this._httpclient
+      .get(`${this._apiUrl}clients/search/${dni}`)
+      .pipe(map((response: any) => response.data));
+  }
+
+  searchClientByDniApiExternal(dni: string): Observable<any> {
+    return this._httpclient
+      .get(`${this._apiUrl}users/search/api-dni/${dni}`)
+      .pipe(map((response: any) => response.data || response));
   }
 
   createClient(client: any): Observable<any> {

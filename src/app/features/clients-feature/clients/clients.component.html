@@ -1,1 +1,174 @@
-<p>clients works!</p>
+<main class="flex flex-col gap-4">
+  <div class="flex items-end gap-2 w-full bg-white rounded-lg border p-4">
+    <div class="flex-none w-64">
+      <app-input-form
+        type="text"
+        label="Nª de Documento"
+        [required]="true"
+        errorType=" "
+        placeholder="90239023"
+        [isPositive]="true"
+        [(value)]="filterClientByDocumentNumber"
+      />
+    </div>
+
+    <button
+      (click)="searchClient()"
+      class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+    >
+      <i class="pi pi-search"></i>
+    </button>
+    <div class="flex gap-2 ml-auto">
+      <app-button
+        icon="pi pi-plus"
+        text="Nuevo Cliente"
+        moreClasses="py-2"
+        bgColor="bg-primary-500"
+        (click)="openClientModal()"
+      />
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border w-full">
+    <div class="w-full py-5 flex px-4 justify-between">
+      <div class="flex gap-2">
+        @for (item of filters(); track $index) {
+        <div
+          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+        >
+          <p-tag [value]="item.value"></p-tag>
+          <button
+            (click)="clearFilters()"
+            class="hover:text-red-500 text-sm text-red-300"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <p-table
+      [columns]="cols"
+      [value]="clients()"
+      [lazy]="true"
+      [scrollable]="true"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="50"
+      [totalRecords]="totalRecords"
+      scrollHeight="400px"
+      [resizableColumns]="true"
+      styleClass="p-datatable-gridlines"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      selectionMode="single"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+          >
+            {{ col.header }}
+          </th>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-client let-columns="columns">
+        <tr [pSelectableRow]="client">
+          @for (col of columns; track $index) {
+          <td>
+            @if (col.field == "typeDocument") {
+            {{ client[col.field] | uppercase }}
+            } @else if (col.field == "createdAt") {
+            {{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field == "updatedAt") {
+            {{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field=="registeredBy") {
+
+            <div class="flex items-center gap-2">
+              <p-tag
+                [value]="client[col.field]"
+                [pTooltip]="'Click para ver + '"
+                tooltipPosition="top"
+                [rounded]="true"
+                (click)="viewUserDetails(client[col.field])"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+              />
+            </div>
+
+            } @else if (col.field=="actions") {
+            <div class="flex gap-1">
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Editar Sucursal'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="editClient(client)"
+              >
+                <i class="pi pi-file-edit"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Eliminar Cliente'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="deleteClient(client)"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+
+            } @else {
+            {{ client[col.field] }}
+
+            }
+          </td>
+          }
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody" let-columns="columns">
+        <tr>
+          @for (col of columns; track $index) {
+          <td>
+            <p-skeleton></p-skeleton>
+          </td>
+
+          }
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showFirstLastIcon]="false"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- 
+  <app-export-excel
+    title="Sucursales"
+    [(showModal)]="showModal"
+    (exportData)="handleExport($event)"
+    [total]="totalRecords"
+  /> -->
+
+<app-form-client
+  [(showModal)]="showClientModal"
+  (refreshData)="handleRefreshData()"
+  [clientToEdit]="selectedClient()"
+/>
+<p-toast [baseZIndex]="10000" [life]="2000" />

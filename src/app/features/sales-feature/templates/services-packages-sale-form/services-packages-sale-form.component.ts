@@ -29,6 +29,7 @@ import {
 } from '@angular/forms';
 import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
+import { SalesService } from '../../../../core/services/sales-services/sales.service';
 interface TableState {
   first: number;
   rows: number;
@@ -75,6 +76,7 @@ interface SaleItem {
 export class ServicesPackagesSaleFormComponent {
   private readonly _servicesService = inject(ServicesService);
   private readonly _packagesService = inject(PackagesService);
+  private readonly _salesService = inject(SalesService);
   private readonly _messageService = inject(MessageService);
   private readonly _fb = inject(FormBuilder);
 
@@ -86,14 +88,7 @@ export class ServicesPackagesSaleFormComponent {
     registeredBy: [''],
     discount: [''],
     observation: [''],
-    details: this._fb.array([
-      this._fb.group({
-        serviceId: [''],
-        packageId: [''],
-        quantity: [''],
-        unitPrice: [''],
-      }),
-    ]),
+    details: this._fb.array([ ]),
   });
 
   constructor() {
@@ -258,5 +253,50 @@ export class ServicesPackagesSaleFormComponent {
       rows: event.rows,
     }));
     this.loadItems();
+  }
+
+  // createSale
+  createSale() {
+    const saleDetails = this.selectedItems().map((item) => ({
+      serviceId: item.type === 'service' ? item.name : null,
+      packageId: item.type === 'package' ? item.name : null,
+      quantity: item.quantity,
+      unitPrice: item.priceUnit,
+    }));
+
+    this.formSale.patchValue({
+      details: saleDetails,
+      clientId: '90942334',
+      registeredBy: '34203588',
+      branchId: '65cdca28-2787-4f85-9fac-60e7fc1236ce',
+    });
+    console.log(this.formSale.value);
+
+    if (this.formSale.valid) {
+      this._salesService.createSale(this.formSale.value).subscribe({
+        next: (response) => {
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Venta creada',
+            detail: 'La venta se ha creado exitosamente',
+          });
+          this.clearSale();
+        },
+        error: (error) => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo crear la venta',
+          });
+          console.error('Error creating sale:', error);
+        },
+      });
+    } else {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos',
+      });
+    }
   }
 }

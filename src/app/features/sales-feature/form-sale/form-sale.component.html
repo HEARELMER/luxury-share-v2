@@ -1,5 +1,5 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
-  <main class="flex flex-col h-auto w-[90vw] max-w-7xl mx-auto bg-green-600">
+  <main class="flex flex-col h-auto w-[90vw] max-w-7xl mx-auto ">
     <header class="flex w-full justify-between items-center">
       <h2 class="text-lg font-semibold text-primary-500">
         Nueva Ventas
@@ -23,7 +23,7 @@
         <p-step-panels   styleclass="flex-grow flex flex-col overflow-auto">
           <p-step-panel [value]="1" styleClass="flex-grow justify-between   h-full flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
-              <div   styleClass="flex flex-col justify-between bg-gray-600 h-full p-6 rounded-lg lg:px-14 flex-grow">
+              <div   styleClass="flex flex-col justify-between   h-full p-6 rounded-lg lg:px-14 flex-grow">
                 <form
                   [formGroup]="clientForm"
                   class="grid grid-cols-1 md:grid-cols-2   gap-4 flex-grow"
@@ -37,15 +37,25 @@
                       { label: 'otros', value: 'otros' }
                     ]"
                     class="w-full"
-                    formControlName="documentType"
+                    formControlName="typeDocument"      
                   />
-                  <app-input-form
-                    [required]="true"
-                    label="N° Documento"
-                    [isPositive]="true"
-                    class="w-full"
-                    formControlName="documentNumber"
-                  />
+               
+                  <div class="flex items-end gap-2">
+                    <app-input-form
+                      [required]="true"
+                      label="N° Documento"
+                      [isPositive]="true"
+                      class="w-full"
+                      formControlName="numberDocument"
+                    />
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-search"
+                      class="p-button-rounded p-button-primary"
+                      (click)="searchClientByDni()"
+                    ></button>
+                  </div>
                   <app-input-form
                     [required]="true"
                     label="Nombres"
@@ -80,7 +90,7 @@
                     [required]="true"
                     label="Número de Celular"
                     class="w-full"
-                    formControlName="cellphone"
+                    formControlName="phone"
                     [isPositive]="true"
                     [maxLength]="9"
                   />
@@ -100,9 +110,9 @@
                     moreClasses="py-2"
                     bgColor="bg-primary-500"
                     textColor="text-white"
-                    (click)="activateCallback(2)"
+                    (click)=" createClient()"
                     [disabled]="!clientForm.valid"
-                  />
+                  /> 
                 </div>
               </div>
             </ng-template>

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { Filter } from '../../interfaces/api/filters';
 import { ExportFilesService } from '../files-services/export-files.service';
@@ -25,6 +25,21 @@ export class ClientsService {
     }
 
     return this._httpclient.get(`${this._apiUrl}clients`, { params });
+  }
+ 
+  searchClientByDniOnlyForSales(dni: string): Observable<any> {
+    return this._httpclient.get(`${this._apiUrl}clients/search/${dni}`).pipe(
+      map((response: any) => response.data),
+      catchError(() =>
+        this._httpclient.get(`${this._apiUrl}clients/search/api-dni/${dni}`).pipe(
+          map((response: any) => response.data)
+        )
+      )
+    );
+  }
+
+  createClient(client: any): Observable<any> {
+    return this._httpclient.post(`${this._apiUrl}clients`, client);
   }
 }
 

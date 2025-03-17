@@ -21,9 +21,14 @@ import { Paginator } from 'primeng/paginator';
 import { Tooltip } from 'primeng/tooltip';
 import { Badge } from 'primeng/badge';
 import { InputFormComponent } from '../../../../shared/components/forms/input-form/input-form.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
-import { ButtonComponent } from "../../../../shared/components/ui/button/button.component";
+import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 interface TableState {
   first: number;
   rows: number;
@@ -62,8 +67,8 @@ interface SaleItem {
     FormsModule,
     CapitalizePipe,
     ReactiveFormsModule,
-    ButtonComponent
-],
+    ButtonComponent,
+  ],
   templateUrl: './services-packages-sale-form.component.html',
   styleUrl: './services-packages-sale-form.component.scss',
 })
@@ -74,9 +79,22 @@ export class ServicesPackagesSaleFormComponent {
   private readonly _fb = inject(FormBuilder);
 
   formSale = this._fb.group({
-    departureDate: ['', Validators.required],
-    observation: [''], 
-  })
+    clientId: [''],
+    branchId: [''],
+    dateSale: [''],
+    departureDate: [''],
+    registeredBy: [''],
+    discount: [''],
+    observation: [''],
+    details: this._fb.array([
+      this._fb.group({
+        serviceId: [''],
+        packageId: [''],
+        quantity: [''],
+        unitPrice: [''],
+      }),
+    ]),
+  });
 
   constructor() {
     // Efecto para recargar datos cuando cambie la vista

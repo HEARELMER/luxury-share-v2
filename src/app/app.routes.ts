@@ -25,6 +25,7 @@ export const routes: Routes = [
     path: 'luxury',
     component: MainComponent,
     children: [
+      {path: '', redirectTo: 'home', pathMatch: 'full'},
       { path: 'home', component: HomeComponent },
       { path: 'users', component: UsersComponent },
       { path: 'profile', component: UserProfileComponent },

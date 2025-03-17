@@ -30,7 +30,8 @@ export class ModalComponent {
   customClass = input<string>('w-auto');
   closeOnBackdrop = input<boolean>(true);
   position= input<string>('center');
-
+  maximizable = input<boolean>(false);
+ 
   close() {
     this.isOpen.set(false);
   }

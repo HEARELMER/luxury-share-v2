@@ -1,8 +1,18 @@
-<main class="flex flex-col min-h-96 h-[90%] w-full backdrop: mx-auto">
-  <!-- Contenido del modal con scroll -->
-  <section class="w-full pt-4 h-full">
-    <form class="w-full">
-      <p-stepper [value]="1" class="basis-[50rem]">
+<app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
+  <main class="flex flex-col h-auto w-[90vw] max-w-7xl mx-auto bg-green-600">
+    <header class="flex w-full justify-between items-center">
+      <h2 class="text-lg font-semibold text-primary-500">
+        Nueva Ventas
+      </h2>
+      <button
+        class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
+        (click)="closeModal()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </header>
+    <section class="h-full " >
+       <p-stepper   [value]="1" styleClass="flex-grow bg-gray-500 flex flex-col"  >
         <p-step-list>
           @for (step of addSaleSteps; track $index) {
           <p-step [value]="step.value">
@@ -10,23 +20,21 @@
           </p-step>
           }
         </p-step-list>
-        <p-step-panels>
-          <p-step-panel [value]="1">
+        <p-step-panels   styleclass="flex-grow flex flex-col overflow-auto">
+          <p-step-panel [value]="1" styleClass="flex-grow justify-between   h-full flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
-              <!-- Sección del formulario -->
-              <div
-                class="flex flex-col justify-between bg-white h-full p-6 rounded-lg lg:px-14"
-              >
+              <div   styleClass="flex flex-col justify-between bg-gray-600 h-full p-6 rounded-lg lg:px-14 flex-grow">
                 <form
                   [formGroup]="clientForm"
-                  class="grid grid-cols-1 md:grid-cols-2 h-full gap-4"
+                  class="grid grid-cols-1 md:grid-cols-2   gap-4 flex-grow"
                 >
                   <app-select
                     label="Tipo de Documento"
                     [required]="true"
                     [options]="[
                       { label: 'Dni', value: 'dni' },
-                      { label: 'Carnet de Extranjeria', value: 'ce' }
+                      { label: 'Carnet de Extranjeria', value: 'ce' },
+                      { label: 'otros', value: 'otros' }
                     ]"
                     class="w-full"
                     formControlName="documentType"
@@ -38,7 +46,6 @@
                     class="w-full"
                     formControlName="documentNumber"
                   />
-
                   <app-input-form
                     [required]="true"
                     label="Nombres"
@@ -79,10 +86,9 @@
                   />
                 </form>
 
-                <div class="flex pt-6 gap-3 justify-end">
+                <div class="flex pt-6  gap-3 justify-end">
                   <app-button
-                    text="Cancelar"
-                    icon="pi pi-times"
+                    text="Cancelar" 
                     moreClasses="py-2"
                     bgColor="bg-gray-100"
                     textColor="text-black"
@@ -101,12 +107,12 @@
               </div>
             </ng-template>
           </p-step-panel>
-          <p-step-panel [value]="2">
+          <p-step-panel [value]="2" class="flex-grow flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
               <app-services-packages-sale-form />
             </ng-template>
           </p-step-panel>
-          <p-step-panel [value]="3">
+          <p-step-panel [value]="3" class="flex-grow flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
               <div class="flex pt-6 justify-end">
                 <p-button
@@ -119,9 +125,8 @@
             </ng-template>
           </p-step-panel>
         </p-step-panels>
-      </p-stepper>
-    </form>
-  </section>
-</main>
-
-<p-toast [life]="2000" [baseZIndex]="10000" />
+       </p-stepper>
+    </section>
+   
+  </main>
+</app-modal>

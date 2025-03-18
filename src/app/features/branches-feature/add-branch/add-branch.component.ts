@@ -61,6 +61,7 @@ export class AddBranchComponent {
       }
     });
   } 
+
   formatValues() {
     this.branchForm.patchValue({
       registeredBy: '34203588',
@@ -72,10 +73,11 @@ export class AddBranchComponent {
   onSubmit() {
     if (!this.branchForm.valid) return;
     this.formatValues();
+    const formValues = this.filterEmptyValues(this.branchForm.value);
     if (this.isEditing()) {
-      this.update(this.branchForm.value);
+      this.update(formValues);
     } else {
-      this.save(this.branchForm.value);
+      this.save(formValues);
     }
   }
 
@@ -126,5 +128,14 @@ export class AddBranchComponent {
     this.showModal.set(false);
     this.branchForm.reset();
     this.isEditing.set(false);
+  }
+
+  private filterEmptyValues(formValues: any): any {
+    return Object.keys(formValues)
+      .filter((key) => formValues[key] !== null && formValues[key] !== '')
+      .reduce((obj: any, key) => {
+        obj[key] = formValues[key];
+        return obj;
+      }, {});
   }
 }

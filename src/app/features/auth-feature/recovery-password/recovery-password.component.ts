@@ -53,33 +53,33 @@ export class RecoveryPasswordComponent {
   });
 
   savePassword() {
-    if (
-      this.password === this.passwordConfirm &&
-      this.NUM_DNI.length >= 8 &&
-      this.NUM_DNI.length < 9
-    ) {
-      this.authService
-        .passwordRecovery(this.NUM_DNI, this.password)
-        .subscribe((isSuccess) => {
-          if (isSuccess) {
-            this.codeIsValid = false;
-            this.messageAlert = {
-              type: 'success',
-              title: '¡Contraseña actualizada!',
-              message: 'Tu contraseña ha sido actualizada exitosamente.',
-            };
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 3000);
-          }
-        });
-    } else {
-      this.messageAlert = {
-        type: 'error',
-        title: '¡Error!',
-        message: 'Las contraseñas no coinciden.',
-      };
-    }
+    // if (
+    //   this.password === this.passwordConfirm &&
+    //   this.NUM_DNI.length >= 8 &&
+    //   this.NUM_DNI.length < 9
+    // ) {
+    //   this.authService
+    //     .passwordRecovery(this.NUM_DNI, this.password)
+    //     .subscribe((isSuccess) => {
+    //       if (isSuccess) {
+    //         this.codeIsValid = false;
+    //         this.messageAlert = {
+    //           type: 'success',
+    //           title: '¡Contraseña actualizada!',
+    //           message: 'Tu contraseña ha sido actualizada exitosamente.',
+    //         };
+    //         setTimeout(() => {
+    //           this.router.navigate(['/login']);
+    //         }, 3000);
+    //       }
+    //     });
+    // } else {
+    //   this.messageAlert = {
+    //     type: 'error',
+    //     title: '¡Error!',
+    //     message: 'Las contraseñas no coinciden.',
+    //   };
+    // }
   }
   getPassword(value: any) {
     console.log(value);
@@ -98,42 +98,42 @@ export class RecoveryPasswordComponent {
     this.codeIsValid = false;
   }
   validateCode() {
-    if (this.form.controls.email.valid && this.value && !this.isLoading) {
-      this.isLoading = true; // Activar bandera de carga
-      const data = {
-        email: this.form.controls.email.value as string,
-        code: this.value as string,
-      };
-      this.authService.validateCodeForPasswordRecovery(data).subscribe(
-        (response: MessageAlert) => {
-          this.messageAlert = response;
-          this.isLoading = false;
-          this.codeIsValid = true;
-          setTimeout(() => {
-            this.messageAlert = null;
-          }, 3000);
-        },
-        () => {
-          this.isLoading = false;
-        }
-      );
-    }
+    // if (this.form.controls.email.valid && this.value && !this.isLoading) {
+    //   this.isLoading = true; // Activar bandera de carga
+    //   const data = {
+    //     email: this.form.controls.email.value as string,
+    //     code: this.value as string,
+    //   };
+    //   this.authService.validateCodeForPasswordRecovery(data).subscribe(
+    //     (response: MessageAlert) => {
+    //       this.messageAlert = response;
+    //       this.isLoading = false;
+    //       this.codeIsValid = true;
+    //       setTimeout(() => {
+    //         this.messageAlert = null;
+    //       }, 3000);
+    //     },
+    //     () => {
+    //       this.isLoading = false;
+    //     }
+    //   );
+    // }
   }
   validateEmail() {
-    if (this.form.controls.email.valid && !this.isLoading) {
-      this.isLoading = true;
-      this.authService
-        .validateEmailForPasswordRecovery(this.form.controls.email.value || '')
-        .subscribe((response: MessageAlert) => {
-          this.messageAlert = response;
-          response.type === 'success'
-            ? (this.emailIsValid = true)
-            : (this.emailIsValid = false);
-          this.isLoading = false;
-          setTimeout(() => {
-            this.messageAlert = null;
-          }, 3000);
-        });
-    }
+    // if (this.form.controls.email.valid && !this.isLoading) {
+    //   this.isLoading = true;
+    //   this.authService
+    //     .validateEmailForPasswordRecovery(this.form.controls.email.value || '')
+    //     .subscribe((response: MessageAlert) => {
+    //       this.messageAlert = response;
+    //       response.type === 'success'
+    //         ? (this.emailIsValid = true)
+    //         : (this.emailIsValid = false);
+    //       this.isLoading = false;
+    //       setTimeout(() => {
+    //         this.messageAlert = null;
+    //       }, 3000);
+    //     });
+    // }
   }
 }

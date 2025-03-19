@@ -1,23 +1,28 @@
 <main class="grid grid-cols-4 h-[70vh] gap-3">
   <section class="col-span-3 h-full">
     <form
-      class="grid gap-2 grid-cols-1 pb-4 lg:grid-cols-2"
+      class="grid gap-2 grid-cols-1 pb-4 lg:grid-cols-3"
       [formGroup]="formSale"
     >
       <app-input-form
         label="Fecha de Salida o Servicio"
         formControlName="departureDate"
-        type="date"
+        type="datetime-local"
         [required]="true"
         class="col-span-1"
       />
-      <app-input-form
+      <!-- <app-input-form
         class="col-span-1"
         label="Observaciones"
         formControlName="observation"
+      /> -->
+      <app-select
+        [options]="paymentMethods"
+        label="Forma de Pago"
+        formControlName="paymentMethod"
+        [required]="true"
       />
-    </form>
-
+    </form> 
     <!-- tabla  -->
     <div class="bg-white rounded-lg min-h-96 shadow-sm border">
       <div class="flex flex-col h-full gap-4">

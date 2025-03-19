@@ -22,6 +22,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SERVICE_TYPES } from '../constants/service-types.contant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 @Component({
   selector: 'app-add-service',
   imports: [
@@ -40,6 +41,7 @@ export class AddServiceComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _serviceService = inject(ServicesService);
   private readonly _messageService = inject(MessageService);
+  private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
 
   showModal = model<boolean>(false);
   refreshData = output<void>();
@@ -72,7 +74,7 @@ export class AddServiceComponent {
 
   formatValues() {
     this.serviceForm.patchValue({
-      registeredBy: '34855749',
+      registeredBy: '73464945',
       priceUnit: parseFloat(this.serviceForm.value.priceUnit),
     });
   }
@@ -80,12 +82,16 @@ export class AddServiceComponent {
   onSubmit() {
     if (!this.serviceForm.valid) return;
     this.formatValues();
+    const filteredValues = this._filterEmptyValuesPipe.transform(
+      this.serviceForm.value
+    );
     if (this.isEditing()) {
-      this.update(this.serviceForm.value);
+      this.update(filteredValues);
     } else {
-      this.save(this.serviceForm.value);
+      this.save(filteredValues);
     }
   }
+
   save(data: any) {
     this.isSubmitting.set(true);
     this._serviceService.createService(data).subscribe({

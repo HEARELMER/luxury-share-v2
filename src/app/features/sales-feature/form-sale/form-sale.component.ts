@@ -67,7 +67,7 @@ export class FormSaleComponent {
   createClient() {
     if (this.clientForm.valid) {
       this.clientForm.patchValue({
-        registeredBy: '34203588',
+        registeredBy: '73464945',
       });
       console.log(this.clientForm.value);
       const filteredValues = this.filterEmptyValues(this.clientForm.value);

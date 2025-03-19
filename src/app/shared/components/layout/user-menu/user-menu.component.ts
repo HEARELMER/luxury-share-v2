@@ -28,10 +28,10 @@ export class UserMenuComponent {
   confirm: boolean = false;
   constructor(private authService: AuthService, private router: Router) {}
   logOut() {
-    this.authService.logOut();
-    this.messageLogin = this.authService.response_login;
-    console.log(this.messageLogin);
-    this.confirm = true;
+    // this.authService.logOut();
+    // this.messageLogin = this.authService.response_login;
+    // console.log(this.messageLogin);
+    // this.confirm = true;
 
     setTimeout(() => {
       this.confirm = false;

@@ -33,6 +33,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { Filter } from '../../../core/interfaces/api/filters';
 import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
 import { ViewServicesToPackageComponent } from '../templates/view-services-to-package/view-services-to-package.component';
+import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 @Component({
   selector: 'app-add-package',
   imports: [
@@ -58,6 +59,7 @@ export class AddPackageComponent {
   private readonly _serviceService = inject(ServicesService);
   private readonly _messageService = inject(MessageService);
   private readonly _packagesService = inject(PackagesService);
+  private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
 
   sourceServices = signal<any[]>([]);
   targetServices = signal<any[]>([]);
@@ -136,7 +138,7 @@ export class AddPackageComponent {
 
   formatValues() {
     this.packageForm.patchValue({
-      registeredBy: '34855749',
+      registeredBy: '73464945',
       priceUnit: parseFloat(this.packageForm.value.priceUnit),
     });
   }
@@ -144,10 +146,13 @@ export class AddPackageComponent {
   onSubmit() {
     if (!this.packageForm.valid) return;
     this.formatValues();
+    const filteredValues = this._filterEmptyValuesPipe.transform(
+      this.packageForm.value
+    );
     if (this.isEditing()) {
-      this.update(this.packageForm.value);
+      this.update(filteredValues);
     } else {
-      this.save(this.packageForm.value);
+      this.save(filteredValues);
     }
   }
 

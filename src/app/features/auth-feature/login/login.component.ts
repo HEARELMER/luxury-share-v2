@@ -53,24 +53,14 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Error al mantener la sesión
-    console.log(this.authService.verifyToken());
-
-    if (this.authService.verifyToken()) {
-      // this.router.navigate(['/luxury']);
-    }
+    
   }
 
   showPassword() {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  refreshPrueba() {
-    this.authService.refreshToken().subscribe((res) => {
-      console.log(res);
-    });
-  }
-
+ 
   async login() {
     if (this.form.valid) {
       this.loading = true;
@@ -80,18 +70,18 @@ export class LoginComponent {
         password: this.form.value.password as string,
       };
 
-      const success = await this.authService.login(user);
-      this.messageLogin = this.authService.response_login;
+      // const success = await this.authService.login(user);
+      // this.messageLogin = this.authService.response_login;
       this.confirmLogin = true;
 
-      setTimeout(() => {
-        this.loading = false;
-        if (success) {
-          this.router.navigate(['/luxury']);
-        } else {
-          this.confirmLogin = false;
-        }
-      }, 3000); // Esperar 3 segundos antes de redirigir
+      // setTimeout(() => {
+      //   this.loading = false;
+      //   if (success) {
+      //     this.router.navigate(['/luxury']);
+      //   } else {
+      //     this.confirmLogin = false;
+      //   }
+      // }, 3000); // Esperar 3 segundos antes de redirigir
     }
   }
 }

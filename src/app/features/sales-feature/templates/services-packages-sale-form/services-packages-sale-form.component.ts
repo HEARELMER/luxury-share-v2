@@ -1,4 +1,4 @@
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, JsonPipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -30,6 +30,7 @@ import {
 import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { SalesService } from '../../../../core/services/sales-services/sales.service';
+import { SelectComponent } from '../../../../shared/components/forms/select/select.component';
 interface TableState {
   first: number;
   rows: number;
@@ -69,6 +70,7 @@ interface SaleItem {
     CapitalizePipe,
     ReactiveFormsModule,
     ButtonComponent,
+    SelectComponent, JsonPipe
   ],
   templateUrl: './services-packages-sale-form.component.html',
   styleUrl: './services-packages-sale-form.component.scss',
@@ -80,15 +82,23 @@ export class ServicesPackagesSaleFormComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _fb = inject(FormBuilder);
 
+  paymentMethods = [
+    { label: 'Efectivo', value: 'Efectivo' },
+    { label: 'Tarjeta de crédito', value: 'Tarjeta de crédito' },
+    { label: 'Tarjeta de débito', value: 'Tarjeta de débito' },
+    { label: 'Transferencia', value: 'Transferencia' },
+    { label: 'Otros', value: 'otros' },
+  ];
   formSale = this._fb.group({
     clientId: [''],
     branchId: [''],
     dateSale: [''],
     departureDate: [''],
     registeredBy: [''],
-    discount: [''],
-    observation: [''],
-    details: this._fb.array([ ]),
+    discount: [0],
+    // observation: [''],
+    details: this._fb.array([]),
+    paymentMethod: [0, [Validators.required]],
   });
 
   constructor() {
@@ -146,6 +156,7 @@ export class ServicesPackagesSaleFormComponent {
       }
       return [...items, { ...newItem, quantity: newItem.quantity || 1 }];
     });
+    this.updateFormDetails();
   }
 
   // Actualizar la cantidad de un item en la venta
@@ -161,6 +172,8 @@ export class ServicesPackagesSaleFormComponent {
       items.splice(index, 1);
       return [...items];
     });
+
+    this.updateFormDetails();
   }
 
   clearSale(): void {
@@ -255,48 +268,22 @@ export class ServicesPackagesSaleFormComponent {
     this.loadItems();
   }
 
+  // Metodo para sincronizar los detalles con el formulario
+private updateFormDetails(): void {
+  const saleDetails = this.selectedItems().map((item) => ({
+    serviceId: item.type === 'service' ? item.name : null,
+    packageId: item.type === 'package' ? item.name : null,
+    quantity: item.quantity,
+    unitPrice: item.priceUnit,
+  }));
+
+  this.formSale.patchValue({
+    details: saleDetails,
+  });
+}
+
   // createSale
   createSale() {
-    const saleDetails = this.selectedItems().map((item) => ({
-      serviceId: item.type === 'service' ? item.name : null,
-      packageId: item.type === 'package' ? item.name : null,
-      quantity: item.quantity,
-      unitPrice: item.priceUnit,
-    }));
-
-    this.formSale.patchValue({
-      details: saleDetails,
-      clientId: '90942334',
-      registeredBy: '34203588',
-      branchId: '65cdca28-2787-4f85-9fac-60e7fc1236ce',
-    });
     console.log(this.formSale.value);
-
-    if (this.formSale.valid) {
-      this._salesService.createSale(this.formSale.value).subscribe({
-        next: (response) => {
-          this._messageService.add({
-            severity: 'success',
-            summary: 'Venta creada',
-            detail: 'La venta se ha creado exitosamente',
-          });
-          this.clearSale();
-        },
-        error: (error) => {
-          this._messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo crear la venta',
-          });
-          console.error('Error creating sale:', error);
-        },
-      });
-    } else {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos',
-      });
-    }
   }
 }

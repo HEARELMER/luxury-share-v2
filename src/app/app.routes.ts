@@ -10,6 +10,7 @@ import { BranchesComponent } from './features/branches-feature/branches/branches
 import { SalesComponent } from './features/sales-feature/sales/sales.component';
 import { ClientsComponent } from './features/clients-feature/clients/clients.component';
 import { ReportsComponent } from './features/reports-feature/reports/reports.component';
+import { PasswordRecoveryComponent } from './features/auth-feature/password-recovery/password-recovery.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -18,7 +19,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
-      { path: 'recovery-password', component: RecoveryPasswordComponent },
+      { path: 'recovery-password', component: PasswordRecoveryComponent },
     ],
   },
   {

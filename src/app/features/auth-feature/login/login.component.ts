@@ -11,6 +11,7 @@ import { AlertComponent } from '../../../shared/components/ui/alert/alert.compon
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
 import { AuthService } from '../../../core/services/auth-services/auth.service';
+import { InputFormComponent } from "../../../shared/components/forms/input-form/input-form.component";
 
 @Component({
   selector: 'app-login',
@@ -22,12 +23,15 @@ import { AuthService } from '../../../core/services/auth-services/auth.service';
     FormsModule,
     NgClass,
     ReactiveFormsModule,
-  ],
+    InputFormComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private readonly formBuilder = inject(FormBuilder);
+  private readonly _formBuilder = inject(FormBuilder);
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
   passwordVisible: boolean = false;
   loading: boolean = false;
   confirmLogin: boolean = false;
@@ -38,29 +42,23 @@ export class LoginComponent {
     type: '',
   };
 
-  form = this.formBuilder.group({
+  form = this._formBuilder.group({
     userId: [
       '',
       [
-        Validators.minLength(6),
+        Validators.minLength(8),
         Validators.maxLength(8),
         Validators.pattern('^[0-9]*$'),
+        Validators.required,
       ],
     ],
-    password: ['', [Validators.minLength(8)]],
+    password: ['', [Validators.required]],
   });
-
-  constructor(private authService: AuthService, private router: Router) {}
-
-  ngOnInit(): void {
-    
-  }
-
+ 
   showPassword() {
     this.passwordVisible = !this.passwordVisible;
   }
 
- 
   async login() {
     if (this.form.valid) {
       this.loading = true;

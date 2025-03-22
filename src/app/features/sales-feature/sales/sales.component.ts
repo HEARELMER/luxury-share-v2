@@ -36,7 +36,8 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
     ButtonComponent,
     PopoverModule,
     TagModule,
-    Tag
+    Tag,
+    InputFormComponent
 ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',

@@ -1,5 +1,166 @@
 <main class="flex flex-col gap-4">
-   <app-button text="Nueva Venta" (click)="openAddSaleModal()" />
+  <app-button text="Nueva Venta" (click)="openAddSaleModal()" />
+  <!-- table section -->
+  <div class="bg-white rounded-lg border w-full">
+    <div class="w-full py-5 flex px-4 justify-between">
+      <!-- <div class="flex gap-2">
+        @for (item of filters(); track $index) {
+        <div
+          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+        >
+          <p-tag [value]="item.value"></p-tag>
+          <button
+            (click)="clearFilters()"
+            class="hover:text-red-500 text-sm text-red-300"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        }
+      </div> -->
+    </div>
+
+    <p-table
+      [columns]="salesTableColumns"
+      [value]="sales()"
+      [lazy]="true"
+      [scrollable]="true"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="50"
+      [totalRecords]="totalRecords"
+      scrollHeight="400px"
+      [resizableColumns]="true"
+      styleClass="p-datatable-gridlines"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      selectionMode="single"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+          >
+            {{ col.header }}
+          </th>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-sale let-columns="columns">
+        <tr [pSelectableRow]="sale">
+          @for (col of columns; track $index) {
+          <td>
+            @if (col.field == "status") { @switch (sale[col.field]) { @case
+            ('PENDIENTE') {
+            <p-tag severity="warn" value="Pendiente"></p-tag>
+            } @case ('CONFIRMADO') {
+            <p-tag severity="success" value="Confirmada"></p-tag>
+            } @case ('CANCELADO') {
+            <p-tag severity="danger" value="Cancelada"></p-tag>
+            } @case ('COMPLETADO') {
+            <p-tag severity="info" value="Completada"></p-tag>
+            } @default {
+            <p-tag
+              severity="secondary"
+              [value]="sale[col.field] || 'Desconocido'"
+            ></p-tag>
+            } } } @else if (col.field == "codeSale") {
+            {{ sale[col.field] | uppercase }}
+            } @else if (col.field == "dateSale") {
+            {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field == "departureDate") {
+            {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            } @else if (col.field=="registeredBy" ) {
+
+            <div class="flex items-center gap-2">
+              <p-tag
+                [value]="sale[col.field]"
+                [pTooltip]="'Click para ver + '"
+                tooltipPosition="top"
+                [rounded]="true"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+              />
+            </div>
+
+            } @else if (col.field=="actions") {
+            <div class="flex gap-1">
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Modificar Venta'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-file-edit"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Cancelar Venta'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="cancelSale(sale)"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Ver Detalles'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-eye"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Ver PDF'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-file-pdf"></i>
+              </button>
+            </div>
+
+            } @else {
+            {{ sale[col.field] }}
+
+            }
+          </td>
+          }
+        </tr>
+      </ng-template>
+
+      <!-- Plantilla para estado de carga -->
+      <ng-template pTemplate="loadingbody" let-columns="columns">
+        <tr>
+          @for (col of columns; track $index) {
+          <td>
+            <p-skeleton></p-skeleton>
+          </td>
+          }
+        </tr>
+      </ng-template>
+      
+
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showFirstLastIcon]="false"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <!-- <app-export-excel
@@ -9,6 +170,4 @@
   [total]="totalRecords"
 /> -->
 
-<app-form-sale
-  [(showModal)]="showModalAddSale"  
-/>
+<app-form-sale [(showModal)]="showModalAddSale" />

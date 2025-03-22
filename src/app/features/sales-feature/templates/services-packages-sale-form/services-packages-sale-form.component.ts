@@ -9,6 +9,7 @@ import {
   computed,
   effect,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -31,6 +32,8 @@ import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { SalesService } from '../../../../core/services/sales-services/sales.service';
 import { SelectComponent } from '../../../../shared/components/forms/select/select.component';
+import { FilterEmptyValuesPipe } from '../../../../shared/pipes/filter-empty-value.pipe';
+import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
 interface TableState {
   first: number;
   rows: number;
@@ -50,6 +53,8 @@ interface SaleItem {
   quantity: number;
   description?: string;
   status?: boolean;
+  serviceId?: string;
+  packageId?: string;
 }
 
 @Component({
@@ -70,7 +75,8 @@ interface SaleItem {
     CapitalizePipe,
     ReactiveFormsModule,
     ButtonComponent,
-    SelectComponent, JsonPipe
+    SelectComponent,
+    JsonPipe,
   ],
   templateUrl: './services-packages-sale-form.component.html',
   styleUrl: './services-packages-sale-form.component.scss',
@@ -80,8 +86,49 @@ export class ServicesPackagesSaleFormComponent {
   private readonly _packagesService = inject(PackagesService);
   private readonly _salesService = inject(SalesService);
   private readonly _messageService = inject(MessageService);
+  private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
+  private readonly _localstorageService = inject(LocalstorageService);
   private readonly _fb = inject(FormBuilder);
+  constructor() {
+    // Efecto para recargar datos cuando cambie la vista
+    effect(() => {
+      this.currentView();
+      this.loadItems();
+    });
+  }
+  // Estados
+  selectedItems = signal<SaleItem[]>([]);
+  discount = signal<any>(0);
+  currentView = signal<'services' | 'packages'>('services');
+  branchId = toSignal(this._localstorageService.getBranchId());
+  loading = signal(false);
+  items = signal<any[]>([]);
+  totalRecords = signal(0);
+  globalFilter = signal('');
+  tableState = signal<TableState>({
+    first: 0,
+    rows: 10,
+    sortField: 'name',
+    sortOrder: 1,
+  });
+  // Computed values
+  currentService = computed(() =>
+    this.currentView() === 'services'
+      ? this._servicesService
+      : this._packagesService
+  );
 
+  totalAmount = computed(() =>
+    this.selectedItems().reduce(
+      (acc, item) => acc + item.priceUnit * item.quantity,
+      0
+    )
+  );
+
+  // Calcular total con descuento
+  totalWithDiscount = computed(() =>
+    Math.max(0, this.totalAmount() - this.discount())
+  );
   paymentMethods = [
     { label: 'Efectivo', value: 'Efectivo' },
     { label: 'Tarjeta de crédito', value: 'Tarjeta de crédito' },
@@ -91,23 +138,14 @@ export class ServicesPackagesSaleFormComponent {
   ];
   formSale = this._fb.group({
     clientId: [''],
-    branchId: [''],
+    branchId: [this.branchId()],
     dateSale: [''],
     departureDate: [''],
     registeredBy: [''],
     discount: [0],
-    // observation: [''],
-    details: this._fb.array([]),
-    paymentMethod: [0, [Validators.required]],
+    observations: [''],
+    paymentMethod: ['', [Validators.required]],
   });
-
-  constructor() {
-    // Efecto para recargar datos cuando cambie la vista
-    effect(() => {
-      this.currentView();
-      this.loadItems();
-    });
-  }
 
   serviceColumns: ColumnDef[] = [
     { field: 'name', header: 'Nombre' },
@@ -126,24 +164,6 @@ export class ServicesPackagesSaleFormComponent {
     { field: 'actions', header: 'Acciones' },
   ];
 
-  // Estados
-  selectedItems = signal<SaleItem[]>([]);
-  discount = signal<any>(0);
-  currentView = signal<'services' | 'packages'>('services');
-
-  // Computados
-  totalAmount = computed(() =>
-    this.selectedItems().reduce(
-      (acc, item) => acc + item.priceUnit * item.quantity,
-      0
-    )
-  );
-
-  // Calcular total con descuento
-  totalWithDiscount = computed(() =>
-    Math.max(0, this.totalAmount() - this.discount())
-  );
-
   // metodo para agregar un item a la venta
   addToSale(newItem: Partial<SaleItem>): void {
     this.selectedItems.update((items: any) => {
@@ -156,7 +176,6 @@ export class ServicesPackagesSaleFormComponent {
       }
       return [...items, { ...newItem, quantity: newItem.quantity || 1 }];
     });
-    this.updateFormDetails();
   }
 
   // Actualizar la cantidad de un item en la venta
@@ -172,38 +191,11 @@ export class ServicesPackagesSaleFormComponent {
       items.splice(index, 1);
       return [...items];
     });
-
-    this.updateFormDetails();
   }
 
   clearSale(): void {
     this.selectedItems.set([]);
-    this._messageService.add({
-      severity: 'info',
-      summary: 'Venta reiniciada',
-      detail: 'Se eliminaron los servicios',
-    });
   }
-
-  tableState = signal<TableState>({
-    first: 0,
-    rows: 10,
-    sortField: 'name',
-    sortOrder: 1,
-  });
-
-  // Estados
-  loading = signal(false);
-  items = signal<any[]>([]);
-  totalRecords = signal(0);
-  globalFilter = signal('');
-
-  // Computed values
-  currentService = computed(() =>
-    this.currentView() === 'services'
-      ? this._servicesService
-      : this._packagesService
-  );
 
   // Metodo para cambiar la vista
   toggleView(view: 'services' | 'packages'): void {
@@ -268,22 +260,45 @@ export class ServicesPackagesSaleFormComponent {
     this.loadItems();
   }
 
-  // Metodo para sincronizar los detalles con el formulario
-private updateFormDetails(): void {
-  const saleDetails = this.selectedItems().map((item) => ({
-    serviceId: item.type === 'service' ? item.name : null,
-    packageId: item.type === 'package' ? item.name : null,
-    quantity: item.quantity,
-    unitPrice: item.priceUnit,
-  }));
-
-  this.formSale.patchValue({
-    details: saleDetails,
-  });
-}
-
   // createSale
   createSale() {
-    console.log(this.formSale.value);
+    const details = this.formatSaleDetails(this.selectedItems());
+    this.formSale.patchValue({
+      clientId: 'e234500d-5166-451f-b072-b88279cd26d1',
+      registeredBy: '73464945',
+    });
+    const formFormated = this._filterEmptyValuesPipe.transform(
+      this.formSale.value
+    );
+    const saleData = {
+      ...formFormated,
+      details,
+      dateSale: new Date().toISOString(),
+    };
+    console.log(saleData);
+    this._salesService.createSale(saleData).subscribe({
+      next: () => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Venta creada',
+        });
+        this.clearSale();
+      },
+    });
+  }
+
+  private formatSaleDetails(items: SaleItem[]): any[] {
+    return items.map((item) => {
+      // Primero crear el objeto con todas las propiedades
+      const itemDetail = {
+        serviceId: item.serviceId,
+        packageId: item.packageId,
+        quantity: Number(item.quantity),
+        unitPrice: Number(item.priceUnit),
+      };
+
+      // Luego filtrar propiedades vacías
+      return this._filterEmptyValuesPipe.transform(itemDetail);
+    });
   }
 }

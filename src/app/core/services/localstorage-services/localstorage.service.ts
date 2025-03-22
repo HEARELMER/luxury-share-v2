@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserAuthorized } from '../../../shared/interfaces/user';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -39,15 +40,16 @@ export class LocalstorageService {
   }
 
   getBranchLoad(): boolean {
-    const branchLoad = sessionStorage.getItem('branchLoad');
+    const branchLoad = localStorage.getItem('branchId');
     if (branchLoad) {
       return JSON.parse(branchLoad);
     } else {
       return false;
     }
   }
-  getBranchId(): string {
-    return sessionStorage.getItem('sucursalId') || '';
+
+  getBranchId(): Observable<string> {
+    return of(localStorage.getItem('branchId') || '');
   }
 
   setBranchLoad(value: boolean) {

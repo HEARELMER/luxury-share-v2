@@ -10,7 +10,10 @@ export class FilterEmptyValuesPipe implements PipeTransform {
     }
 
     return Object.keys(value)
-      .filter((key) => value[key] !== null && value[key] !== '')
+      .filter(
+        (key) =>
+          value[key] !== null && value[key] !== '' && value[key] !== undefined
+      )
       .reduce((obj: any, key) => {
         obj[key] = value[key];
         return obj;

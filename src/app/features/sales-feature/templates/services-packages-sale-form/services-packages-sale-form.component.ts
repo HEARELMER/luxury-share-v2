@@ -34,6 +34,7 @@ import { SalesService } from '../../../../core/services/sales-services/sales.ser
 import { SelectComponent } from '../../../../shared/components/forms/select/select.component';
 import { FilterEmptyValuesPipe } from '../../../../shared/pipes/filter-empty-value.pipe';
 import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
+import { filter } from 'rxjs';
 interface TableState {
   first: number;
   rows: number;
@@ -65,7 +66,6 @@ interface SaleItem {
     InputTextModule,
     TagModule,
     CurrencyPipe,
-    SelectButton,
     ButtonModule,
     Paginator,
     Tooltip,
@@ -74,9 +74,7 @@ interface SaleItem {
     FormsModule,
     CapitalizePipe,
     ReactiveFormsModule,
-    ButtonComponent,
     SelectComponent,
-    JsonPipe,
   ],
   templateUrl: './services-packages-sale-form.component.html',
   styleUrl: './services-packages-sale-form.component.scss',

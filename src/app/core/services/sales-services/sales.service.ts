@@ -14,10 +14,12 @@ export class SalesService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getSales(page: number, size: number, filters?: Filter[]): Observable<any> {
+    // Construir params base
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
 
+    // Agregar filtros a los params en lugar de concatenar a la URL
     if (filters?.length) {
       filters.forEach((filter) => {
         params = params.append(`filters[${filter.key}]`, filter.value);

@@ -7,10 +7,13 @@
         placeholder=""
         [required]="true"
         errorType=" "
+        ç
+        [(ngModel)]="filterSaleByCodeSale"
       />
     </div>
 
     <button
+      (click)="searchSale()"
       class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
     >
       <i class="pi pi-search"></i>
@@ -136,6 +139,7 @@
                 [pTooltip]="'Ver Detalles'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="viewSaleDetails(sale)"
               >
                 <i class="pi pi-eye"></i>
               </button>

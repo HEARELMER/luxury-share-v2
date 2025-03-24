@@ -18,6 +18,8 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { AddBranchComponent } from '../../branches-feature/add-branch/add-branch.component';
 import { SalesService } from '../../../core/services/sales-services/sales.service';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
+import { SaleDetailsComponent } from '../sale-details/sale-details.component';
+import { FilterOptions } from '../../../core/interfaces/api/filters';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -37,8 +39,8 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
     PopoverModule,
     TagModule,
     Tag,
-    InputFormComponent
-],
+    InputFormComponent,
+  ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
   providers: [DialogService],
@@ -46,11 +48,16 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
 export class SalesComponent {
   public readonly dialogService = inject(DialogService);
   private readonly _salesService = inject(SalesService);
-  constructor(){
+  constructor() {
     this.loadSales();
   }
+  // signlas
   showModalAddSale = signal<boolean>(false);
+  loading = signal<boolean>(false);
+  filterSaleByCodeSale = signal<string>('');
   sales = signal<any[]>([]);
+  filters = signal<{ key: string; value: string }[]>([]);
+  
   // Configuración de tabla
   salesTableColumns = SALES_TABLE_COLUMNS;
   currentPage = 1;
@@ -63,12 +70,34 @@ export class SalesComponent {
     this.showModalAddSale.set(true);
   }
 
-  loadSales() {
+  searchSale(){
+    if (this.filterSaleByCodeSale()) {
+      this.filters.set([
+        { key: 'saleCode', value: this.filterSaleByCodeSale()},
+      ]);
+      this.loadSales({ resetPage: true });
+    }
+    this.filterSaleByCodeSale.set('');
+  }
+
+  loadSales(options: FilterOptions = {}) {
+    this.loading.set(true);
+    if (options.resetPage) {
+      this.currentPage = 1;
+      this.first = 0;
+    }
+
     this._salesService
-      .getSales(this.currentPage, this.pageSize)
-      .subscribe((response) => {
+      .getSales(this.currentPage, this.pageSize, this.filters())
+      .subscribe(  {
+       next:(response)=>{
         this.sales.set(response.data.sales);
         this.totalRecords = response.data.total;
+        this.loading.set(false);
+       },
+       error: (error) => {
+        this.loading.set(false);
+      },
       });
   }
 
@@ -87,11 +116,11 @@ export class SalesComponent {
     this.loadSales();
   }
 
-   /**
-     * cancelar uan venta
-     */
-    cancelSale(sale: any): void {
-      const ref = this.dialogService.open(DialogComponent, {
+  /**
+   * cancelar uan venta
+   */
+  cancelSale(sale: any): void {
+    const ref = this.dialogService.open(DialogComponent, {
       header: 'Cancelar Venta',
       modal: true,
       contentStyle: { overflow: 'auto' },
@@ -106,9 +135,9 @@ export class SalesComponent {
         cancelText: 'No, Cancelar',
         showCancel: true,
       },
-      });
+    });
 
-      ref.onClose.subscribe((confirmed: boolean) => {
+    ref.onClose.subscribe((confirmed: boolean) => {
       if (confirmed) {
         // this._salesService.cancelSale(sale.id).subscribe({
         // next: () => {
@@ -122,6 +151,20 @@ export class SalesComponent {
       } else {
         console.log('Cancelación de venta abortada por el usuario.');
       }
-      });
-    }
+    });
+  }
+
+  viewSaleDetails(sale: any): void {
+    const ref = this.dialogService.open(SaleDetailsComponent, {
+      header: 'Detalle de Venta',
+      modal: true,
+      closable: true,
+      maximizable: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
 }

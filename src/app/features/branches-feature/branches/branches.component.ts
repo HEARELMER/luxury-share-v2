@@ -20,11 +20,7 @@ import { Tag } from 'primeng/tag';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
-
-interface FilterOptions {
-  resetPage?: boolean;
-  resetFilters?: boolean;
-}
+import { FilterOptions } from '../../../core/interfaces/api/filters';
 
 @Component({
   selector: 'app-users',
@@ -190,24 +186,21 @@ export class BranchesComponent {
    * @param user
    * @returns void
    */
-  viewUserDetails(userId:string){
+  viewUserDetails(userId: string) {
     console.log('User ID:', userId);
-    const ref = this.dialogService.open(
-      ViewUserInfoComponent,
-      {
-        header: 'Información del usuario', 
-        modal: true,
-        closable: true,
-        dismissableMask: true,
-        breakpoints: {
-          '960px': '65vw',
-          '640px': '80vw',
-        },
-        data: {
-          userId: userId,
-        },
-      }
-    )
+    const ref = this.dialogService.open(ViewUserInfoComponent, {
+      header: 'Información del usuario',
+      modal: true,
+      closable: true,
+      dismissableMask: true,
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '80vw',
+      },
+      data: {
+        userId: userId,
+      },
+    });
   }
 
   /**

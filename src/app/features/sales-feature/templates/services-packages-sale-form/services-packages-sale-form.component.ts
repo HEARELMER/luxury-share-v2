@@ -1,10 +1,7 @@
-import { CommonModule, CurrencyPipe, JsonPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import {
   Component,
-  EventEmitter,
-  Output,
   signal,
-  input,
   inject,
   computed,
   effect,
@@ -15,7 +12,6 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ServicesService } from '../../../../core/services/services_packages-services/services.service';
 import { PackagesService } from '../../../../core/services/services_packages-services/packages.service';
-import { SelectButton } from 'primeng/selectbutton';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { Paginator } from 'primeng/paginator';
@@ -29,12 +25,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { CapitalizePipe } from '../../../../shared/pipes/capitalize.pipe';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { SalesService } from '../../../../core/services/sales-services/sales.service';
 import { SelectComponent } from '../../../../shared/components/forms/select/select.component';
 import { FilterEmptyValuesPipe } from '../../../../shared/pipes/filter-empty-value.pipe';
 import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
-import { filter } from 'rxjs';
 interface TableState {
   first: number;
   rows: number;

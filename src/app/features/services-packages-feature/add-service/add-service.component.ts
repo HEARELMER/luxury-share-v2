@@ -23,6 +23,7 @@ import { MessageService } from 'primeng/api';
 import { SERVICE_TYPES } from '../constants/service-types.contant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
+import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-add-service',
   imports: [
@@ -33,6 +34,7 @@ import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.
     ModalComponent,
     Toast,
     SelectComponent,
+    JsonPipe,
   ],
   templateUrl: './add-service.component.html',
   styleUrl: './add-service.component.scss',
@@ -73,18 +75,23 @@ export class AddServiceComponent {
   }
 
   formatValues() {
+    const formValues = this.serviceForm.value;
     this.serviceForm.patchValue({
+      name: formValues.name?.trim(),
+      description: formValues.description?.trim(),
+      priceUnit: formValues.priceUnit ? parseFloat(formValues.priceUnit) : 0,
+      type: formValues.type?.trim(),
+      status: Boolean(formValues.status),
       registeredBy: '73464945',
-      priceUnit: parseFloat(this.serviceForm.value.priceUnit),
     });
   }
 
   onSubmit() {
-    if (!this.serviceForm.valid) return;
+    if (!this.serviceForm.valid) return; 
     this.formatValues();
     const filteredValues = this._filterEmptyValuesPipe.transform(
       this.serviceForm.value
-    );
+    ); 
     if (this.isEditing()) {
       this.update(filteredValues);
     } else {

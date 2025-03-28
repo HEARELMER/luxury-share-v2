@@ -1,0 +1,86 @@
+<div
+  styleClass="flex flex-col justify-between   h-full p-6 rounded-lg lg:px-14 flex-grow"
+>
+  <form
+    [formGroup]="clientForm()"
+    class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow"
+  >
+    <app-select
+      label="Tipo de Documento"
+      [required]="true"
+      [options]="[
+        { label: 'Dni', value: 'dni' },
+        { label: 'Carnet de Extranjeria', value: 'ce' },
+        { label: 'otros', value: 'otros' }
+      ]"
+      class="w-full"
+      formControlName="typeDocument"
+    />
+
+    <div class="flex items-end gap-2">
+      <app-input-form
+        [required]="true"
+        label="N° Documento"
+        [isPositive]="true"
+        class="w-full"
+        formControlName="numberDocument"
+      />
+      <button
+        pButton
+        type="button"
+        icon="pi pi-search"
+        class="p-button-rounded p-button-primary"
+        (click)="onSearchClient()"
+      ></button>
+    </div>
+    <app-input-form
+      [required]="true"
+      label="Nombres"
+      class="w-full"
+      formControlName="name"
+    />
+    <app-input-form
+      [required]="true"
+      label="Primer Apellido"
+      class="w-full"
+      formControlName="firstLastname"
+    />
+    <app-input-form
+      [required]="true"
+      label="Segundo Apellido"
+      class="w-full"
+      formControlName="secondLastname"
+    />
+    <app-input-form
+      label="Fecha de nacimiento"
+      class="w-full"
+      formControlName="birthDate"
+      type="date"
+    />
+    <app-input-form
+      label="Correo Electrónico"
+      class="w-full"
+      type="email"
+      formControlName="email"
+    />
+    <app-input-form
+      [required]="true"
+      label="Número de Celular"
+      class="w-full"
+      formControlName="phone"
+      [isPositive]="true"
+      [maxLength]="9"
+    />
+  </form>
+
+  <div class="flex pt-6 gap-3 justify-end">
+    <p-button
+      label="Continuar"
+      icon="pi pi-arrow-right"
+      iconPos="right"
+      [disabled]="clientForm().invalid"
+      [loading]="loading()"
+      (onClick)="onSubmit()"
+    ></p-button>
+  </div>
+</div>

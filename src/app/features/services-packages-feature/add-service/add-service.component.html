@@ -79,6 +79,7 @@
         [disabled]="!serviceForm.valid || isSubmitting()"
       />
     </div>
+    {{serviceForm.value | json }}
   </form>
 </app-modal>
 

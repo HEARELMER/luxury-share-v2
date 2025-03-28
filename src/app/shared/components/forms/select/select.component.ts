@@ -32,6 +32,7 @@ export class SelectComponent {
   errorMessage = signal('');
   isTouched = signal(false);
   readonly = input<boolean>(false);
+  errorType = input<string>('');
   onChange: any = () => {};
   onTouch: any = () => {};
 

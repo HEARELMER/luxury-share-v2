@@ -116,6 +116,8 @@
         [options]="filterServiceByType"
         [value]="selectedStatus()"
         (valueChange)="applyFilters('type', $event)"
+        [required]="true"
+        errorType=" "
       />
       <!-- <app-select
         class="w-full"
@@ -127,6 +129,9 @@
         [options]="filterServiceByStatus"
         [value]="selectedStatus()"
         (valueChange)="applyFilters('status', $event)"
+        [required]="true"
+        errorType=" "
+        
       />
     </div>
     <p-table

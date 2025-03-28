@@ -32,4 +32,8 @@ export class SalesService {
   createSale(sale: any): Observable<any> {
     return this._httpclient.post(`${this._apiUrl}sales`, sale);
   }
+ 
+  cancelSale(data: object): Observable<any> {
+    return this._httpclient.post(`${this._apiUrl}sales/cancel-sale`, data);
+  }
 }

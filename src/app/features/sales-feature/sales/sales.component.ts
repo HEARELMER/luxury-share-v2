@@ -20,6 +20,7 @@ import { SalesService } from '../../../core/services/sales-services/sales.servic
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { SaleDetailsComponent } from '../sale-details/sale-details.component';
 import { FilterOptions } from '../../../core/interfaces/api/filters';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -48,6 +49,7 @@ import { FilterOptions } from '../../../core/interfaces/api/filters';
 export class SalesComponent {
   public readonly dialogService = inject(DialogService);
   private readonly _salesService = inject(SalesService);
+  private readonly _messageService = inject(MessageService);
   constructor() {
     this.loadSales();
   }
@@ -57,7 +59,7 @@ export class SalesComponent {
   filterSaleByCodeSale = signal<string>('');
   sales = signal<any[]>([]);
   filters = signal<{ key: string; value: string }[]>([]);
-  
+
   // Configuración de tabla
   salesTableColumns = SALES_TABLE_COLUMNS;
   currentPage = 1;
@@ -70,10 +72,10 @@ export class SalesComponent {
     this.showModalAddSale.set(true);
   }
 
-  searchSale(){
+  searchSale() {
     if (this.filterSaleByCodeSale()) {
       this.filters.set([
-        { key: 'saleCode', value: this.filterSaleByCodeSale()},
+        { key: 'saleCode', value: this.filterSaleByCodeSale() },
       ]);
       this.loadSales({ resetPage: true });
     }
@@ -89,15 +91,15 @@ export class SalesComponent {
 
     this._salesService
       .getSales(this.currentPage, this.pageSize, this.filters())
-      .subscribe(  {
-       next:(response)=>{
-        this.sales.set(response.data.sales);
-        this.totalRecords = response.data.total;
-        this.loading.set(false);
-       },
-       error: (error) => {
-        this.loading.set(false);
-      },
+      .subscribe({
+        next: (response) => {
+          this.sales.set(response.data.sales);
+          this.totalRecords = response.data.total;
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.loading.set(false);
+        },
       });
   }
 
@@ -139,17 +141,28 @@ export class SalesComponent {
 
     ref.onClose.subscribe((confirmed: boolean) => {
       if (confirmed) {
-        // this._salesService.cancelSale(sale.id).subscribe({
-        // next: () => {
-        //   this.loadSales();
-        //   console.log(`Venta con ID: ${sale.id} cancelada exitosamente.`);
-        // },
-        // error: (err) => {
-        //   console.error('Error al cancelar la venta:', err);
-        // },
-        // });
-      } else {
-        console.log('Cancelación de venta abortada por el usuario.');
+        const data = {
+          codeSale: sale.codeSale,
+          updatedBy: '73464945',
+        };
+        this._salesService.cancelSale(data).subscribe({
+          next: (response) => {
+            this.loadSales();
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Venta Cancelada',
+              detail: response.message,
+            }); 
+          },
+          error: (err) => {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err.error?.message || 'No se pudo cancelar la venta',
+              life: 3000,
+            });
+          },
+        });
       }
     });
   }

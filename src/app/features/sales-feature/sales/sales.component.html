@@ -100,6 +100,16 @@
             {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field == "departureDate") {
             {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            }@else if (col.field == "client") {
+            {{
+              sale[col.field].name +
+                " " +
+                sale[col.field].firstLastname +
+                " " +
+                sale[col.field].secondLastname
+            }}
+            } @else if (col.field == "branch") {
+            {{ sale[col.field].address }}
             } @else if (col.field=="registeredBy" ) {
 
             <div class="flex items-center gap-2">

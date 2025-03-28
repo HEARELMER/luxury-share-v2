@@ -1,0 +1,55 @@
+<form [formGroup]="step1Form()" class="flex flex-col min-h-48">
+  <div class="flex items-center gap-3 mb-6">
+    <div
+      class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center"
+    >
+      <i class="pi pi-envelope text-xl text-primary-500"></i>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900">
+        Recupera tu contraseña
+      </h2>
+      <p class="text-sm text-gray-600">
+        Ingresa tu correo electrónico para comenzar
+      </p>
+    </div>
+  </div>
+
+  <div class="w-full flex flex-col items-center gap-2 pt-8 py-4">
+    <div class="max-w-96 flex flex-col gap-2 w-auto">
+      <app-input-form
+        formControlName="numDni"
+        label="Número de DNI"
+        [required]="true"
+        [isPositive]="true"
+        placeholder="Ejemplo: 12345678"
+        [maxLength]="8"
+      />
+      <app-input-form
+        formControlName="email"
+        label="Correo Electrónico"
+        placeholder="ejemplo@correo.com"
+        [required]="true"
+        pTooltip="Ingresa el correo asociado a tu cuenta"
+      />
+
+      <div class="p-4 flex items-start gap-2">
+        <i class="pi pi-info-circle text-blue-500 mt-0.5 mr-3"></i>
+        <p class="text-sm text-blue-700">
+          Te enviaremos un código de verificación a tu correo electrónico.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex pt-6 justify-end">
+    <p-button
+      label="Enviar"
+      icon="pi pi-envelope"
+      iconPos="right"
+      [disabled]="!step1Form().valid || loading()"
+      [loading]="loading()"
+      (onClick)="onSubmit()"
+    />
+  </div>
+</form>

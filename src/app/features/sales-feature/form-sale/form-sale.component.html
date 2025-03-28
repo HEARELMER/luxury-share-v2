@@ -13,7 +13,10 @@
       <p-stepper [value]="1" styleClass="flex-grow bg-gray-500 flex flex-col">
         <p-step-list>
           @for (step of addSaleSteps; track $index) {
-          <p-step [value]="step.value">
+          <p-step
+            [value]="step.value"
+            [disabled]="step.value == 1 ? false : !canActivateStep(step.value)"
+          >
             {{ step.label }}
           </p-step>
           }
@@ -34,7 +37,9 @@
           </p-step-panel>
           <p-step-panel [value]="2" class="flex-grow flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
-              <app-services-packages-sale-form />
+              <app-step2-sale-form
+                (submitForm)="confirmSale(activateCallback)"
+              />
             </ng-template>
           </p-step-panel>
           <p-step-panel [value]="3" class="flex-grow flex flex-col">

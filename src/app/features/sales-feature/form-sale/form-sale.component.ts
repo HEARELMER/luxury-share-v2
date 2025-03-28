@@ -18,6 +18,7 @@ import { SalesService } from '../../../core/services/sales-services/sales.servic
 import { ClientsService } from '../../../core/services/clients-services/clients.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { Step1ClientFormComponent } from './steps/step1-client-form/step1-client-form.component';
+import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.component';
 @Component({
   selector: 'app-form-sale',
   imports: [
@@ -33,6 +34,7 @@ import { Step1ClientFormComponent } from './steps/step1-client-form/step1-client
     ModalComponent,
     ButtonModule,
     Step1ClientFormComponent,
+    Step2SaleFormComponent,
   ],
   templateUrl: './form-sale.component.html',
   styleUrl: './form-sale.component.scss',
@@ -89,13 +91,19 @@ export class FormSaleComponent {
         next: (response) => {
           this.stepsCompleted.update((steps) => ({ ...steps, 1: true }));
           this.loading.set(false);
-          this.showModal.set(false);
           this.currentStep.set(2);
           this.currentClient.set(response.data);
           activateCallback(2);
         },
       });
     }
+  }
+
+  confirmSale(activateCallback: (step: number) => void) {
+    this.stepsCompleted.update((steps) => ({ ...steps, 2: true }));
+    this.loading.set(false);
+    this.currentStep.set(2);
+    activateCallback(3);
   }
 
   searchClientByDni() {

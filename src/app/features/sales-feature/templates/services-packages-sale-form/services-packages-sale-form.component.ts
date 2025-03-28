@@ -1,11 +1,5 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import {
-  Component,
-  signal,
-  inject,
-  computed,
-  effect,
-} from '@angular/core';
+import { Component, signal, inject, computed, effect, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -89,6 +83,7 @@ export class ServicesPackagesSaleFormComponent {
     });
   }
   // Estados
+  readonly submitForm = output<void>()
   selectedItems = signal<SaleItem[]>([]);
   discount = signal<any>(0);
   currentView = signal<'services' | 'packages'>('services');
@@ -137,6 +132,7 @@ export class ServicesPackagesSaleFormComponent {
     discount: [0],
     observations: [''],
     paymentMethod: ['', [Validators.required]],
+    status: '',
   });
 
   serviceColumns: ColumnDef[] = [
@@ -258,6 +254,7 @@ export class ServicesPackagesSaleFormComponent {
     this.formSale.patchValue({
       clientId: 'e234500d-5166-451f-b072-b88279cd26d1',
       registeredBy: '73464945',
+      status: 'COMPLETADO',
     });
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
@@ -272,8 +269,35 @@ export class ServicesPackagesSaleFormComponent {
       next: () => {
         this._messageService.add({
           severity: 'success',
-          summary: 'Venta creada',
+          summary: 'Venta creada con éxito',
         });
+        this.submitForm.emit()
+        this.clearSale();
+      },
+    });
+  }
+
+  reservarSale() {
+    const details = this.formatSaleDetails(this.selectedItems());
+    this.formSale.patchValue({
+      clientId: 'e234500d-5166-451f-b072-b88279cd26d1',
+      registeredBy: '73464945',
+    });
+    const formFormated = this._filterEmptyValuesPipe.transform(
+      this.formSale.value
+    );
+    const saleData = {
+      ...formFormated,
+      details,
+      dateSale: new Date().toISOString(),
+    };
+    this._salesService.createSale(saleData).subscribe({
+      next: () => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Reserva Creada con éxito',
+        });
+        this.submitForm.emit()
         this.clearSale();
       },
     });

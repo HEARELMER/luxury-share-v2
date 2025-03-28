@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { ExportExcelComponent } from '../../../shared/components/layout/export-excel/export-excel.component';
 import { FormSaleComponent } from '../form-sale/form-sale.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SALES_TABLE_COLUMNS } from '../constants/sales-table.constant';
@@ -15,7 +14,6 @@ import { TableModule } from 'primeng/table';
 import { TagModule, Tag } from 'primeng/tag';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
-import { AddBranchComponent } from '../../branches-feature/add-branch/add-branch.component';
 import { SalesService } from '../../../core/services/sales-services/sales.service';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { SaleDetailsComponent } from '../sale-details/sale-details.component';

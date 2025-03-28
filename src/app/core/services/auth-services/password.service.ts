@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { environmentDev } from '../../../environments/environment.development';
 import { Observable } from 'rxjs';
 
@@ -8,7 +7,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PasswordService {
-  private readonly _router = inject(Router);
   private readonly _http = inject(HttpClient);
   private readonly _apiUrl = environmentDev.apiUrl;
 
@@ -27,6 +25,9 @@ export class PasswordService {
       `${this._apiUrl}auth/password-recovery/validate-code`,
       {
         code,
+      },
+      {
+        withCredentials: true,
       }
     );
   }
@@ -37,6 +38,9 @@ export class PasswordService {
       {
         newPassword,
         email,
+      },
+      {
+        withCredentials: true,
       }
     );
   }

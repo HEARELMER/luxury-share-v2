@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { PdfControlsComponent } from '../../../shared/components/pdf/pdf-controls.component';
 import { PdfViewerComponent } from '../../../shared/components/pdf/pdf-viewer.component';
 import jsPDF from 'jspdf';
-import { ReportPdfTemplate } from '../../../shared/components/pdf/templates/report-template';
+import { ReportSalePdfTemplate } from '../../../shared/components/pdf/templates/report-sale-template';
 
 @Component({
   selector: 'app-sale-details-pdf',
@@ -68,7 +68,7 @@ export class SaleDetailsPdfComponent {
     ],
   };
 
-  constructor(private reportTemplate: ReportPdfTemplate) {
+  constructor(private reportSaleTemplate: ReportSalePdfTemplate) {
     // Inicializar el PDF al cargar el componente
     this.generateSaleDetailsPdf();
   }
@@ -139,6 +139,8 @@ export class SaleDetailsPdfComponent {
       ],
     };
 
-    this.pdfDoc = this.reportTemplate.generateReportPdf(reportData as any);
+    this.pdfDoc = this.reportSaleTemplate.generateReportSalePdf(
+      reportData as any
+    );
   }
 }

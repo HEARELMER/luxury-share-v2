@@ -9,13 +9,13 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class ReportPdfTemplate {
+export class ReportSalePdfTemplate {
   constructor(
     private pdfService: PdfService,
     @Inject(PDF_CONFIG) private config: PdfGeneratorConfig
   ) {}
 
-  generateReportPdf(data: ReportData): jsPDF {
+  generateReportSalePdf(data: ReportSaleData): jsPDF {
     // Crear PDF con la configuración global
     const doc = this.pdfService.createPdf({
       orientation: data.orientation || this.config.document.defaultOrientation,
@@ -81,7 +81,7 @@ export class ReportPdfTemplate {
           doc.text(wrappedLines, 14, yPos);
           yPos += wrappedLines.length * lineHeight;
         }
-        
+
         // Espacio después de sección de texto
         yPos += 5;
       } else if (section.type === 'table' && section.tableData) {
@@ -90,7 +90,7 @@ export class ReportPdfTemplate {
           rows: section.tableData.rows,
           startY: yPos,
         });
-        
+
         // Actualizar posición después de la tabla
         yPos = (doc as any).lastAutoTable.finalY + 15;
       }
@@ -141,7 +141,7 @@ export class ReportPdfTemplate {
   }
 }
 
-export interface ReportData {
+export interface ReportSaleData {
   title: string;
   subtitle?: string;
   date: string;
@@ -150,12 +150,12 @@ export interface ReportData {
   companyLogo?: string;
   footerText?: string;
   orientation?: 'portrait' | 'landscape';
-  sections: ReportSection[];
+  sections: ReportSaleSection[];
   summary?: string[];
   author?: string;
 }
 
-export interface ReportSection {
+export interface ReportSaleSection {
   title: string;
   type: 'text' | 'table' | 'chart';
   content?: string[] | string;

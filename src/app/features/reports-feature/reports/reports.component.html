@@ -48,9 +48,10 @@
         pButton
         icon="pi pi-filter-slash"
         label="Limpiar filtros"
-        class="p-button-text p-button-sm border shadow-sm text-gray-600"
+        class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
         [disabled]="activeFiltersCount() === 0"
         (click)="filtersForm.reset()"
+        size="small"
       ></button>
     </div>
     <form
@@ -72,6 +73,8 @@
             (valueChange)="onDateRangeChange($event)"
             formControlName="dateRange"
             placeholder="Seleccione un período"
+            [required]="true"
+            errorType=" "
           />
           @if (filtersForm.get('dateRange')?.value === 'custom') {
           <div class="grid grid-cols-2 gap-2">
@@ -120,6 +123,8 @@
           [options]="serviceTypeOptions"
           formControlName="serviceType"
           placeholder="Todos los tipos"
+          [required]="true"
+          errorType=" "
         />
         <p class="text-xs text-gray-500">
           Opcional: Filtra por categoría de servicio
@@ -139,6 +144,8 @@
           [options]="serviceOptions"
           formControlName="service"
           placeholder="Todos los servicios"
+          [required]="true"
+          errorType=" "
         />
       </div>
       }
@@ -153,6 +160,8 @@
           [options]="packageOptions"
           placeholder="Todos los Paquetes"
           formControlName="package"
+          [required]="true"
+          errorType=" "
         />
       </div>
 
@@ -168,6 +177,8 @@
           [options]="sellersOptions"
           formControlName="seller"
           placeholder="Todos los vendedores"
+          [required]="true"
+          errorType=" "
         />
       </div>
     </form>
@@ -179,10 +190,6 @@
 
   <!-- section table data -->
   <section>
-    <app-sales-table
-      [data]="salesData()"
-      [loading]="loading()"
-      [totalRecords]="totalRecords()"
-    ></app-sales-table>
+   
   </section>
 </main>

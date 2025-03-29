@@ -1,0 +1,35 @@
+<div class="flex flex-col h-full w-full">
+  <!-- Controles flotantes en la parte superior -->
+  <div class="p-3 bg-white/80 backdrop-blur-sm z-10">
+    <app-pdf-controls
+      [pdfDocument]="pdfDoc"
+      [fileName]="'detalle-venta.pdf'"
+      [showLabels]="true"
+      [position]="'end'"
+      size="large"
+    ></app-pdf-controls>
+  </div>
+
+  <!-- Área de contenido - ocupa todo el espacio disponible -->
+  <div class="flex-1 flex">
+    @if (!pdfDoc) {
+    <!-- Estado inicial - Botón centrado -->
+    <div class="flex items-center justify-center w-full">
+      <p-button
+        label="Generar PDF"
+        icon="pi pi-file-pdf"
+        iconPos="left"
+        size="large"
+        (onClick)="generateSaleDetailsPdf()"
+      ></p-button>
+    </div>
+    } @else {
+    <!-- Visor PDF a pantalla completa -->
+    <app-pdf-viewer
+      [pdfDocument]="pdfDoc"
+      [fileName]="'detalle-venta.pdf'"
+      class="w-full h-full"
+    ></app-pdf-viewer>
+    }
+  </div>
+</div>

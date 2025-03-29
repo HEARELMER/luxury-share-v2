@@ -12,6 +12,7 @@ import { LocalstorageService } from './core/services/localstorage-services/local
 import { MessageService } from 'primeng/api';
 import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
 import { FilterEmptyValuesPipe } from './shared/pipes/filter-empty-value.pipe';
+import { providePdfConfig } from './core/services/pdf-services/pdf-generator.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,12 +30,30 @@ export const appConfig: ApplicationConfig = {
           },
         },
       },
-    }), 
+    }),
+    providePdfConfig({
+      branding: {
+        companyName: 'Luxury Travels',
+        logo: 'assets/img/logo.png',
+        primaryColor: [47, 132, 71],
+        secondaryColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      metadata: {
+        author: 'Tu Empresa',
+        creator: 'Tu Empresa',
+      },
+      footer: {
+        includePageNumbers: true,
+        pageNumberFormat: 'Página {0} de {1}',
+        text: '© Tu Empresa - 2025',
+      },
+    }),
     FormatDatePipe,
     TruncateDecimalPipe,
     LocalstorageService,
     MessageService,
     CapitalizePipe,
-    FilterEmptyValuesPipe
+    FilterEmptyValuesPipe,
   ],
 };

@@ -13,7 +13,6 @@ import { Toast } from 'primeng/toast';
 import { StepperModule } from 'primeng/stepper';
 import { ADD_SALES_STEPS } from '../constants/add-sales.constant';
 import { Button, ButtonModule } from 'primeng/button';
-import { ServicesPackagesSaleFormComponent } from '../templates/services-packages-sale-form/services-packages-sale-form.component';
 import { SalesService } from '../../../core/services/sales-services/sales.service';
 import { ClientsService } from '../../../core/services/clients-services/clients.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
@@ -29,8 +28,7 @@ import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.
     StepperModule,
     Button,
     FormsModule,
-    ReactiveFormsModule,
-    ServicesPackagesSaleFormComponent,
+    ReactiveFormsModule, 
     ModalComponent,
     ButtonModule,
     Step1ClientFormComponent,

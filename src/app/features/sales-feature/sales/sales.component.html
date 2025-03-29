@@ -82,11 +82,17 @@
           <td>
             @if (col.field == "status") { @switch (sale[col.field]) { @case
             ('PENDIENTE') {
-            <p-tag styleClass="bg-orange-100 text-orange-500" value="Reservado"></p-tag>
-            }  @case ('CANCELADO') {
-            <p-tag bg="bg-primary-500"  value="Cancelada"></p-tag>
+            <p-tag
+              styleClass="bg-orange-100 text-orange-500"
+              value="Reservado"
+            ></p-tag>
+            } @case ('CANCELADO') {
+            <p-tag bg="bg-primary-500" value="Cancelada"></p-tag>
             } @case ('COMPLETADO') {
-            <p-tag styleClass="bg-green-100 text-green-500" value="Completada"></p-tag>
+            <p-tag
+              styleClass="bg-green-100 text-green-500"
+              value="Completada"
+            ></p-tag>
             } @default {
             <p-tag
               severity="secondary"
@@ -122,7 +128,7 @@
             </div>
 
             } @else if (col.field=="actions") {
-              
+
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
@@ -158,6 +164,7 @@
                 [pTooltip]="'Ver PDF'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="viewSaleDetailsPdf(sale)"
               >
                 <i class="pi pi-file-pdf"></i>
               </button>

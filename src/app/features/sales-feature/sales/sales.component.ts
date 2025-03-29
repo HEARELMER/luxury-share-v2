@@ -19,6 +19,7 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
 import { SaleDetailsComponent } from '../sale-details/sale-details.component';
 import { FilterOptions } from '../../../core/interfaces/api/filters';
 import { MessageService } from 'primeng/api';
+import { SaleDetailsPdfComponent } from '../sale-details-pdf/sale-details-pdf.component';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -169,6 +170,21 @@ export class SalesComponent {
     const ref = this.dialogService.open(SaleDetailsComponent, {
       header: 'Detalle de Venta',
       modal: true,
+      closable: true,
+      maximizable: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
+  viewSaleDetailsPdf(sale: any): void {
+    const ref = this.dialogService.open(SaleDetailsPdfComponent, {
+      header: 'Detalle de Venta PDF',
+      modal: true,
+      width: '50vw',
+      height: 'auto',
       closable: true,
       maximizable: true,
       contentStyle: { overflow: 'auto' },

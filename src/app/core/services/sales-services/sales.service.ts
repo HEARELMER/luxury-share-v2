@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { Filter } from '../../interfaces/api/filters';
 import { ExportFilesService } from '../files-services/export-files.service';
@@ -32,8 +32,18 @@ export class SalesService {
   createSale(sale: any): Observable<any> {
     return this._httpclient.post(`${this._apiUrl}sales`, sale);
   }
- 
+
   cancelSale(data: object): Observable<any> {
     return this._httpclient.post(`${this._apiUrl}sales/cancel-sale`, data);
+  }
+
+  getSaleByCodeSale(codeSale: string): Observable<any> {
+    return this._httpclient
+      .get(`${this._apiUrl}sales/find-by-code-sale/${codeSale}`)
+      .pipe(
+        map((response: any) => {
+          return response.data;
+        })
+      );
   }
 }

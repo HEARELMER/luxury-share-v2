@@ -151,7 +151,7 @@ export class SalesComponent {
               severity: 'success',
               summary: 'Venta Cancelada',
               detail: response.message,
-            }); 
+            });
           },
           error: (err) => {
             this._messageService.add({
@@ -187,6 +187,9 @@ export class SalesComponent {
       height: 'auto',
       closable: true,
       maximizable: true,
+      data: {
+        codeSale: sale.codeSale,
+      },
       contentStyle: { overflow: 'auto' },
       breakpoints: {
         '960px': '75vw',

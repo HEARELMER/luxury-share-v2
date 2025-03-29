@@ -3,10 +3,10 @@
   <div class="p-3 bg-white/80 backdrop-blur-sm z-10">
     <app-pdf-controls
       [pdfDocument]="pdfDoc"
-      [fileName]="'detalle-venta.pdf'"
+      [fileName]="'detalle-venta-' + (saleData()?.codeSale || 'nuevo') + '.pdf'"
       [showLabels]="true"
       [position]="'end'"
-      size="small"
+      [size]="'small'"
       [showEmail]="true"
       (email)="onEmail($event)"
     ></app-pdf-controls>
@@ -14,22 +14,43 @@
 
   <!-- Área de contenido - ocupa todo el espacio disponible -->
   <div class="flex-1 flex">
-    @if (!pdfDoc) {
-    <!-- Estado inicial - Botón centrado -->
-    <div class="flex items-center justify-center w-full">
-      <p-button
-        label="Generar PDF"
-        icon="pi pi-file-pdf"
-        iconPos="left"
-        size="large"
-        (onClick)="generateSaleDetailsPdf()"
-      ></p-button>
+    <!-- Estado de carga -->
+    @if (loading()) {
+    <div class="w-full flex flex-col items-center justify-center gap-4">
+      <p-progressSpinner
+        styleClass="w-12 h-12"
+        strokeWidth="4"
+        animationDuration=".8s"
+      ></p-progressSpinner>
+      <span class="text-gray-500">Cargando información de la venta...</span>
     </div>
-    } @else {
-    <!-- Visor PDF a pantalla completa -->
+    }
+    <!-- Estado sin PDF generado -->
+    @else if (!pdfDoc) {
+    <div class="flex items-center justify-center w-full">
+      @if (saleNotFound()) {
+      <div class="text-center p-6">
+        <i class="pi pi-exclamation-circle text-5xl text-red-500 mb-4"></i>
+        <h2 class="text-2xl font-semibold mb-2">Ocurrió un Error</h2>
+        <p class="text-gray-500 pb-4">
+          Upps! No hemos podido encontrar la venta que buscas. Puede que haya
+          sido eliminada o nunca existió.
+        </p>
+        <p-button
+          
+          label="Cerrar"
+          icon="pi pi-times"
+          (onClick)="close()"
+        ></p-button>
+      </div>
+      }
+    </div>
+    }
+    <!-- PDF generado -->
+    @else {
     <app-pdf-viewer
       [pdfDocument]="pdfDoc"
-      [fileName]="'detalle-venta.pdf'"
+      [fileName]="'detalle-venta-' + (saleData()?.codeSale || 'nuevo') + '.pdf'"
       class="w-full h-full"
     ></app-pdf-viewer>
     }

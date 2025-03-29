@@ -15,3 +15,12 @@ export const ADD_SALES_STEPS = [
     value: 3,
   },
 ];
+
+export const PAYMENT_METHODS = [
+  { label: 'Efectivo', value: 'efectivo' },
+  { label: 'Yape', value: 'yape' },
+  { label: 'Plin', value: 'plin' },
+  { label: 'Visa', value: 'visa' },
+  { label: 'Transferencia', value: 'transferencia' },
+  { label: 'Otros', value: 'otros' },
+];

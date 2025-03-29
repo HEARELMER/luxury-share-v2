@@ -35,6 +35,7 @@ import {
   ColumnDef,
   TableState,
 } from '../../../../services-packages-feature/interfaces/sale-formt';
+import { PAYMENT_METHODS } from '../../../constants/add-sales.constant';
 
 @Component({
   selector: 'app-step2-sale-form',
@@ -106,13 +107,7 @@ export class Step2SaleFormComponent {
   totalWithDiscount = computed(() =>
     Math.max(0, this.totalAmount() - this.discount())
   );
-  paymentMethods = [
-    { label: 'Efectivo', value: 'Efectivo' },
-    { label: 'Tarjeta de crédito', value: 'Tarjeta de crédito' },
-    { label: 'Tarjeta de débito', value: 'Tarjeta de débito' },
-    { label: 'Transferencia', value: 'Transferencia' },
-    { label: 'Otros', value: 'otros' },
-  ];
+  paymentMethods = PAYMENT_METHODS;
   formSale = this._fb.group({
     clientId: [''],
     branchId: [this.branchId()],

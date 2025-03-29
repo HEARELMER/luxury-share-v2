@@ -172,7 +172,7 @@
             @if (col.field == "status") { @if (item[col.field] === true ) {
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (item[col.field] === false) {
-            <p-tag severity="info" value="Inactivo"></p-tag>
+            <p-tag class="bg-primary-500" value="No Disponible"></p-tag>
             } }
             @else if (col.field=="registeredBy") {
 

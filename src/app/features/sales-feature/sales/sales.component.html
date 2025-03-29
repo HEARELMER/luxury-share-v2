@@ -82,13 +82,11 @@
           <td>
             @if (col.field == "status") { @switch (sale[col.field]) { @case
             ('PENDIENTE') {
-            <p-tag severity="warn" value="Pendiente"></p-tag>
-            } @case ('CONFIRMADO') {
-            <p-tag severity="success" value="Confirmada"></p-tag>
-            } @case ('CANCELADO') {
-            <p-tag severity="danger" value="Cancelada"></p-tag>
+            <p-tag styleClass="bg-orange-100 text-orange-500" value="Reservado"></p-tag>
+            }  @case ('CANCELADO') {
+            <p-tag bg="bg-primary-500"  value="Cancelada"></p-tag>
             } @case ('COMPLETADO') {
-            <p-tag severity="info" value="Completada"></p-tag>
+            <p-tag styleClass="bg-green-100 text-green-500" value="Completada"></p-tag>
             } @default {
             <p-tag
               severity="secondary"

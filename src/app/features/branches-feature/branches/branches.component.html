@@ -79,7 +79,7 @@
             @if (col.field == "status") { @if (branch[col.field] === true ) {
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (branch[col.field] === false) {
-            <p-tag severity="info" value="Inactivo"></p-tag>
+            <p-tag severity="danger" value="No Disponible"></p-tag>
             } } @else if (col.field == "createdAt") {
             {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field == "updatedAt") {

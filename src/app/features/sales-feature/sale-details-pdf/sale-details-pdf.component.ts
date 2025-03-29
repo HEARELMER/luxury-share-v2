@@ -94,35 +94,33 @@ export class SaleDetailsPdfComponent {
         {
           title: 'Información de la Venta',
           type: 'text',
-          content: `
-            Fecha de venta: ${new Date(saleData.dateSale).toLocaleDateString()}
-            Fecha de salida: ${new Date(
+          content: [
+            `Fecha de venta: ${new Date(
+              saleData.dateSale
+            ).toLocaleDateString()}`,
+            `Fecha de salida: ${new Date(
               saleData.departureDate
-            ).toLocaleDateString()}
-            Método de pago: ${saleData.paymentMethod}
-            Estado: ${saleData.status}
-            Sucursal: ${saleData.branch}
-            ${
-              saleData.observations
-                ? `Observaciones: ${saleData.observations}`
-                : ''
-            }
-          `.trim(),
+            ).toLocaleDateString()}`,
+            `Método de pago: ${saleData.paymentMethod}`,
+            `Estado: ${saleData.status}`,
+            `Sucursal: ${saleData.branch}`,
+            saleData.observations
+              ? `Observaciones: ${saleData.observations}`
+              : null,
+          ],
         },
         {
           title: 'Datos del Cliente',
           type: 'text',
-          content: `
-            Nombre: ${saleData.client.name} ${saleData.client.firstLastname} ${
-            saleData.client.secondLastname
-          }
-            DNI: ${saleData.client.numberDocument}
-            Teléfono: ${saleData.client.phone}
-            ${saleData.client.email ? `Email: ${saleData.client.email}` : ''}
-          `.trim(),
+          content: [
+            `Nombre: ${saleData.client.name} ${saleData.client.firstLastname} ${saleData.client.secondLastname}`,
+            `DNI: ${saleData.client.numberDocument}`,
+            `Teléfono: ${saleData.client.phone}`,
+            saleData.client.email ? `Email: ${saleData.client.email}` : null,
+          ],
         },
         {
-          title: 'Detalle de Productos y Servicios',
+          title: 'Detalle de Servicios',
           type: 'table',
           tableData: {
             headers: ['Descripción', 'Cantidad', 'Precio Unitario', 'Total'],
@@ -130,17 +128,15 @@ export class SaleDetailsPdfComponent {
           },
         },
       ],
-      summary: `
-        Subtotal: S/ ${saleData.total.toFixed(2)}
-        ${
-          saleData.discount
-            ? `Descuento: S/ ${saleData.discount.toFixed(2)}`
-            : ''
-        }
-        Total: S/ ${(saleData.total - saleData.discount).toFixed(2)}
-
-        Venta registrada por: ${saleData.registeredBy}
-      `.trim(),
+      summary: [
+        `Subtotal: S/ ${saleData.total.toFixed(2)}`,
+        saleData.discount
+          ? `Descuento: S/ ${saleData.discount.toFixed(2)}`
+          : null,
+        `Total: S/ ${(saleData.total - saleData.discount).toFixed(2)}`,
+        '',
+        `Venta registrada por: ${saleData.registeredBy}`,
+      ],
     };
 
     this.pdfDoc = this.reportTemplate.generateReportPdf(reportData as any);

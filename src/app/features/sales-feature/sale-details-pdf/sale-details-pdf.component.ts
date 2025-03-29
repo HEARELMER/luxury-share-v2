@@ -20,6 +20,10 @@ import { ReportPdfTemplate } from '../../../shared/components/pdf/templates/repo
 export class SaleDetailsPdfComponent {
   pdfDoc: jsPDF | null = null;
 
+  onEmail(event: any) {
+    console.log('Email event:', event);
+  }
+
   // Datos estáticos de muestra para una venta
   mockSaleData = {
     codeSale: 'F001-123',
@@ -83,7 +87,7 @@ export class SaleDetailsPdfComponent {
 
     const reportData = {
       title: 'DETALLE DE VENTA',
-      subtitle: `Venta #${saleData.codeSale}`,
+      subtitle: `Venta - ${saleData.codeSale}`,
       date: new Date().toLocaleDateString(),
 
       sections: [

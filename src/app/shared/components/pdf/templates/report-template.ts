@@ -1,57 +1,70 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import { PdfService } from '../../../../core/services/pdf-services/pdf.service';
+import {
+  PDF_CONFIG,
+  PdfGeneratorConfig,
+} from '../../../../core/services/pdf-services/pdf-generator.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportPdfTemplate {
-  constructor(private pdfService: PdfService) {}
+  constructor(
+    private pdfService: PdfService,
+    @Inject(PDF_CONFIG) private config: PdfGeneratorConfig
+  ) {}
 
   generateReportPdf(data: ReportData): jsPDF {
-    // Crear PDF
+    // Crear PDF con la configuración global
     const doc = this.pdfService.createPdf({
-      orientation: data.orientation || 'portrait',
+      orientation: data.orientation || this.config.document.defaultOrientation,
+      unit: this.config.document.defaultUnit,
+      format: this.config.document.defaultFormat,
     });
 
-    // Añadir encabezado
+    // Añadir encabezado usando datos globales cuando no se proporcionan específicos
     this.pdfService.addHeader(doc, {
       title: data.title,
-      logo: data.companyLogo,
-      companyName: data.companyName,
+      logo: data.companyLogo || this.config.branding.logo,
+      companyName: data.companyName || this.config.branding.companyName,
     });
 
+    // Configurar colores según la configuración global
+    const [r, g, b] = this.config.branding.textColor;
+    doc.setTextColor(r, g, b);
+
     // Información del reporte
-    doc.setFontSize(11);
-    doc.text(`Fecha: ${data.date}`, 14, 50);
+    doc.setFontSize(this.config.fonts.normalSize || 11);
+    doc.text(`Fecha de emisión: ${data.date}`, 14, 50);
 
     if (data.period) {
       doc.text(`Período: ${data.period}`, 14, 55);
     }
 
     if (data.subtitle) {
-      doc.setFontSize(13);
-      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(this.config.fonts.subtitleSize);
+      doc.setFont(this.config.fonts.default, 'bold');
       doc.text(data.subtitle, doc.internal.pageSize.width / 2, 60, {
         align: 'center',
       });
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(this.config.fonts.default, 'normal');
     }
 
     let yPos = 70;
 
     // Añadir secciones del reporte
     for (const section of data.sections) {
-      // Título de sección
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
+      // Título de sección con estilo de la configuración global
+      doc.setFontSize(this.config.fonts.subtitleSize - 2); // Un poco más pequeño que los subtítulos
+      doc.setFont(this.config.fonts.default, 'bold');
       doc.text(section.title, 14, yPos);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(this.config.fonts.default, 'normal');
       yPos += 7;
 
       // Contenido de sección según tipo
       if (section.type === 'text') {
-        doc.setFontSize(10);
+        doc.setFontSize(this.config.fonts.normalSize);
         const textLines = doc.splitTextToSize(
           section.content as string,
           doc.internal.pageSize.width - 30
@@ -77,13 +90,13 @@ export class ReportPdfTemplate {
 
     // Añadir resumen o conclusión
     if (data.summary) {
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Conclusión', 14, yPos);
-      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(this.config.fonts.normalSize);
+      doc.setFont(this.config.fonts.default, 'bold');
+      doc.text('Resumen', 14, yPos);
+      doc.setFont(this.config.fonts.default, 'normal');
       yPos += 7;
 
-      doc.setFontSize(10);
+      doc.setFontSize(this.config.fonts.normalSize);
       const summaryLines = doc.splitTextToSize(
         data.summary,
         doc.internal.pageSize.width - 30
@@ -91,11 +104,17 @@ export class ReportPdfTemplate {
       doc.text(summaryLines, 14, yPos);
     }
 
-    // Pie de página
-    this.pdfService.addFooter(
-      doc,
-      data.footerText || `Reporte generado por ${data.companyName}`
-    );
+    // Pie de página con texto de la configuración global
+    this.pdfService.addFooter(doc, data.footerText || this.config.footer.text);
+
+    // Agregar metadatos del PDF
+    doc.setProperties({
+      title: data.title,
+      subject: data.subtitle || '',
+      author: data.author || this.config.metadata.author,
+      creator: this.config.metadata.creator,
+      keywords: this.config.metadata.keywords || '',
+    });
 
     return doc;
   }
@@ -123,7 +142,7 @@ export interface ReportSection {
     headers: string[];
     rows: string[][];
   };
-  
+
   chartImage?: string;
   chartWidth?: number;
   chartHeight?: number;

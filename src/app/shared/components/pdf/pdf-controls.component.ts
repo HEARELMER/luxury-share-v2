@@ -6,8 +6,7 @@ import jsPDF from 'jspdf';
 import { PdfService } from '../../../core/services/pdf-services/pdf.service';
 
 @Component({
-  selector: 'app-pdf-controls',
-  standalone: true,
+  selector: 'app-pdf-controls', 
   imports: [CommonModule, ButtonModule, TooltipModule],
   template: `
     <div class="flex gap-2 justify-content-{{ position() }}">
@@ -50,7 +49,7 @@ import { PdfService } from '../../../core/services/pdf-services/pdf.service';
         [label]="showLabels() ? 'Enviar' : ''"
         [outlined]="outlined()"
         [size]="size()"
-        pTooltip="Enviar por email"
+        pTooltip="Enviar por correo"
         tooltipPosition="top"
         (onClick)="onEmail()"
       ></p-button>
@@ -61,7 +60,7 @@ export class PdfControlsComponent {
   // Inputs
   readonly pdfDocument = input.required<jsPDF | null>();
   readonly fileName = input<string>('documento.pdf');
-  readonly showPreview = input<boolean>(true);
+  readonly showPreview = input<boolean>(false);
   readonly showDownload = input<boolean>(true);
   readonly showPrint = input<boolean>(true);
   readonly showEmail = input<boolean>(false);

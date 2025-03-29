@@ -6,7 +6,9 @@
       [fileName]="'detalle-venta.pdf'"
       [showLabels]="true"
       [position]="'end'"
-      size="large"
+      size="small"
+      [showEmail]="true"
+      (email)="onEmail($event)"
     ></app-pdf-controls>
   </div>
 

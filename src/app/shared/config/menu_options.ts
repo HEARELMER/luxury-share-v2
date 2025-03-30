@@ -57,7 +57,7 @@ export const MENU_OPTIONS: MenuNode[] = [
     label: 'Paquetes y Servicios',
     icon: 'pi pi-box',
     routerLink: '/services_packages',
-  }, 
+  },
   {
     key: 'reports',
     label: 'Reportes',
@@ -71,9 +71,15 @@ export const MENU_OPTIONS: MenuNode[] = [
     routerLink: '/branches',
   },
   {
+    key: 'manifests',
+    label: 'Manifiestos',
+    icon: 'pi pi-file',
+    routerLink: '/manifests',
+  },
+  {
     key: 'configurations',
     label: 'Configuraciones',
     icon: 'pi pi-cog',
     routerLink: '/configurations',
-  } 
+  },
 ];

@@ -1,0 +1,305 @@
+ <main class="flex flex-col bg-white rounded-xl">
+  <!-- HEADER: Título y filtros -->
+  <header class="border-b py-3 px-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-bold">Manifiestos</h1>
+        <p class="text-sm text-gray-500">
+          Gestión de pasajeros por servicio y fecha
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          pButton
+          icon="pi pi-plus"
+          label="Nuevo Manifiesto"
+          class="p-button-primary"
+          (click)="crearManifiesto()"
+        ></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTROS -->
+  <section class="px-6 py-4 border-b bg-gray-50">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-1">Servicio</label>
+        <p-dropdown
+          [options]="tiposServicio"
+          [(ngModel)]="filtros.tipoServicio"
+          placeholder="Todos los servicios"
+          styleClass="w-full"
+          (onChange)="buscarManifiestos()"
+        ></p-dropdown>
+      </div>
+      
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-1">Fecha</label>
+        <p-calendar
+          [(ngModel)]="filtros.fecha"
+          [showIcon]="true"
+          placeholder="Seleccionar fecha"
+          styleClass="w-full"
+          dateFormat="dd/mm/yy"
+          (onSelect)="buscarManifiestos()"
+        ></p-calendar>
+      </div>
+      
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-700 mb-1">Estado</label>
+        <p-selectButton
+          [options]="estadosManifiesto"
+          [(ngModel)]="filtros.estado"
+          (onOptionClick)="buscarManifiestos()"
+          styleClass="w-full"
+        ></p-selectButton>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTADO DE MANIFIESTOS -->
+  <section class="p-4">
+    <p-table 
+      [value]="manifiestos" 
+      [paginator]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-sm"
+      [loading]="cargando"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nombreServicio">Servicio <p-sortIcon field="nombreServicio"></p-sortIcon></th>
+          <th pSortableColumn="fechaServicio">Fecha/Hora <p-sortIcon field="fechaServicio"></p-sortIcon></th>
+          <th pSortableColumn="destino">Destino <p-sortIcon field="destino"></p-sortIcon></th>
+          <th pSortableColumn="guia">Guía <p-sortIcon field="guia"></p-sortIcon></th>
+          <th pSortableColumn="totalPasajeros">Pasajeros <p-sortIcon field="totalPasajeros"></p-sortIcon></th>
+          <th pSortableColumn="estado">Estado <p-sortIcon field="estado"></p-sortIcon></th>
+          <th style="width: 130px">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-manifiesto>
+        <tr>
+          <td>
+            <div class="flex items-center">
+              <span class="w-8 h-8 rounded-full flex items-center justify-center mr-2" [ngClass]="{
+                'bg-blue-100 text-blue-600': manifiesto.tipoServicio === 'tour',
+                'bg-green-100 text-green-600': manifiesto.tipoServicio === 'hotel',
+                'bg-yellow-100 text-yellow-600': manifiesto.tipoServicio === 'comida',
+                'bg-purple-100 text-purple-600': manifiesto.tipoServicio === 'paquete'
+              }">
+                <i class="pi" [ngClass]="{
+                  'pi-compass': manifiesto.tipoServicio === 'tour',
+                  'pi-building': manifiesto.tipoServicio === 'hotel',
+                  'pi-shopping-bag': manifiesto.tipoServicio === 'comida',
+                  'pi-box': manifiesto.tipoServicio === 'paquete'
+                }"></i>
+              </span>
+              <span class="font-medium">{{ manifiesto.nombreServicio }}</span>
+            </div>
+          </td>
+          <td>{{ manifiesto.fechaServicio | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ manifiesto.destino }}</td>
+          <td>
+            <div class="flex items-center">
+              <img *ngIf="manifiesto.guiaFoto" [src]="manifiesto.guiaFoto" class="w-6 h-6 rounded-full mr-1">
+              {{ manifiesto.guia || 'Sin asignar' }}
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center">
+              <span class="font-medium mr-1">{{ manifiesto.pasajerosConfirmados }}/{{ manifiesto.capacidadMaxima }}</span>
+              <p-progressBar [value]="(manifiesto.pasajerosConfirmados / manifiesto.capacidadMaxima) * 100" [showValue]="false" [style]="{'height': '4px', 'width': '60px'}"></p-progressBar>
+            </div>
+          </td>
+          <td>
+            <p-tag 
+              [value]="getEstadoLabel(manifiesto.estado)" 
+              [severity]="getEstadoSeverity(manifiesto.estado) ||'info' "
+            ></p-tag>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <button pButton icon="pi pi-eye" class="p-button-text p-button-rounded" pTooltip="Ver detalle" (click)="verDetalle(manifiesto.id)"></button>
+              <button pButton icon="pi pi-print" class="p-button-text p-button-rounded" pTooltip="Imprimir" (click)="imprimirManifiesto(manifiesto.id)"></button>
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded" pTooltip="Editar" (click)="editarManifiesto(manifiesto.id)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-4">
+            <div class="flex flex-col items-center">
+              <i class="pi pi-search text-gray-300 text-5xl mb-3"></i>
+              <span class="text-gray-500">No se encontraron manifiestos con los filtros seleccionados</span>
+              <button pButton label="Limpiar filtros" class="p-button-text mt-2" (click)="limpiarFiltros()"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+  <!-- DETALLE DE MANIFIESTO (DIÁLOGO) -->
+  <p-dialog 
+    [(visible)]="mostrarDetalle" 
+    [style]="{width: '90vw', maxWidth: '1200px'}" 
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    header="Detalle de Manifiesto"
+    styleClass="manifiesto-dialog"
+  >
+    <ng-container *ngIf="manifiestoSeleccionado">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 class="text-xl font-bold">{{ manifiestoSeleccionado.nombreServicio }}</h2>
+          <p class="text-gray-600">{{ manifiestoSeleccionado.fechaServicio | date:'dd/MM/yyyy HH:mm' }} - {{ manifiestoSeleccionado.destino }}</p>
+        </div>
+        <div>
+          <p-tag 
+            [value]="getEstadoLabel(manifiestoSeleccionado.estado)" 
+            [severity]="getEstadoSeverity(manifiestoSeleccionado.estado)"
+          ></p-tag>
+        </div>
+      </div>
+
+      <!-- Información del servicio -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-white p-4 rounded-lg border shadow-sm">
+          <h3 class="text-sm font-medium text-gray-600 mb-2">Información del Servicio</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between py-1 border-b">
+              <span class="text-gray-500">Tipo:</span>
+              <span class="font-medium">{{ manifiestoSeleccionado.tipoServicio | titlecase }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b">
+              <span class="text-gray-500">Guía:</span>
+              <span class="font-medium">{{ manifiestoSeleccionado.guia || 'Sin asignar' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b">
+              <span class="text-gray-500">Capacidad:</span>
+              <span class="font-medium">{{ manifiestoSeleccionado.pasajerosConfirmados }}/{{ manifiestoSeleccionado.capacidadMaxima }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b">
+              <span class="text-gray-500">Lugar de salida:</span>
+              <span class="font-medium">{{ manifiestoSeleccionado.lugarSalida || 'No especificado' }}</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-gray-500">Hora de salida:</span>
+              <span class="font-medium">{{ manifiestoSeleccionado.fechaServicio | date:'HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg border shadow-sm">
+          <h3 class="text-sm font-medium text-gray-600 mb-2">Datos de pasajeros</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="bg-blue-50 p-3 rounded-md border border-blue-100 flex items-center">
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                <i class="pi pi-users text-blue-600"></i>
+              </div>
+              <div>
+                <div class="text-xs text-blue-700">Total pasajeros</div>
+                <div class="text-lg font-bold text-blue-800">{{ manifiestoSeleccionado.pasajerosConfirmados }}</div>
+              </div>
+            </div>
+            <div class="bg-green-50 p-3 rounded-md border border-green-100 flex items-center">
+              <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                <i class="pi pi-check-circle text-green-600"></i>
+              </div>
+              <div>
+                <div class="text-xs text-green-700">Check-in completado</div>
+                <div class="text-lg font-bold text-green-800">{{ manifiestoSeleccionado.checkInCompletos || 0 }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 pt-2 border-t">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-500">Progreso de check-in</span>
+              <span class="font-medium">{{ getCheckInPorcentaje(manifiestoSeleccionado) }}%</span>
+            </div>
+            <p-progressBar 
+              [value]="getCheckInPorcentaje(manifiestoSeleccionado)" 
+              styleClass="mt-2" 
+              [showValue]="false"
+            ></p-progressBar>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg border shadow-sm">
+          <h3 class="text-sm font-medium text-gray-600 mb-2">Acciones</h3>
+          <div class="space-y-2">
+            <button pButton icon="pi pi-print" label="Imprimir manifiesto" class="p-button-outlined w-full justify-start"></button>
+            <button pButton icon="pi pi-file-excel" label="Exportar a Excel" class="p-button-outlined p-button-success w-full justify-start"></button>
+            <button pButton icon="pi pi-envelope" label="Enviar por email" class="p-button-outlined p-button-info w-full justify-start"></button>
+            <button pButton icon="pi pi-check-square" label="Completar check-in" class="p-button-outlined p-button-warning w-full justify-start"></button>
+            <button pButton icon="pi pi-user-plus" label="Agregar pasajero" class="p-button-outlined p-button-help w-full justify-start"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de pasajeros -->
+      <h3 class="text-lg font-medium mb-2">Lista de Pasajeros</h3>
+      <p-table [value]="manifiestoSeleccionado.pasajeros || []" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 40px">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Nacionalidad</th>
+            <th>Restricciones</th>
+            <th style="width: 90px">Check-in</th>
+            <th style="width: 90px">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pasajero>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="pasajero"></p-tableCheckbox>
+            </td>
+            <td>
+              <div class="flex items-center">
+                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                  <i class="pi pi-user text-xs text-gray-500"></i>
+                </div>
+                {{ pasajero.nombreCompleto }}
+              </div>
+            </td>
+            <td>{{ pasajero.tipoDocumento }}: {{ pasajero.documento }}</td>
+            <td>{{ pasajero.nacionalidad || 'No especificada' }}</td>
+            <td>
+              <div *ngIf="pasajero.restriccionesAlimenticias" class="flex items-center">
+                <i class="pi pi-exclamation-circle text-yellow-500 mr-1"></i>
+                {{ pasajero.restriccionesAlimenticias }}
+              </div>
+              <span *ngIf="!pasajero.restriccionesAlimenticias" class="text-gray-500">Ninguna</span>
+            </td>
+            <td>
+              <p-inputSwitch [(ngModel)]="pasajero.checkIn" (onChange)="actualizarCheckIn(pasajero)"></p-inputSwitch>
+            </td>
+            <td>
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded p-button-sm" (click)="editarPasajero(pasajero)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger p-button-sm" (click)="eliminarPasajero(pasajero)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center p-3">
+              No hay pasajeros registrados para este manifiesto
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
+  </p-dialog>
+
+  <!-- Toast para notificaciones -->
+  <p-toast position="bottom-right"></p-toast>
+</main>

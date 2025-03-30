@@ -1,0 +1,146 @@
+<p-dialog
+  header="Programar reportes"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [contentStyle]="{ 'padding-bottom': '0' }"
+  (onHide)="onHide()"
+  styleClass="schedule-dialog h-[80vh]"
+>
+  <div class="grid gap-5">
+    <!-- Frecuencia -->
+    <div class="col-12 border-bottom pb-3">
+      <div class="flex items-center gap-2 pb-2">
+        <i class="pi pi-calendar text-primary-500"></i>
+        <label class="text-base font-medium text-gray-700">Frecuencia</label>
+      </div>
+      <p-dropdown
+        [options]="scheduleFrequencies"
+        placeholder="Seleccione frecuencia"
+        optionLabel="label"
+        [(ngModel)]="selectedFrequency"
+        class="w-full"
+        [style]="{ height: '40px' }"
+      >
+      </p-dropdown>
+    </div>
+
+    <!-- Destinatarios -->
+    <div class="col-12 border-bottom pb-3">
+      <div class="flex items-center gap-2 pb-2">
+        <i class="pi pi-users text-primary-500"></i>
+        <label class="text-base font-medium text-gray-700">Destinatarios</label>
+      </div>
+
+      <!-- Campo de entrada para correos -->
+      <div
+        class="p-inputgroup flex gap-2 items-center w-full justify-between pb-3"
+      >
+        <app-input-form
+          [(value)]="newRecipient"
+          placeholder="Agregar email"
+          [required]="true"
+          errorType=" "
+          (keydown.enter)="addRecipient($event)"
+          class="w-full"
+        />
+
+        <button
+          type="button"
+          pButton
+          icon="pi pi-plus"
+          (click)="addRecipient()"
+          [disabled]="!isValidEmail(newRecipient)"
+          class="p-button-primary h-10"
+        ></button>
+      </div>
+      <div class="flex flex-col gap-2">
+        <!-- Lista de destinatarios seleccionados -->
+        <div
+          class="p-3 bg-gray-50 rounded-md pb-3"
+          *ngIf="selectedRecipients.length > 0"
+        >
+          <div class="flex items-center gap-2 pb-1">
+            <i class="pi pi-envelope text-gray-500 text-sm"></i>
+            <span class="text-sm font-medium text-gray-500"
+              >Destinatarios seleccionados</span
+            >
+          </div>
+          <div class="flex flex-wrap gap-2 pt-2">
+            @for (email of selectedRecipients; track $index) {
+            <p-chip
+              [label]="email"
+              [removable]="true"
+              (onRemove)="removeRecipient(email)"
+              styleClass="custom-chip"
+            ></p-chip>
+            }
+          </div>
+        </div>
+
+        <div class="p-3 bg-gray-50 rounded-md">
+          <div class="flex items-center gap-2 mb-1">
+            <i class="pi pi-user text-gray-500 text-sm"></i>
+            <span class="text-sm font-medium text-gray-500"
+              >Usuarios sugeridos</span
+            >
+          </div>
+          <div class="flex flex-wrap gap-2 pt-2">
+            @for (user of suggestedUsers; track $index) {
+            <p-chip
+              [label]="user.name"
+              [image]="user.avatar"
+              [removable]="false"
+              (click)="toggleRecipient(user.email)"
+              [styleClass]="
+                isSelected(user.email)
+                  ? 'bg-red-100 cursor-pointer custom-chip shadow-sm'
+                  : 'cursor-pointer custom-chip'
+              "
+            ></p-chip>
+            }
+          </div>
+          <small class="block pt-2 text-gray-500 text-xs italic">
+            <i class="pi pi-info-circle mr-1"></i>
+            Haz clic en un usuario para añadir/quitar de destinatarios
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formato -->
+    <div class="col-12">
+      <div class="flex items-center gap-2 mb-2">
+        <i class="pi pi-file text-primary-500"></i>
+        <label class="text-base font-medium text-gray-700">Formato</label>
+      </div>
+      <p-selectButton
+        [options]="exportFormats"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="selectedFormat"
+        styleClass="schedule-select-button"
+      ></p-selectButton>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-end pt-3 border-top">
+      <button
+        pButton
+        label="Cancelar"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="cancel()"
+      ></button>
+      <button
+        pButton
+        label="Programar reporte"
+        icon="pi pi-check"
+        class="p-button-primary"
+        (click)="saveReport()"
+        [disabled]="!isFormValid()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

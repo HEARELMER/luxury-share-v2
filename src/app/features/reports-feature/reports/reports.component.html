@@ -1,39 +1,76 @@
 <main class="flex flex-col bg-white rounded-xl gap-4">
-  <header class="border-b py-2 px-4 flex justify-between items-center">
-    <div>
-      <h1 class="text-xl font-bold">Reportes</h1>
-      <p class="text-sm text-gray-500">
-        Aquí podrás ver los reportes de los usuarios.
-      </p>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="flex flex-col text-sm">
-        <span class="text-gray-500">Última actualización</span>
-        <span class="font-medium text-gray-700">
-          {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
-        </span>
+  <!-- HEADER: Título, exportar y botones de acción -->
+  <header class="border-b py-3 px-4">
+    <!-- Sección superior: título y botones principales -->
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+    >
+      <div>
+        <h1 class="text-xl font-bold">Reportes</h1>
+        <p class="text-sm text-gray-500">
+          Aquí podrás ver los reportes de los usuarios.
+        </p>
       </div>
 
-      <button
-        pButton
-        icon="pi pi-cloud-download"
-        size="small"
-        class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-        label="Exportar "
-      ></button>
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Info de actualización - visible solo en tablets/desktop -->
+        <div class="hidden md:flex flex-col text-sm mr-2">
+          <span class="text-gray-500">Última actualización</span>
+          <span class="font-medium text-gray-700">
+            {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
+          </span>
+        </div>
 
-      <button
-        pButton
-        icon="pi pi-refresh"
-        size="small"
-        class="border-2 shadow-sm rounded-lg border-slate-100 hover:bg-primary-400 hover:shadow-md transition-all duration-200"
-        label="Actualizar Reporte "
-        (click)="updateReport()"
-      ></button>
+        <!-- Sección de botones con diseño responsive -->
+        <div class="flex items-center gap-2">
+          <!-- Botón exportar -->
+          <button
+            pButton
+            icon="pi pi-cloud-download"
+            size="small"
+            class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+            [label]="'Exportar'"
+            pTooltip="Exportar reporte"
+            tooltipPosition="bottom"
+            (click)="exportMenu.toggle($event)"
+          ></button>
+          <p-menu #exportMenu [popup]="true" [model]="exportOptions"></p-menu>
+
+          <!-- Botón actualizar -->
+          <button
+            pButton
+            icon="pi pi-refresh"
+            size="small"
+            class="border-2 shadow-sm rounded-lg border-slate-100 hover:bg-primary-400 hover:shadow-md transition-all duration-200"
+            [label]="'Actualizar Reporte'"
+            pTooltip="Actualizar datos"
+            tooltipPosition="bottom"
+            (click)="updateReport()"
+          ></button>
+
+          <!-- Botón programar reportes -->
+          <button
+            pButton
+            icon="pi pi-clock"
+            [label]="'Programar reportes'"
+            size="small"
+            class="p-button-outlined"
+            pTooltip="Programar envíos"
+            tooltipPosition="bottom"
+            (click)="showScheduleDialog.set(true)"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info de actualización - visible solo en móvil -->
+    <div class="flex md:hidden items-center text-xs text-gray-500 mt-2">
+      <i class="pi pi-clock mr-1"></i>
+      Actualizado: {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
     </div>
   </header>
 
-  <!-- section filters -->
+  <!-- SECCIÓN DE FILTROS -->
   <section class="px-6 py-4 border-b">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
@@ -54,6 +91,7 @@
         size="small"
       ></button>
     </div>
+
     <form
       [formGroup]="filtersForm"
       class="grid gap-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
@@ -111,7 +149,7 @@
         </div>
       </div>
 
-      <!-- Tipo de servicio con descripción -->
+      <!-- Tipo de servicio -->
       <div class="col-span-1 space-y-2">
         <label
           class="text-sm font-medium text-gray-700 flex items-center gap-2"
@@ -149,6 +187,8 @@
         />
       </div>
       }
+
+      <!-- Paquetes -->
       <div class="col-span-1 space-y-2">
         <label
           class="text-sm font-medium text-gray-700 flex items-center gap-2"
@@ -184,12 +224,26 @@
     </form>
   </section>
 
+  <!-- SECCIÓN DE KPI CARDS -->
   <section class="px-6 py-4">
     <app-kpi-cards [data]="kpiData()"></app-kpi-cards>
   </section>
 
- 
+  <!-- SECCIÓN DE OBJETIVOS Y CUMPLIMIENTO -->
+  <app-goals-panel [goals]="goalsData()" />
+
+  <!-- SECCIÓN DE GRÁFICOS -->
   <section>
-   <app-charts-panel [data]="[chartData()]" ></app-charts-panel>
+    <app-charts-panel [data]="chartData()"></app-charts-panel>
   </section>
+
+  <!-- DIÁLOGOS: Programación de reportes -->
+  <app-schedule-report-dialog
+    [(visible)]="showScheduleDialog"
+    (onClose)="showScheduleDialog.set(false)"
+    (save)="scheduleReport()"
+  />
+
+  <!-- Toast para notificaciones -->
+  <p-toast position="bottom-right"></p-toast>
 </main>

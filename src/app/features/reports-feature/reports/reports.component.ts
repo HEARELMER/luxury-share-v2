@@ -17,8 +17,24 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { Popover } from 'primeng/popover';
 import { DatePickerComponent } from '../../../shared/components/forms/date-picker/date-picker.component';
 import { DatePickerModule } from 'primeng/datepicker';
-import { MessageService } from 'primeng/api';
-import { DatePipe } from '@angular/common';
+import { MenuItem, MessageService } from 'primeng/api';
+import { DatePipe, NgClass } from '@angular/common';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TableModule } from 'primeng/table';
+import { MenuModule } from 'primeng/menu';
+import { DialogModule } from 'primeng/dialog';
+import { ChipModule } from 'primeng/chip';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { TagModule } from 'primeng/tag';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
+import { ScheduleReportDialogComponent } from '../schedule-report-dialog/schedule-report-dialog.component';
+import {
+  Goal,
+  GoalsPanelComponent,
+} from '../goals-panel/goals-panel.component';
 @Component({
   selector: 'app-reports',
   imports: [
@@ -36,6 +52,19 @@ import { DatePipe } from '@angular/common';
     Popover,
     DatePickerModule,
     DatePipe,
+    ProgressBarModule,
+    ToastModule,
+    MenuModule,
+    DialogModule,
+    ChipModule,
+    SelectButtonModule,
+    TagModule,
+    DropdownModule,
+    InputTextModule,
+    DialogComponent,
+    NgClass,
+    ScheduleReportDialogComponent,
+    GoalsPanelComponent,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
@@ -46,13 +75,139 @@ export class ReportsComponent {
   showFilters = signal<boolean>(false);
   activeFiltersCount = signal<number>(0);
   lastUpdate = signal<Date>(new Date());
-
+  // Opciones para el menú de exportación
+  exportOptions: MenuItem[] = [
+    {
+      label: 'Excel (.xlsx)',
+      icon: 'pi pi-file-excel',
+      command: () => this.onExport('excel'),
+    },
+    {
+      label: 'CSV',
+      icon: 'pi pi-file',
+      command: () => this.onExport('csv'),
+    },
+    {
+      label: 'PDF',
+      icon: 'pi pi-file-pdf',
+      command: () => this.onExport('pdf'),
+    },
+  ];
   updateActiveFiltersCount() {
     const values = this.filtersForm.value;
     const count = Object.values(values).filter((v) => v && v !== 'all').length;
     this.activeFiltersCount.set(count);
   }
+  // Mostrar/ocultar datos detallados
+  showDetailedData = signal<boolean>(false);
 
+  // Datos simulados para tabla detallada
+  detailedData = signal<any[]>([
+    {
+      date: new Date(2024, 2, 15),
+      seller: 'Juan Pérez',
+      type: 'Tour',
+      service: 'Valle Sagrado',
+      customer: 'Carlos Martínez',
+      amount: 450,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 14),
+      seller: 'María García',
+      type: 'Hotel',
+      service: 'Marriott',
+      customer: 'Ana López',
+      amount: 320,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 12),
+      seller: 'Carlos López',
+      type: 'Paquete',
+      service: 'Cusco Completo',
+      customer: 'Jorge González',
+      amount: 1200,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 10),
+      seller: 'Ana Silva',
+      type: 'Transporte',
+      service: 'Transfer Aeropuerto',
+      customer: 'Laura Ramírez',
+      amount: 45,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 9),
+      seller: 'Juan Pérez',
+      type: 'Tour',
+      service: 'Machu Picchu',
+      customer: 'Roberto Díaz',
+      amount: 580,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 8),
+      seller: 'María García',
+      type: 'Hotel',
+      service: 'Casa Andina',
+      customer: 'Elena Castro',
+      amount: 290,
+      status: 'Cancelado',
+    },
+    {
+      date: new Date(2024, 2, 7),
+      seller: 'Carlos López',
+      type: 'Paquete',
+      service: 'Puno y Lago Titicaca',
+      customer: 'Javier Herrera',
+      amount: 870,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 5),
+      seller: 'Jorge Rodriguez',
+      type: 'Tour',
+      service: 'City Tour Cusco',
+      customer: 'Patricia Vargas',
+      amount: 120,
+      status: 'Completado',
+    },
+    {
+      date: new Date(2024, 2, 4),
+      seller: 'Ana Silva',
+      type: 'Transporte',
+      service: 'Bus Turístico',
+      customer: 'Miguel Soto',
+      amount: 65,
+      status: 'Cancelado',
+    },
+    {
+      date: new Date(2024, 2, 3),
+      seller: 'Juan Pérez',
+      type: 'Tour',
+      service: 'Montaña 7 Colores',
+      customer: 'Claudia Torres',
+      amount: 320,
+      status: 'Completado',
+    },
+  ]);
+
+  // Método para obtener la severidad de las etiquetas (tags)
+  getSeverity(status: string): string {
+    switch (status) {
+      case 'Completado':
+        return 'success';
+      case 'Pendiente':
+        return 'warning';
+      case 'Cancelado':
+        return 'danger';
+      default:
+        return 'info';
+    }
+  }
   // Datos simulados para KPIs
   kpiData = signal<KpiData>({
     totalSales: 156,
@@ -82,6 +237,88 @@ export class ReportsComponent {
     package: [''],
     seller: [''],
   });
+  // Reportes guardados
+  savedReports = signal<any[]>([
+    {
+      name: 'Reporte mensual de ventas',
+      id: 1,
+      config: { dateRange: 'last-month', serviceType: 'all' },
+    },
+    {
+      name: 'Ventas tours último trimestre',
+      id: 2,
+      config: { dateRange: 'custom', serviceType: 'tours' },
+    },
+    {
+      name: 'Rendimiento por vendedor 2024',
+      id: 3,
+      config: { dateRange: 'last-year', seller: '1' },
+    },
+  ]);
+
+  // Método para guardar el reporte actual
+  saveCurrentReport() {
+    // Mostrar diálogo para guardar
+    this.showSaveReportDialog.set(true);
+  }
+
+  // Control de diálogo de programación
+  showScheduleDialog = signal<boolean>(false);
+
+  // Opciones para frecuencia
+  scheduleFrequencies = [
+    { label: 'Diario', value: 'daily' },
+    { label: 'Semanal', value: 'weekly' },
+    { label: 'Mensual', value: 'monthly' },
+    { label: 'Trimestral', value: 'quarterly' },
+  ];
+
+  // Opciones para formatos de exportación
+  exportFormats = [
+    { label: 'Excel', value: 'excel' },
+    { label: 'PDF', value: 'pdf' },
+    { label: 'CSV', value: 'csv' },
+  ];
+
+  // Método para programar un reporte
+  scheduleReport() {
+    // Implementación simulada
+    this._messageService.add({
+      severity: 'info',
+      summary: 'Reporte programado',
+      detail: 'El reporte ha sido programado correctamente',
+    });
+    this.showScheduleDialog.set(false);
+  }
+
+  // Propiedad para controlar diálogo de guardar reporte
+  showSaveReportDialog = signal<boolean>(false);
+  newReportName = signal<string>('');
+
+  // Método para guardar realmente el reporte
+  confirmSaveReport() {
+    if (this.newReportName()) {
+      const newReport = {
+        name: this.newReportName(),
+        id: this.savedReports().length + 1,
+        config: { ...this.filtersForm.value },
+      };
+
+      // Añadir al listado
+      this.savedReports.update((reports) => [...reports, newReport]);
+
+      // Mostrar mensaje de éxito
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Reporte guardado',
+        detail: `El reporte "${this.newReportName()}" ha sido guardado`,
+      });
+
+      // Cerrar diálogo y limpiar
+      this.showSaveReportDialog.set(false);
+      this.newReportName.set('');
+    }
+  }
 
   loading = signal<boolean>(false);
   totalRecords = signal<number>(100);
@@ -190,6 +427,44 @@ export class ReportsComponent {
     }, 1500);
   }
 
+  // Añade estas propiedades
+  selectedRecipients: string[] = ['carlos.lopez@empresa.com'];
+
+  // Usuarios sugeridos para enviar reportes
+  suggestedUsers = [
+    {
+      name: 'María García',
+      email: 'maria.garcia@empresa.com',
+      avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
+    },
+    {
+      name: 'Juan Pérez',
+      email: 'juan.perez@empresa.com',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    },
+    {
+      name: 'Ana Silva',
+      email: 'ana.silva@empresa.com',
+      avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
+    },
+    {
+      name: 'Roberto Torres',
+      email: 'roberto.torres@empresa.com',
+      avatar: 'https://randomuser.me/api/portraits/men/41.jpg',
+    },
+    {
+      name: 'Elena Salazar',
+      email: 'elena.salazar@empresa.com',
+      avatar: 'https://randomuser.me/api/portraits/women/33.jpg',
+    },
+  ];
+
+  // Método para añadir un destinatario desde las sugerencias
+  addRecipient(email: string): void {
+    if (!this.selectedRecipients.includes(email)) {
+      this.selectedRecipients.push(email);
+    }
+  }
   // Datos simulados para los gráficos
   chartData = signal({
     sales: {
@@ -368,4 +643,44 @@ export class ReportsComponent {
       ],
     },
   });
+  goalsData = signal<Goal[]>([
+    {
+      id: 1,
+      title: 'Ventas mensuales',
+      icon: 'pi-dollar',
+      target: 150000,
+      current: 117000,
+      percentage: 78,
+      formatTarget: 'S/. 150,000',
+      formatCurrent: 'S/. 117,000',
+    },
+    {
+      id: 2,
+      title: 'Nuevos clientes',
+      icon: 'pi-users',
+      target: 50,
+      current: 31,
+      percentage: 62,
+      formatTarget: '50',
+      formatCurrent: '31',
+    },
+    {
+      id: 3,
+      title: 'Retención',
+      icon: 'pi-heart-fill',
+      target: 80,
+      current: 73.5,
+      percentage: 92,
+      formatTarget: '80%',
+      formatCurrent: '73.5%',
+    },
+  ]);
+
+  // En el componente
+  compareOptions = [
+    { label: 'Sin comparación', value: 'none' },
+    { label: 'Mismo período año anterior', value: 'last-year' },
+    { label: 'Período anterior', value: 'previous-period' },
+    { label: 'Promedio histórico', value: 'historical-avg' },
+  ];
 }

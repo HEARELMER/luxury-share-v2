@@ -1,0 +1,26 @@
+:host ::ng-deep {
+    // Estilos para las barras de progreso
+    .p-progressbar { 
+      background-color: #f1f5f9; // Fondo suave
+      
+      &.progress-success .p-progressbar-value {
+        background: linear-gradient(to right, #10b981, #059669);
+        box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
+      }
+      
+      &.progress-warning .p-progressbar-value {
+        background: linear-gradient(to right, #f59e0b, #d97706);
+        box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
+      }
+      
+      &.progress-danger .p-progressbar-value {
+        background: linear-gradient(to right, #ef4444, #dc2626);
+        box-shadow: 0 1px 3px rgba(239, 68, 68, 0.2);
+      }
+    }
+    
+    // Transición suave al cambiar los valores
+    .p-progressbar-value {
+      transition: width 0.3s ease-in-out;
+    }
+  }

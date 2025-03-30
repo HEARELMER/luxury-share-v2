@@ -1,0 +1,20 @@
+<div class="chart-container bg-white rounded-lg p-3">
+  <div class="flex justify-between items-center mb-2">
+    <div>
+      <h3 class="text-sm font-medium">{{ title() || "Gráfico de Dona" }}</h3>
+      <p class="text-xs text-gray-500">{{ subtitle() || "" }}</p>
+    </div>
+    <div class="flex gap-1">
+      <button
+        pButton
+        icon="pi pi-download"
+        class="p-button-text p-button-sm p-button-rounded"
+        pTooltip="Descargar gráfico"
+        tooltipPosition="left"
+      ></button>
+    </div>
+  </div>
+  <div class="chart-wrapper max-h-32 h-auto">
+    <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+  </div>
+</div>

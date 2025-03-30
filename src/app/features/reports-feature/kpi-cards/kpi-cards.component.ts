@@ -11,6 +11,9 @@ export interface KpiData {
     name: string;
     sales: number;
   };
+  conversionRate?: number;
+  customerRetention?: number;
+  averageValue?: number;
 }
 @Component({
   selector: 'app-kpi-cards',

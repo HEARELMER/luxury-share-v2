@@ -1,0 +1,19 @@
+<div class="chart-container bg-white rounded-lg p-4">
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <h3 class="text-base font-medium">{{ title() || 'Gráfico de Línea' }}</h3>
+      <p class="text-sm text-gray-500">{{ subtitle() || '' }}</p>
+    </div>
+    <div class="flex gap-2">
+      <button pButton 
+              icon="pi pi-download"
+              class="p-button-text p-button-sm"
+              pTooltip="Descargar gráfico"
+              tooltipPosition="left">
+      </button>
+    </div>
+  </div>
+  <div class="chart-wrapper h-auto">
+    <p-chart type="line" [data]="data" [options]="options"></p-chart>
+  </div>
+</div>

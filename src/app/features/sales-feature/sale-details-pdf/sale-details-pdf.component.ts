@@ -136,10 +136,8 @@ export class SaleDetailsPdfComponent {
             `Fecha de salida: ${new Date(
               saleData.departureDate
             ).toLocaleDateString()}`,
-            `Método de pago: ${this.formatPaymentMethod(
-              saleData.paymentMethod
-            )}`,
-            `Estado: ${this.formatStatus(saleData.status)}`,
+            `Método de pago: ${saleData.paymentMethod}`,
+            `Estado: ${saleData.status}`,
             `Sucursal: ${saleData.branch?.address || 'Principal'}`,
             saleData.observations
               ? `Observaciones: ${saleData.observations}`
@@ -190,29 +188,6 @@ export class SaleDetailsPdfComponent {
       reportData as any
     );
     this.pdfDoc = pdf; // Usar signal.set() en lugar de asignación directa
-  }
-
-  // Formatear para mejor visualización
-  formatPaymentMethod(method: string): string {
-    const methods: Record<string, string> = {
-      CASH: 'Efectivo',
-      CREDIT_CARD: 'Tarjeta de Crédito',
-      DEBIT_CARD: 'Tarjeta de Débito',
-      TRANSFER: 'Transferencia',
-      YAPE: 'Yape',
-      PLIN: 'Plin',
-    };
-    return methods[method] || method;
-  }
-
-  formatStatus(status: string): string {
-    const statuses: Record<string, string> = {
-      PENDIENTE: 'Pendiente',
-      COMPLETADO: 'Completado',
-      CANCELADO: 'Cancelado',
-      EN_PROCESO: 'En Proceso',
-    };
-    return statuses[status] || status;
   }
 
   onEmail(event: any): void {

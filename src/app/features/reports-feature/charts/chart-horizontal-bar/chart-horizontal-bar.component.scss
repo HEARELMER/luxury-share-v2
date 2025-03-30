@@ -1,0 +1,15 @@
+:host {
+    display: block;
+    height: 100%;
+    
+    // Para asegurar que el gráfico respeta las dimensiones del contenedor
+    ::ng-deep {
+      .p-chart {
+        width: 100% !important;
+      }
+      
+      canvas {
+        max-height: 250px;
+      }
+    }
+  }

@@ -4,8 +4,11 @@ import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
-import { ChartLineComponent } from '../../../shared/components/charts/chart-line/chart-line.component';
-import { ChartBarComponent } from '../../../shared/components/charts/chart-bar/chart-bar.component';
+import { ChartLineComponent } from '../charts/chart-line/chart-line.component';
+import { ChartBarComponent } from '../charts/chart-bar/chart-bar.component';
+import { ChartHorizontalBarComponent } from '../charts/chart-horizontal-bar/chart-horizontal-bar.component';
+import { ChartPieComponent } from '../charts/chart-pie/chart-pie.component';
+import { ChartDounghnutComponent } from '../charts/chart-dounghnut/chart-dounghnut.component';
 @Component({
   selector: 'app-charts-panel',
   imports: [
@@ -16,13 +19,13 @@ import { ChartBarComponent } from '../../../shared/components/charts/chart-bar/c
     TooltipModule,
     ChartLineComponent,
     ChartBarComponent,
+    ChartPieComponent,
+    ChartHorizontalBarComponent,
+    ChartDounghnutComponent,
   ],
   templateUrl: './charts-panel.component.html',
   styleUrl: './charts-panel.component.scss',
 })
 export class ChartsPanelComponent {
-  data = input.required<{
-    sales: any;
-    distribution: any;
-  }>();
+  readonly data = input.required<any>();
 }

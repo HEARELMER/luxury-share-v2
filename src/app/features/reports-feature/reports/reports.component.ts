@@ -8,11 +8,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { Skeleton } from 'primeng/skeleton';
-import {
-  SaleReport,
-  SalesTableComponent,
-  TableState,
-} from '../sales-table/sales-table.component';
+
 import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
 import { KpiCardsComponent, KpiData } from '../kpi-cards/kpi-cards.component';
 import { Select } from 'primeng/select';
@@ -31,7 +27,6 @@ import { DatePipe } from '@angular/common';
     FormsModule,
     SelectComponent,
     Skeleton,
-    SalesTableComponent,
     KpiCardsComponent,
     ChartsPanelComponent,
     ToggleSwitchModule,
@@ -58,17 +53,6 @@ export class ReportsComponent {
     this.activeFiltersCount.set(count);
   }
 
-  // Método para cargar datos
-  loadData(tableState: TableState) {
-    this.loading.set(true);
-    // Aquí irá la llamada al servicio
-    // Por ahora simulamos datos
-    setTimeout(() => {
-      this.salesData.set([]); // Datos del servicio
-      this.loading.set(false);
-    }, 1000);
-  }
-
   // Datos simulados para KPIs
   kpiData = signal<KpiData>({
     totalSales: 156,
@@ -79,8 +63,11 @@ export class ReportsComponent {
       name: 'Juan Pérez',
       sales: 45,
     },
+    // Datos adicionales para los nuevos KPIs
+    conversionRate: 68.2, // Tasa de conversión
+    customerRetention: 73.5, // Retención de clientes
+    averageValue: 1950.45, // Valor promedio de venta
   });
-
   // Método para exportar
   onExport(type: 'excel' | 'csv' | 'pdf') {
     console.log(`Exportando en formato: ${type}`);
@@ -94,29 +81,6 @@ export class ReportsComponent {
     service: [''],
     package: [''],
     seller: [''],
-  });
-  // Datos simulados para gráficas
-  chartData = signal({
-    sales: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-      datasets: [
-        {
-          label: 'Ventas 2024',
-          data: [65, 59, 80, 81, 56, 55],
-          fill: false,
-          borderColor: '#4338ca',
-        },
-      ],
-    },
-    distribution: {
-      labels: ['Tours', 'Hoteles', 'Paquetes'],
-      datasets: [
-        {
-          data: [300, 150, 200],
-          backgroundColor: ['#4338ca', '#16a34a', '#ea580c'],
-        },
-      ],
-    },
   });
 
   loading = signal<boolean>(false);
@@ -226,28 +190,182 @@ export class ReportsComponent {
     }, 1500);
   }
 
-  salesData = signal<SaleReport[]>([
-    {
-      id: 'VNT-001',
-      saleDate: new Date(),
-      client: 'Carlos Rodriguez',
-      service: 'Tour Machu Picchu',
-      seller: 'Juan Pérez',
-      quantity: 2,
-      unitPrice: 250.00,
-      discount: 25.00,
-      total: 475.00
+  // Datos simulados para los gráficos
+  chartData = signal({
+    sales: {
+      labels: [
+        'Ene',
+        'Feb',
+        'Mar',
+        'Abr',
+        'May',
+        'Jun',
+        'Jul',
+        'Ago',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dic',
+      ],
+      datasets: [
+        {
+          label: 'Ventas 2023',
+          data: [65, 59, 80, 81, 56, 55, 40, 38, 45, 60, 70, 75],
+          fill: false,
+          tension: 0.4,
+          borderColor: '#4338ca',
+        },
+        {
+          label: 'Ventas 2024',
+          data: [70, 65, 85, 89, 60, 60, 45, 42, 50, 65, 75, 80],
+          fill: false,
+          tension: 0.4,
+          borderColor: '#16a34a',
+        },
+      ],
     },
-    {
-      id: 'VNT-002',
-      saleDate: new Date(),
-      client: 'María López',
-      service: 'Hotel Cusco Premium',
-      seller: 'Ana García',
-      quantity: 1,
-      unitPrice: 350.00,
-      discount: 0,
-      total: 350.00
-    }
-  ]);
+
+    profitMargin: {
+      labels: [
+        'Ene',
+        'Feb',
+        'Mar',
+        'Abr',
+        'May',
+        'Jun',
+        'Jul',
+        'Ago',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dic',
+      ],
+      datasets: [
+        {
+          label: 'Margen (%)',
+          data: [25, 27, 30, 32, 28, 29, 31, 33, 35, 36, 34, 38],
+          fill: false,
+          borderColor: '#16a34a',
+        },
+      ],
+    },
+
+    yearComparison: {
+      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      datasets: [
+        {
+          label: '2023',
+          data: [540, 620, 710, 790],
+          backgroundColor: '#94a3b8',
+        },
+        {
+          label: '2024',
+          data: [650, 750, 830, 920],
+          backgroundColor: '#4338ca',
+        },
+      ],
+    },
+
+    topSellers: {
+      labels: [
+        'Juan Pérez',
+        'María García',
+        'Carlos López',
+        'Ana Silva',
+        'Jorge Rodriguez',
+      ],
+      datasets: [
+        {
+          label: 'Ventas (S/.)',
+          data: [45000, 38000, 32000, 28000, 21000],
+          backgroundColor: '#4338ca',
+        },
+      ],
+    },
+
+    distribution: {
+      labels: ['Tours', 'Hoteles', 'Paquetes', 'Transporte', 'Guías'],
+      datasets: [
+        {
+          data: [300, 150, 200, 120, 80],
+          backgroundColor: [
+            '#4338ca',
+            '#16a34a',
+            '#ea580c',
+            '#0ea5e9',
+            '#8b5cf6',
+          ],
+        },
+      ],
+    },
+
+    regionSales: {
+      labels: ['Cusco', 'Lima', 'Arequipa', 'Puno', 'Otros'],
+      datasets: [
+        {
+          data: [450, 230, 180, 120, 215],
+          backgroundColor: [
+            '#4338ca',
+            '#16a34a',
+            '#ea580c',
+            '#0ea5e9',
+            '#8b5cf6',
+          ],
+        },
+      ],
+    },
+
+    branchPerformance: {
+      labels: [
+        'Ventas',
+        'Atención',
+        'Satisfacción',
+        'Tiempo de respuesta',
+        'Calidad',
+      ],
+      datasets: [
+        {
+          label: 'Sucursal Cusco',
+          backgroundColor: 'rgba(67, 56, 202, 0.2)',
+          borderColor: '#4338ca',
+          pointBackgroundColor: '#4338ca',
+          pointBorderColor: '#fff',
+          data: [85, 90, 88, 76, 92],
+        },
+        {
+          label: 'Sucursal Lima',
+          backgroundColor: 'rgba(22, 163, 74, 0.2)',
+          borderColor: '#16a34a',
+          pointBackgroundColor: '#16a34a',
+          pointBorderColor: '#fff',
+          data: [78, 85, 91, 88, 85],
+        },
+      ],
+    },
+
+    monthlyGrowth: {
+      labels: [
+        'Ene',
+        'Feb',
+        'Mar',
+        'Abr',
+        'May',
+        'Jun',
+        'Jul',
+        'Ago',
+        'Sep',
+        'Oct',
+      ],
+      datasets: [
+        {
+          label: 'Crecimiento (%)',
+          data: [5.2, 3.8, 7.1, -2.3, 4.5, 6.2, 1.8, 3.5, 8.2, 4.7],
+          backgroundColor: (context: any) => {
+            const value = context.dataset.data[context.dataIndex];
+            return value >= 0 ? '#16a34a' : '#ef4444';
+          },
+        },
+      ],
+    },
+  });
 }

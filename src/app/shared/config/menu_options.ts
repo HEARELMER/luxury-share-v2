@@ -70,4 +70,10 @@ export const MENU_OPTIONS: MenuNode[] = [
     icon: 'pi pi-building',
     routerLink: '/branches',
   },
+  {
+    key: 'configurations',
+    label: 'Configuraciones',
+    icon: 'pi pi-cog',
+    routerLink: '/configurations',
+  } 
 ];

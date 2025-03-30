@@ -10,7 +10,7 @@ import { SalesComponent } from './features/sales-feature/sales/sales.component';
 import { ClientsComponent } from './features/clients-feature/clients/clients.component';
 import { ReportsComponent } from './features/reports-feature/reports/reports.component';
 import { PasswordRecoveryComponent } from './features/auth-feature/password-recovery/password-recovery.component';
-import { ConfigurationsComponent } from './configuration-feature/configurations/configurations.component';
+import { ConfigurationsComponent } from './features/configuration-feature/configurations/configurations.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },

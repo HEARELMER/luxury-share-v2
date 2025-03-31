@@ -1,0 +1,136 @@
+<div class="p-4">
+  <h3 class="text-lg font-semibold pb-4">Manifiestos sugeridos</h3>
+  <p class="text-sm text-gray-600 pb-4">
+    Basado en las ventas del {{ selectedDate() | date : "MM/dd/yyyy" }}, se sugieren los siguientes manifiestos:
+  </p>
+
+  <p-table
+    [value]="suggestedManifests()"
+    [responsive]="true"
+    styleClass="p-datatable-sm"
+    [rowHover]="true"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [selection]="selectedManifests()"
+    (selectionChange)="selectedManifests.set($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>Servicio</th>
+        <th>Tipo</th>
+        <th>Sucursal</th>
+        <th pSortableColumn="date">
+          Fecha
+          <p-sortIcon field="date"></p-sortIcon>
+        </th>
+      
+        <th pSortableColumn="totalPassengers">
+          Total de pasajeros
+          <p-sortIcon field="totalPassengers"></p-sortIcon>
+        </th>
+        <th>Detalles</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-manifest>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="manifest"></p-tableCheckbox>
+        </td>
+        <td>
+          <div class="font-medium">{{ manifest.serviceName }}</div>
+          <div class="text-xs text-gray-500">
+            {{ manifest.description }}
+          </div>
+        </td>
+        <td>
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+            [ngClass]="{
+              'bg-blue-100 text-blue-800': manifest.type === 'tour',
+              'bg-green-100 text-green-800': manifest.type === 'hotel',
+              'bg-yellow-100 text-yellow-800': manifest.type === 'food',
+              'bg-purple-100 text-purple-800': manifest.type === 'transport'
+            }"
+          >
+            {{ manifest.type | titlecase }}
+          </span>
+        </td>
+        <td>{{ manifest.branch }}</td>
+        <td>
+          {{ manifest.date | date : "MM/dd/yyyy HH:mm" }}
+        </td>
+        <td>
+          <div class="flex gap-1 flex-wrap">
+            <p-tag
+              *ngFor="let sale of manifest.sales.slice(0, 3)"
+              [value]="'#' + sale.code"
+              severity="info"
+            ></p-tag>
+            <p-tag
+              *ngIf="manifest.sales.length > 3"
+              [value]="'+' + (manifest.sales.length - 3)"
+            ></p-tag>
+          </div>
+        </td>
+        <td class="text-center">
+          <div class="text-lg font-bold">
+            {{ manifest.totalPassengers }}
+          </div>
+          <p-progressBar
+            [value]="manifest.totalPassengers * 10"
+            [showValue]="false"
+            [style]="{ height: '4px' }"
+          ></p-progressBar>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-eye"
+            class="p-button-text p-button-rounded"
+            (click)="showManifestDetails(manifest)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  @if (suggestedManifests().length === 0) {
+  <div class="text-center py-8 border rounded-lg bg-gray-50">
+    <i class="pi pi-search text-gray-300 text-5xl pb-3"></i>
+    <h3 class="text-xl font-medium text-gray-600 pb-2">
+      No se encontraron ventas pendientes
+    </h3>
+    <p class="text-gray-500 pb-4">
+      No hay ventas programadas para el
+      {{ selectedDate() | date : "MM/dd/yyyy" }}
+      o ya se han creado todos los manifiestos necesarios.
+    </p>
+    <button
+      pButton
+      label="Cambiar fecha"
+      icon="pi pi-calendar"
+      class="p-button-outlined"
+      (click)="goBackToDateSelection()"
+    ></button>
+  </div>
+  }
+
+  <div class="flex justify-between pt-4">
+    <button
+      pButton
+      label="Atrás"
+      icon="pi pi-arrow-left"
+      class="p-button-outlined"
+      (click)="goBackToDateSelection()"
+    ></button>
+    <button
+      pButton
+      label="Generar manifiestos seleccionados"
+      icon="pi pi-check"
+      [disabled]="!hasSelectedManifests"
+      (click)="generateManifests()"
+    ></button>
+  </div>
+</div>

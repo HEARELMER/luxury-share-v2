@@ -1,0 +1,65 @@
+<div class="p-4">
+    <div class="text-center pb-6">
+      <div
+        class="inline-flex items-center justify-center h-24 w-24 rounded-full bg-green-100 pb-4"
+      >
+        <i class="pi pi-check-circle text-green-600 text-5xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-800">
+        Manifiestos generados exitosamente
+      </h3>
+      <p class="text-gray-600 mt-2">
+        {{ generatedManifests().length }} manifiestos han sido
+        creados exitosamente
+      </p>
+    </div>
+
+    <div class="bg-gray-50 rounded-lg p-4 pb-6">
+    <div class="pb-2 font-medium text-sm text-gray-700">
+      Resumen de manifiestos creados:
+    </div>
+      <ul class="divide-y">
+        @for (manifest of generatedManifests(); track $index) {
+        <li class="py-3 flex justify-between">
+          <div>
+            <div class="font-medium">{{ manifest.serviceName }}</div>
+            <div class="flex items-center gap-2">
+              <div class="text-xs text-gray-500">
+                {{ manifest.date | date : "MM/dd/yyyy HH:mm" }}
+              </div>
+              <span
+                class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                >{{ manifest.branch }}</span
+              >
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm">
+              {{ manifest.totalPassengers }} passengers
+            </div>
+            <p-tag
+              [value]="'ID: ' + manifest.manifestId.substring(0, 8)"
+              severity="success"
+            ></p-tag>
+          </div>
+        </li>
+        }
+      </ul>
+    </div>
+
+    <div class="flex pt-4 justify-between">
+      <button
+        pButton
+        label="Generar más manifiestos"
+        icon="pi pi-plus"
+        class="p-button-outlined"
+        (click)="restartProcess()"
+      ></button>
+      <button
+        pButton
+        label="Cerrar"
+        icon="pi pi-check"
+        (click)="closeDialog()"
+      ></button>
+    </div>
+  </div>

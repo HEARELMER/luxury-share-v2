@@ -15,6 +15,9 @@ import { ClientsService } from '../../../core/services/clients-services/clients.
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { Step1ClientFormComponent } from './steps/step1-client-form/step1-client-form.component';
 import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.component';
+import { SaleCreationResult } from '../interfaces/sale-creation-result.interface';
+import { Step3SummarySaleComponent } from './steps/step3-summary-sale/step3-summary-sale.component';
+import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.service';
 @Component({
   selector: 'app-form-sale',
   imports: [
@@ -27,6 +30,7 @@ import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.
     ButtonModule,
     Step1ClientFormComponent,
     Step2SaleFormComponent,
+    Step3SummarySaleComponent,
   ],
   templateUrl: './form-sale.component.html',
   styleUrl: './form-sale.component.scss',
@@ -37,8 +41,9 @@ export class FormSaleComponent {
   private readonly _salesService = inject(SalesService);
   private readonly _clientsService = inject(ClientsService);
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
-
+  private readonly _pdfSaleService = inject(SalePdfService);
   // Signals,variables constantes y outputs
+  saleCreationResult = signal<SaleCreationResult | null>(null);
   currentClient = signal<any>(null);
   currentStep = signal<number>(1);
   stepsCompleted = signal<{ [key: number]: boolean }>({
@@ -50,6 +55,7 @@ export class FormSaleComponent {
   addSaleSteps = ADD_SALES_STEPS;
   showModal = model<boolean>(false);
   refreshData = output<void>();
+  isCompleted = signal<boolean>(false);
 
   // 90942334 :dni primer cliente creado
   // forms
@@ -67,6 +73,9 @@ export class FormSaleComponent {
 
   closeModal() {
     this.showModal.set(false);
+    if (this.isCompleted()) {
+      this.refreshData.emit();
+    }
   }
 
   createClient(activateCallback: (step: number) => void) {
@@ -128,11 +137,36 @@ export class FormSaleComponent {
     activateCallback(this.currentStep());
   }
 
+  handleSaleCreationResult(result: any): void {
+    this.saleCreationResult.set(result);
+    if (result.status === 'COMPLETED') {
+      this.isCompleted.set(true);
+    }
+    this.currentStep.set(3);
+  }
+
   // Verificar si se puede navegar a un paso
   canActivateStep(step: number): boolean {
     // El paso 1 siempre está disponible
     if (step === 1) return true;
     // Para los demás pasos, verificar si el anterior está completado
     return this.stepsCompleted()[step - 1] === true;
+  }
+
+  downloadReceipt() {
+    if (this.saleCreationResult()) {
+      const code = this.saleCreationResult()?.codeSale || '';
+      this._pdfSaleService.downloadSaleDetailsPdf(code);
+    }
+  }
+
+  restartSale() {
+    this.clientForm.reset();
+    this.currentClient.set(null);
+    this.saleCreationResult.set(null);
+    this.stepsCompleted.update((steps) => ({ ...steps, 1: false, 2: false }));
+    this.currentStep.set(1);
+    this.showModal.set(false);
+    this.refreshData.emit();
   }
 }

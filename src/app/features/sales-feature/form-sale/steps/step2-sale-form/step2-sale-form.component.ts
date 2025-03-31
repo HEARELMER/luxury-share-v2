@@ -36,6 +36,7 @@ import {
   TableState,
 } from '../../../../services-packages-feature/interfaces/sale-formt';
 import { PAYMENT_METHODS } from '../../../constants/add-sales.constant';
+import { SaleCreationResult } from '../../../interfaces/sale-creation-result.interface';
 
 @Component({
   selector: 'app-step2-sale-form',
@@ -62,7 +63,6 @@ export class Step2SaleFormComponent {
   private readonly _servicesService = inject(ServicesService);
   private readonly _packagesService = inject(PackagesService);
   private readonly _salesService = inject(SalesService);
-  private readonly _messageService = inject(MessageService);
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
   private readonly _localstorageService = inject(LocalstorageService);
   private readonly _fb = inject(FormBuilder);
@@ -74,6 +74,7 @@ export class Step2SaleFormComponent {
     });
   }
   // Estados
+  readonly statusOfSaleCreated = output<SaleCreationResult>();
   readonly submitForm = output<void>();
   selectedItems = signal<SaleItem[]>([]);
   discount = signal<any>(0);
@@ -211,14 +212,6 @@ export class Step2SaleFormComponent {
       },
       error: (error) => {
         this.loading.set(false);
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `No se pudieron cargar los ${
-            this.currentView() === 'services' ? 'servicios' : 'paquetes'
-          }`,
-        });
-        console.error('Error loading items:', error);
       },
     });
   }
@@ -251,13 +244,24 @@ export class Step2SaleFormComponent {
     };
     console.log(saleData);
     this._salesService.createSale(saleData).subscribe({
-      next: () => {
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Venta creada con éxito',
+      next: (response) => {
+        this.statusOfSaleCreated.emit({
+          success: true,
+          message: response.message,
+          codeSale: response.data.codeSale,
+          saleData: response.data,
+          status: 'COMPLETED',
         });
         this.submitForm.emit();
         this.clearSale();
+      },
+      error: (error) => {
+        this.statusOfSaleCreated.emit({
+          success: false,
+          message: error.message,
+          error,
+          status: 'ERROR',
+        });
       },
     });
   }
@@ -277,13 +281,24 @@ export class Step2SaleFormComponent {
       dateSale: new Date().toISOString(),
     };
     this._salesService.createSale(saleData).subscribe({
-      next: () => {
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Reserva Creada con éxito',
+      next: (response) => {
+        this.statusOfSaleCreated.emit({
+          success: true,
+          message: response.message,
+          codeSale: response.data.codeSale,
+          saleData: response.data,
+          status: 'COMPLETED',
         });
         this.submitForm.emit();
         this.clearSale();
+      },
+      error: (error) => {
+        this.statusOfSaleCreated.emit({
+          success: false,
+          message: error.message,
+          error,
+          status: 'ERROR',
+        });
       },
     });
   }

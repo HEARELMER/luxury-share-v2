@@ -39,19 +39,18 @@
             <ng-template #content let-activateCallback="activateCallback">
               <app-step2-sale-form
                 (submitForm)="confirmSale(activateCallback)"
+                (statusOfSaleCreated)="handleSaleCreationResult($event)"
               />
             </ng-template>
           </p-step-panel>
           <p-step-panel [value]="3" class="flex-grow flex flex-col">
             <ng-template #content let-activateCallback="activateCallback">
-              <div class="flex pt-6 justify-end">
-                <p-button
-                  label="Guardar"
-                  icon="pi pi-lock"
-                  iconPos="right"
-                  (onClick)="activateCallback(2)"
-                />
-              </div>
+              <app-step3-summary-sale
+                [saleCreationResult]="saleCreationResult()"
+                (download)="downloadReceipt()"
+                (restart)="restartSale()"
+                (close)="closeModal()"
+              />
             </ng-template>
           </p-step-panel>
         </p-step-panels>

@@ -179,6 +179,11 @@ export class SalesComponent {
       },
     });
   }
+
+  handleRefreshData() {
+    this.loadSales();
+  }
+
   viewSaleDetailsPdf(sale: any): void {
     const ref = this.dialogService.open(SaleDetailsPdfComponent, {
       header: 'Detalle de Venta PDF',

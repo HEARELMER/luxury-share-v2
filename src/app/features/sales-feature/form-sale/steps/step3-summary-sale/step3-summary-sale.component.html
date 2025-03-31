@@ -1,1 +1,128 @@
-<p>step3-summary-sale works!</p>
+<div class="p-4">
+  @if (saleCreationResult()?.success) {
+  <div class="text-center pb-6">
+    <div
+      class="inline-flex items-center justify-center h-24 w-24 rounded-full bg-green-100 pb-4"
+    >
+      <i class="pi pi-check-circle text-green-500 text-5xl"></i>
+    </div>
+    <h3 class="text-xl font-bold text-gray-800">
+      {{
+        saleCreationResult()?.status === "COMPLETED"
+          ? "Venta completada"
+          : "Reserva creada"
+      }}
+    </h3>
+    <p class="text-gray-600 pt-2">
+      {{ saleCreationResult()?.message }}
+    </p>
+
+    <div class="pt-4 p-4 bg-green-50 border border-green-100 rounded text-left">
+      <div class="flex justify-between items-center pb-2">
+        <p class="text-sm font-medium text-green-500">
+          Detalles de la operación:
+        </p>
+        <p-tag
+          [value]="saleCreationResult()?.status"
+          class="bg-green-100 shadow-sm text-green-500  "
+        ></p-tag>
+      </div>
+      <p class="text-sm text-gray-600">
+        ID:
+        <span class="font-medium">{{ saleCreationResult()?.codeSale | uppercase }}</span>
+      </p>
+      <p class="text-sm text-gray-600">
+        Fecha:
+        <span class="font-medium">{{
+          saleCreationResult()?.saleData?.dateSale | date : "dd/MM/yyyy HH:mm"
+        }}</span>
+      </p>
+    </div>
+    
+    <!-- Añadir acciones de comprobante -->
+    <div class="flex flex-wrap justify-center gap-3 pt-4">
+      <button
+        pButton
+        type="button"
+        label="Descargar comprobante"
+        icon="pi pi-download"
+        class="p-button-outlined p-button-info"
+        (click)="downloadReceipt()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Enviar por correo"
+        icon="pi pi-envelope"
+        class="p-button-outlined p-button-help"
+        (click)="sendReceiptByEmail()"
+      ></button>
+    </div>
+  </div>
+  } @else if (saleCreationResult() && !saleCreationResult()?.success) {
+  <div class="text-center pb-6">
+    <div
+      class="inline-flex items-center justify-center h-24 w-24 rounded-full bg-red-100 pb-4"
+    >
+      <i class="pi pi-times-circle text-red-600 text-5xl"></i>
+    </div>
+    <h3 class="text-xl font-bold text-gray-800">Error en la operación</h3>
+    <p class="text-gray-600 pt-2">
+      {{
+        saleCreationResult()?.message ||
+          "Ocurrió un error al procesar su solicitud"
+      }}
+    </p>
+
+    <div class="pt-4 p-4 bg-red-50 border border-red-100 rounded text-left">
+      <p class="text-sm font-medium text-red-700">Detalles del error:</p>
+      <p class="text-sm text-gray-600">
+        {{ saleCreationResult()?.error?.message || "Error desconocido" }}
+      </p>
+    </div>
+  </div>
+  } @else {
+  <div class="text-center p-6 border rounded-lg bg-gray-50">
+    <i class="pi pi-info-circle text-gray-400 text-5xl pb-3"></i>
+    <h3 class="text-lg font-medium text-gray-600">
+      No hay información disponible
+    </h3>
+    <p class="text-gray-500 pt-2">
+      No se ha completado ningún proceso de venta.
+    </p>
+  </div>
+  }
+
+  <div class="flex flex-wrap justify-between gap-2 pt-6">
+    <button
+      pButton
+      label="Nueva venta"
+      icon="pi pi-plus"
+      class="p-button-outlined"
+      (click)="restartProcess()"
+    ></button>
+
+    <div class="flex flex-wrap gap-2">
+      @if (saleCreationResult()?.success) {
+      <button
+        pButton
+        label="Ver detalles de venta"
+        icon="pi pi-eye"
+        class="p-button-outlined p-button-success"
+        (click)="viewSaleDetails()"
+      ></button>
+      }
+
+      <button
+        pButton
+        [label]="saleCreationResult()?.success ? 'Finalizar' : 'Cerrar'"
+        [icon]="saleCreationResult()?.success ? 'pi pi-check' : 'pi pi-times'"
+        [class.p-button-success]="saleCreationResult()?.success"
+        [class.p-button-danger]="
+          saleCreationResult() && !saleCreationResult()?.success
+        "
+        (click)="closeDialog()"
+      ></button>
+    </div>
+  </div>
+</div>

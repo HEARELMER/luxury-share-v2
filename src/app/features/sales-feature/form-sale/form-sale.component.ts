@@ -1,8 +1,5 @@
 import { Component, inject, model, output, signal } from '@angular/core';
-import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
-import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import {
   FormBuilder,
   FormsModule,
@@ -21,14 +18,11 @@ import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.
 @Component({
   selector: 'app-form-sale',
   imports: [
-    InputFormComponent,
-    SelectComponent,
-    ButtonComponent,
     Toast,
     StepperModule,
     Button,
     FormsModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     ModalComponent,
     ButtonModule,
     Step1ClientFormComponent,
@@ -77,7 +71,12 @@ export class FormSaleComponent {
 
   createClient(activateCallback: (step: number) => void) {
     this.loading.set(true);
-    if (this.clientForm.valid) {
+    if (this.currentClient()) {
+      this.stepsCompleted.update((steps) => ({ ...steps, 1: true }));
+      this.loading.set(false);
+      this.currentStep.set(2);
+      activateCallback(2);
+    } else if (this.clientForm.valid) {
       this.clientForm.patchValue({
         registeredBy: '73464945',
       });

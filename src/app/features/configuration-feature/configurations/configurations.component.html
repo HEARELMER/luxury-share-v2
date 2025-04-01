@@ -1,336 +1,377 @@
- <div class="flex h-screen bg-gray-50">
-  <!-- Sidebar de navegación -->
-  <div class="w-64 bg-white shadow-md">
-    <div class="p-4 border-b">
-      <h2 class="text-lg font-medium text-gray-800">Configuración</h2>
-    </div>
-    <ul class="py-2">
-      <li>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-800 bg-primary-50 border-l-4 border-primary-500">
-          <i class="pi pi-flag-fill mr-3 text-primary-500"></i>
-          <span>Objetivos</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-          <i class="pi pi-users mr-3 text-gray-400"></i>
-          <span>Responsables</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-          <i class="pi pi-bell mr-3 text-gray-400"></i>
-          <span>Notificaciones</span>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50">
-          <i class="pi pi-cog mr-3 text-gray-400"></i>
-          <span>Generales</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Contenido principal -->
-  <div class="flex-1 overflow-auto">
-    <div class="p-6">
-      <!-- Encabezado -->
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Configuración de Objetivos</h1>
+<main class="flex flex-col gap-4">
+  <section class="bg-white rounded-t-lg">
+    <header class="border-b py-3 px-4">
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+      >
         <div>
-          <button pButton label="Nuevo Objetivo" icon="pi pi-plus" class="p-button-primary"></button>
+          <h1 class="text-xl font-bold">Objetivos</h1>
+          <p class="text-sm text-gray-500">
+            Gestión de metas y objetivos estratégicos
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            pButton
+            icon="pi pi-plus"
+            label="Nuevo Objetivo"
+            class="p-button-primary"
+            (click)="openGoalForm()"
+          ></button>
         </div>
       </div>
+    </header>
 
-      <!-- Pestañas -->
-      <p-tabView styleClass="mb-6">
-        <p-tabPanel header="Definir Objetivos">
-          
-          <!-- Formulario de objetivos -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del objetivo</label>
-                <input pInputText class="w-full" placeholder="Ej: Aumentar ventas en Q2"/>
+    <div class="px-6 py-4 border-b">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Filtro por tipo de objetivo -->
+        <div class="flex flex-col">
+          <label class="text-sm font-medium text-gray-700 mb-1"
+            >Tipo de objetivo</label
+          >
+          <p-dropdown
+            [options]="goalTypesOptions"
+            [(ngModel)]="selectedGoalType"
+            placeholder="Todos los tipos"
+            styleClass="w-full"
+            (onChange)="loadGoals({ resetPage: true })"
+          >
+            <ng-template let-item pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="item">
+                <i [class]="item.icon" class="mr-1"></i>
+                <span>{{ item.label }}</span>
               </div>
-              
-              <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción breve</label>
-                <textarea rows="2" pInputTextarea class="w-full" placeholder="Descripción de este objetivo"></textarea>
+            </ng-template>
+            <ng-template let-goal pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <i [class]="goal.icon" class="mr-1"></i>
+                <span>{{ goal.label }}</span>
               </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de objetivo</label>
-                <p-dropdown 
-                  [options]="[
-                    {label: 'Ventas', value: 'sales'},
-                    {label: 'Productividad', value: 'productivity'},
-                    {label: 'Satisfacción', value: 'satisfaction'},
-                    {label: 'Calidad', value: 'quality'},
-                    {label: 'Financiero', value: 'financial'}
-                  ]" 
-                  placeholder="Seleccione tipo" 
-                  styleClass="w-full"
-                  optionLabel="label">
-                </p-dropdown>
+        <!-- Filtro por prioridad -->
+        <div class="flex flex-col">
+          <label class="text-sm font-medium text-gray-700 mb-1"
+            >Prioridad</label
+          >
+          <p-dropdown
+            [options]="priorityOptions"
+            [(ngModel)]="selectedPriority"
+            placeholder="Todas las prioridades"
+            styleClass="w-full"
+            (onChange)="loadGoals({ resetPage: true })"
+          >
+            <ng-template let-item pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="item">
+                <i [class]="item.icon" class="mr-1"></i>
+                <span>{{ item.label }}</span>
               </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prioridad</label>
-                <p-selectButton 
-                  [options]="[
-                    {label: 'Alta', value: 'high', icon: 'pi pi-arrow-up'},
-                    {label: 'Media', value: 'medium', icon: 'pi pi-minus'},
-                    {label: 'Baja', value: 'low', icon: 'pi pi-arrow-down'}
-                  ]"
-                  optionLabel="label"
-                  styleClass="w-full">
-                </p-selectButton>
+            </ng-template>
+            <ng-template let-priority pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <i [class]="priority.icon" class="mr-1"></i>
+                <span>{{ priority.label }}</span>
               </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Meta numérica</label>
-                <div class="flex gap-4">
-                  <input pInputText type="number" placeholder="Ej: 20" class="w-full"/>
-                  <input pInputText placeholder="%" class="w-1/3" />
-                </div>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                <div class="flex gap-3 items-center">
-                  <p-calendar placeholder="Fecha inicio" styleClass="w-full"></p-calendar>
-                  <span class="text-gray-500">a</span>
-                  <p-calendar placeholder="Fecha fin" styleClass="w-full"></p-calendar>
-                </div>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Color e ícono</label>
-                <div class="flex gap-3">
-                  <div class="flex-1 flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-primary-500 cursor-pointer border shadow-sm"></div>
-                    <div class="w-10 h-10 rounded-full bg-green-500 cursor-pointer ml-2 border shadow-sm"></div>
-                    <div class="w-10 h-10 rounded-full bg-yellow-500 cursor-pointer ml-2 border shadow-sm"></div>
-                    <div class="w-10 h-10 rounded-full bg-red-500 cursor-pointer ml-2 border shadow-sm"></div>
-                    <div class="w-10 h-10 rounded-full bg-purple-500 cursor-pointer ml-2 border shadow-sm"></div>
-                  </div>
-                  <div class="w-36">
-                    <p-dropdown 
-                      [options]="[
-                        {label: 'Gráfico', value: 'chart'},
-                        {label: 'Dinero', value: 'money'},
-                        {label: 'Personas', value: 'people'}
-                      ]" 
-                      placeholder="Ícono" 
-                      styleClass="w-full"
-                      optionLabel="label">
-                    </p-dropdown>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-3">Opciones adicionales</label>
-                <div class="space-y-3">
-                  <div class="flex items-center">
-                    <p-checkbox name="dashboard" value="dashboard" [binary]="true"></p-checkbox>
-                    <label class="ml-2 text-sm text-gray-600">Mostrar en dashboard principal</label>
-                  </div>
-                  <div class="flex items-center">
-                    <p-checkbox name="notify" value="notify" [binary]="true"></p-checkbox>
-                    <label class="ml-2 text-sm text-gray-600">Notificar al acercarse a fecha límite</label>
-                  </div>
-                  <div class="flex items-center">
-                    <p-checkbox name="trend" value="trend" [binary]="true"></p-checkbox>
-                    <label class="ml-2 text-sm text-gray-600">Mostrar tendencia</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Vista previa -->
-            <div class="mt-6 p-4 bg-gray-50 rounded-md border border-dashed border-gray-300">
-              <h3 class="text-sm font-medium text-gray-700">Vista previa</h3>
-              <div class="mt-3 flex">
-                <div class="w-full md:w-1/3 bg-white p-4 rounded-lg border shadow-sm">
-                  <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-medium">Aumentar ventas</h3>
-                    <span class="text-sm text-yellow-600">35% alcanzado</span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 35%"></div>
-                  </div>
-                  <div class="flex justify-between mt-2 text-xs text-gray-500">
-                    <span>Meta: 20%</span>
-                    <span>Actual: 7%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </p-tabPanel>
-        
-        <p-tabPanel header="Responsables">
-          <!-- Sección de responsables -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <!-- Selector de objetivo -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar objetivo</label>
-              <p-dropdown 
-                [options]="[
-                  {label: 'Aumentar ventas en Q2', value: 'obj1'},
-                  {label: 'Mejorar satisfacción cliente', value: 'obj2'},
-                  {label: 'Reducir costos operativos', value: 'obj3'}
-                ]" 
-                placeholder="Seleccione un objetivo" 
-                styleClass="w-full"
-                optionLabel="label">
-              </p-dropdown>
-            </div>
-            
-            <!-- Buscador de empleados -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Agregar responsable</label>
-              <div class="flex gap-3">
-                <div class="flex-1">
-                  <p-autoComplete 
-                    [suggestions]="[]" 
-                    placeholder="Buscar empleado..." 
-                    styleClass="w-full">
-                  </p-autoComplete>
-                </div>
-                <div>
-                  <p-dropdown 
-                    [options]="[
-                      {label: 'Principal', value: 'primary'},
-                      {label: 'Secundario', value: 'secondary'}
-                    ]" 
-                    placeholder="Tipo" 
-                    styleClass="w-40"
-                    optionLabel="label">
-                  </p-dropdown>
-                </div>
-                <button pButton icon="pi pi-plus" class="p-button-primary" label="Agregar"></button>
-              </div>
-            </div>
-            
-            <!-- Lista de responsables -->
-            <div class="mb-6">
-              <h3 class="text-base font-medium text-gray-700 mb-3">Responsables asignados</h3>
-              <div class="border rounded-md overflow-hidden">
-                <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empleado</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nivel</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departamento</th>
-                      <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                          <div class="flex-shrink-0 h-10 w-10">
-                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/12.jpg" alt="" />
-                          </div>
-                          <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">María García</div>
-                            <div class="text-sm text-gray-500">mariaempresa.com</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Principal
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Ventas
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger"></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                          <div class="flex-shrink-0 h-10 w-10">
-                            <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="" />
-                          </div>
-                          <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">Juan Pérez</div>
-                            <div class="text-sm text-gray-500">juanempresa.com</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                          Secundario
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Marketing
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger"></button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <!-- Configuración de notificaciones -->
-            <div class="mb-6">
-              <h3 class="text-base font-medium text-gray-700 mb-3">Configuración de notificaciones</h3>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Frecuencia de reportes</label>
-                  <p-dropdown 
-                    [options]="[
-                      {label: 'Diario', value: 'daily'},
-                      {label: 'Semanal', value: 'weekly'},
-                      {label: 'Mensual', value: 'monthly'}
-                    ]" 
-                    placeholder="Seleccione" 
-                    styleClass="w-full"
-                    optionLabel="label">
-                  </p-dropdown>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Alertas de desviación</label>
-                  <div class="flex items-center gap-2">
-                    <span>Al desviarse más del</span>
-                    <p-inputNumber suffix="%" [showButtons]="true" [min]="5" [max]="50" [step]="5"></p-inputNumber>
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Método de notificación</label>
-                  <div class="flex items-center gap-4 mt-2">
-                    <div class="flex items-center">
-                      <p-checkbox name="email" value="email" [binary]="true"></p-checkbox>
-                      <label class="ml-2 text-sm text-gray-600">Email</label>
-                    </div>
-                    <div class="flex items-center">
-                      <p-checkbox name="app" value="app" [binary]="true"></p-checkbox>
-                      <label class="ml-2 text-sm text-gray-600">App</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </p-tabPanel>
-      </p-tabView>
-      
-      <!-- Botones de acción -->
-      <div class="flex justify-end gap-3">
-        <button pButton label="Cancelar" class="p-button-text"></button>
-        <button pButton label="Guardar" icon="pi pi-save" class="p-button-primary"></button>
+            </ng-template>
+          </p-dropdown>
+        </div>
+
+        <!-- Filtro por estado -->
+        <div class="flex flex-col w-auto">
+          <label class="text-sm font-medium text-gray-700 mb-1">Estado</label>
+          <p-selectButton
+            [options]="statusOptions"
+            [(ngModel)]="selectedStatus"
+            (onOptionClick)="loadGoals({ resetPage: true })"
+            styleClass="w-full"
+          ></p-selectButton>
+        </div>
+
+        <!-- Limpiar filtros -->
+        <div class="flex flex-col w-40 justify-end">
+          <button
+            pButton
+            icon="pi pi-filter-slash"
+            label="Limpiar filtros"
+            class="p-button-outlined p-button-secondary"
+            (click)="clearFilters()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resumen de objetivos -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-flag text-blue-600 text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-medium">{{ totalGoals }}</h3>
+          <p class="text-sm text-gray-500">Objetivos totales</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-clock text-yellow-600 text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-medium">{{ inProgressGoals }}</h3>
+          <p class="text-sm text-gray-500">En progreso</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-check-circle text-green-600 text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-medium">{{ completedGoals }}</h3>
+          <p class="text-sm text-gray-500">Completados</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-exclamation-circle text-red-600 text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-medium">{{ overdueGoals }}</h3>
+          <p class="text-sm text-gray-500">Vencidos</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Contenedor de tabla -->
+  <div class="bg-white rounded-lg border w-full">
+    <!-- Filtros activos -->
+    <div
+      *ngIf="activeFilters().length > 0"
+      class="w-full py-3 flex px-4 justify-between border-b"
+    >
+      <div class="flex flex-wrap gap-2">
+        <div
+          *ngFor="let filter of activeFilters()"
+          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+        >
+          <p-tag [value]="filter.value"></p-tag>
+          <button
+            (click)="removeFilter(filter.key)"
+            class="hover:text-red-500 text-sm text-red-300"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de objetivos -->
+    <p-table
+      [value]="goals()"
+      [lazy]="true"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+      [rowsPerPageOptions]="rowsPerPageOptions"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      styleClass="p-datatable-gridlines"
+      selectionMode="single"
+      (onLazyLoad)="loadGoals($event)"
+      responsiveLayout="scroll"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 25%">Objetivo</th>
+          <th style="width: 15%">Tipo</th>
+          <th style="width: 10%">Prioridad</th>
+          <th style="width: 15%">Progreso</th>
+          <th style="width: 15%">Fecha Límite</th>
+          <th style="width: 10%">Estado</th>
+          <th style="width: 10%">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-goal>
+        <tr
+          [ngClass]="{
+            'bg-red-50': isOverdue(goal),
+            'bg-green-50': isCompleted(goal)
+          }"
+        >
+          <td>
+            <div class="flex items-center gap-2">
+              <i [class]="goal.icon || 'pi pi-flag'" class="text-lg"></i>
+              <div>
+                <div class="font-medium">{{ goal.name }}</div>
+                <div class="text-xs text-gray-500 truncate max-w-xs">
+                  {{ goal.description }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span
+              class="p-tag"
+              [ngClass]="{
+                'bg-blue-100 text-blue-800': goal.type === 'sales',
+                'bg-green-100 text-green-800': goal.type === 'productivity',
+                'bg-yellow-100 text-yellow-800': goal.type === 'satisfaction',
+                'bg-purple-100 text-purple-800': goal.type === 'quality',
+                'bg-indigo-100 text-indigo-800': goal.type === 'financial'
+              }"
+            >
+              {{ getGoalTypeLabel(goal.type) }}
+            </span>
+          </td>
+          <td>
+            <span
+              class="p-tag"
+              [ngClass]="{
+                'bg-red-100 text-red-800': goal.priority === 'high',
+                'bg-yellow-100 text-yellow-800': goal.priority === 'medium',
+                'bg-blue-100 text-blue-800': goal.priority === 'low'
+              }"
+            >
+              <i [class]="getPriorityIcon(goal.priority)" class="mr-1"></i>
+              {{ getPriorityLabel(goal.priority) }}
+            </span>
+          </td>
+          <td>
+            <div class="flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium"
+                  >{{ getProgressPercentage(goal) }}%</span
+                >
+                <span class="text-xs text-gray-500"
+                  >{{ goal.currentValue }}/{{ goal.targetValue }}
+                  {{ goal.unit }}</span
+                >
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  [class]="getProgressBarClass(goal)"
+                  [style.width.%]="getProgressPercentage(goal)"
+                ></div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="flex flex-col">
+              <span>{{ goal.endDate | date : "dd/MM/yyyy" }}</span>
+              <span
+                *ngIf="getDaysRemaining(goal) > 0"
+                [ngClass]="{
+                  'text-red-600': getDaysRemaining(goal) < 7,
+                  'text-yellow-600':
+                    getDaysRemaining(goal) >= 7 && getDaysRemaining(goal) < 30,
+                  'text-green-600': getDaysRemaining(goal) >= 30
+                }"
+                class="text-xs"
+              >
+                {{ getDaysRemaining(goal) }} días restantes
+              </span>
+              <span *ngIf="isOverdue(goal)" class="text-xs text-red-600">
+                <i class="pi pi-exclamation-triangle mr-1"></i>Vencido
+              </span>
+              <span *ngIf="isCompleted(goal)" class="text-xs text-green-600">
+                <i class="pi pi-check-circle mr-1"></i>Completado
+              </span>
+            </div>
+          </td>
+          <td>
+            <p-tag
+              [value]="getGoalStatusLabel(goal)"
+              [severity]="getGoalStatusSeverity(goal)"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Editar Objetivo'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="editGoal(goal)"
+              >
+                <i class="pi pi-file-edit"></i>
+              </button>
+              <button
+                class="button-table-actions"
+                class="button-table-actions"
+                [pTooltip]="'Eliminar Objetivo'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="deleteGoal($event, goal)"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-5">
+            <div class="flex flex-column align-items-center">
+              <i class="pi pi-flag text-5xl text-gray-300 mb-3"></i>
+              <span class="text-xl font-medium text-gray-500"
+                >No hay objetivos definidos</span
+              >
+              <p class="text-gray-400 mt-2">
+                Crea tu primer objetivo para comenzar el seguimiento
+              </p>
+              <button
+                pButton
+                label="Crear objetivo"
+                icon="pi pi-plus"
+                class="p-button-primary mt-3"
+                (click)="openGoalForm()"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let _ of [1, 2, 3, 4, 5]">
+          <td *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7]">
+            <p-skeleton></p-skeleton>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</main>
+
+<!-- Toast para notificaciones -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Diálogos de confirmación -->
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  header="Confirmación"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

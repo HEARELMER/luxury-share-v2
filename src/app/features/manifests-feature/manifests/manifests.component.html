@@ -183,9 +183,10 @@
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
-                [pTooltip]="'Editar Sucursal'"
+                [pTooltip]="'Detalles'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="openManifestDetails(manifest)"
               >
                 <i class="pi pi-eye"></i>
               </button>

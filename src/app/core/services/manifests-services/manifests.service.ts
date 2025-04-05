@@ -31,4 +31,6 @@ export class ManifestsService {
     // Usar params en la llamada HTTP
     return this._http.get(`${this._api}manifests`, { params });
   }
+
+  
 }

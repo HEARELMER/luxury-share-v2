@@ -19,6 +19,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ManifestFormComponent } from '../manifest-form/manifest-form.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ManifestDetailComponent } from '../manifest-detail/manifest-detail.component';
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -36,7 +37,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
     PaginatorModule,
     Skeleton,
     SelectButtonModule,
-    ManifestFormComponent,
   ],
   templateUrl: './manifests.component.html',
   styleUrl: './manifests.component.scss',
@@ -178,9 +178,7 @@ export class ManifestsComponent {
         '960px': '75vw',
         '640px': '90vw',
       },
-      data: {
-        // Puedes pasar datos iniciales aquí si es necesario
-      },
+      data: {},
     });
 
     // Manejar el cierre del diálogo
@@ -196,6 +194,29 @@ export class ManifestsComponent {
           detail: `Se crearon ${result.manifestosCreados.length} manifiestos correctamente`,
         });
       }
+    });
+  }
+
+  openManifestDetails(manifest: Manifest): void {
+    this.ref = this.dialogService.open(ManifestDetailComponent, {
+      header: 'Detalles del Manifiesto',
+      width: '70vw',
+      height: '80vh',
+      contentStyle: { 'max-height': '90vh', overflow: 'auto' },
+      baseZIndex: 10000,
+      modal: true,
+      closable: true,
+      resizable: true,
+      maximizable: true,
+
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      data: {
+        manifestId: manifest.manifestId,
+        isViewMode: true,
+      },
     });
   }
 }

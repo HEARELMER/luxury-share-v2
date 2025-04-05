@@ -15,13 +15,17 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { GoalsFormComponent } from '../goals-form/goals-form.component';
 import { Goal } from '../interfaces/goal.interface';
-import { GOAL_TYPES } from '../constants/configurations.consant';
+import {
+  GOAL_COLS_TABLE,
+  GOAL_TYPES,
+} from '../constants/configurations.consant';
 import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
+import { GoalService } from '../../../core/services/goals-services/goals.service';
 @Component({
   selector: 'app-configurations',
   imports: [
@@ -53,6 +57,7 @@ export class ConfigurationsComponent {
   private readonly messageService = inject(MessageService);
   private readonly dialogService = inject(DialogService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly goalsService = inject(GoalService);
 
   ref: DynamicDialogRef | undefined;
 
@@ -60,7 +65,7 @@ export class ConfigurationsComponent {
   goals = signal<Goal[]>([]);
   loading = signal<boolean>(false);
   activeFilters = signal<{ key: string; value: string }[]>([]);
-
+  headerColsGoals = GOAL_COLS_TABLE;
   // Paginación
   rows = 10;
   first = 0;
@@ -113,146 +118,54 @@ export class ConfigurationsComponent {
     if (this.selectedGoalType) {
       filters.push({
         key: 'type',
-        value: `${this.getGoalTypeLabel(this.selectedGoalType.value)}`,
+        value: this.selectedGoalType.value,
       });
     }
 
     if (this.selectedPriority) {
       filters.push({
         key: 'priority',
-        value: `${this.getPriorityLabel(this.selectedPriority.value)}`,
+        value: this.selectedPriority.value,
       });
     }
 
-    if (this.selectedStatus) {
+    if (this.selectedStatus?.value) {
       filters.push({
         key: 'status',
-        value: `${this.selectedStatus.label}`,
+        value: this.selectedStatus.value,
       });
     }
 
     this.activeFilters.set(filters);
 
-    // Simular llamada a API
-    setTimeout(() => {
-      // Mock data - esto sería reemplazado por una llamada a un servicio real
-      const mockGoals: Goal[] = [
-        {
-          id: '1',
-          name: 'Aumentar ventas en 20%',
-          description:
-            'Incrementar las ventas totales en un 20% para el segundo trimestre',
-          type: 'sales',
-          priority: 'high',
-          targetValue: 20,
-          currentValue: 15,
-          unit: '%',
-          startDate: new Date(2023, 0, 1),
-          endDate: new Date(2023, 11, 31),
-          icon: 'pi pi-dollar',
-        },
-        {
-          id: '2',
-          name: 'Reducir costos operativos',
-          description: 'Disminuir los costos operativos en un 10%',
-          type: 'financial',
-          priority: 'medium',
-          targetValue: 10,
-          currentValue: 3,
-          unit: '%',
-          startDate: new Date(2023, 0, 1),
-          endDate: new Date(2023, 11, 31),
-          icon: 'pi pi-wallet',
-        },
-        {
-          id: '3',
-          name: 'Mejorar satisfacción del cliente',
-          description: 'Aumentar puntuación NPS de 7.5 a 8.5',
-          type: 'satisfaction',
-          priority: 'high',
-          targetValue: 8.5,
-          currentValue: 7.8,
-          unit: 'units',
-          startDate: new Date(2023, 0, 1),
-          endDate: new Date(2023, 11, 31),
-          icon: 'pi pi-thumbs-up',
-        },
-        {
-          id: '4',
-          name: 'Disminuir tiempo de espera',
-          description: 'Reducir el tiempo promedio de espera en un 25%',
-          type: 'productivity',
-          priority: 'low',
-          targetValue: 25,
-          currentValue: 25,
-          unit: '%',
-          startDate: new Date(2023, 0, 1),
-          endDate: new Date(2023, 5, 30),
-          icon: 'pi pi-clock',
-        },
-        {
-          id: '5',
-          name: 'Aumentar retención',
-          description: 'Mejorar la tasa de retención de clientes',
-          type: 'sales',
-          priority: 'medium',
-          targetValue: 15,
-          currentValue: 5,
-          unit: '%',
-          startDate: new Date(2023, 0, 1),
-          endDate: new Date(2023, 3, 30),
-          icon: 'pi pi-users',
-        },
-      ];
+    // Calcular la página actual basada en first y rows
+    const currentPage = Math.floor(this.first / this.rows) + 1;
 
-      // Aplicar filtros
-      let filteredGoals = [...mockGoals];
+    // Llamar al servicio real en lugar de usar datos simulados
+    this.goalsService.getGoals(currentPage, this.rows, filters).subscribe({
+      next: (response) => {
+        // Actualizar datos con la respuesta del servidor
+        this.goals.set(response.data.goals);
+        this.totalRecords = response.data.total;
 
-      if (this.selectedGoalType?.value) {
-        filteredGoals = filteredGoals.filter(
-          (goal) => goal.type === this.selectedGoalType.value
-        );
-      }
+        // Actualizar estadísticas
+        this.totalGoals = response.data.stats?.total || 0;
+        this.completedGoals = response.data.stats?.completed || 0;
+        this.inProgressGoals = response.data.stats?.inProgress || 0;
+        this.overdueGoals = response.data.stats?.overdue || 0;
 
-      if (this.selectedPriority?.value) {
-        filteredGoals = filteredGoals.filter(
-          (goal) => goal.priority === this.selectedPriority.value
-        );
-      }
-
-      if (this.selectedStatus?.value) {
-        if (this.selectedStatus.value === 'completed') {
-          filteredGoals = filteredGoals.filter(
-            (goal) => this.getProgressPercentage(goal) >= 100
-          );
-        } else if (this.selectedStatus.value === 'overdue') {
-          filteredGoals = filteredGoals.filter((goal) => this.isOverdue(goal));
-        } else if (this.selectedStatus.value === 'progress') {
-          filteredGoals = filteredGoals.filter(
-            (goal) =>
-              this.getProgressPercentage(goal) < 100 && !this.isOverdue(goal)
-          );
-        }
-      }
-
-      // Actualizar estadísticas
-      this.totalGoals = mockGoals.length;
-      this.completedGoals = mockGoals.filter(
-        (goal) => this.getProgressPercentage(goal) >= 100
-      ).length;
-      this.inProgressGoals = mockGoals.filter(
-        (goal) =>
-          this.getProgressPercentage(goal) < 100 && !this.isOverdue(goal)
-      ).length;
-      this.overdueGoals = mockGoals.filter((goal) =>
-        this.isOverdue(goal)
-      ).length;
-
-      // Actualizar datos y paginación
-      this.totalRecords = filteredGoals.length;
-      this.goals.set(filteredGoals);
-      this.loading.set(false);
-    }, 800);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading goals:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los objetivos',
+        });
+        this.loading.set(false);
+      },
+    });
   }
 
   /**
@@ -325,6 +238,7 @@ export class ConfigurationsComponent {
    * Edita un objetivo existente
    */
   editGoal(goal: Goal): void {
+    console.log('Editing goal:', goal);
     this.ref = this.dialogService.open(GoalsFormComponent, {
       header: 'Editar Objetivo',
       width: '50rem',
@@ -343,7 +257,7 @@ export class ConfigurationsComponent {
         // Actualizar el objetivo en la lista
         this.goals.update((goals: Goal[]) =>
           goals.map((g: Goal) =>
-            g.id === goal.id ? { ...result, id: goal.id } : g
+            g.goalId === goal.goalId ? { ...result, id: goal.goalId } : g
           )
         );
 
@@ -359,7 +273,6 @@ export class ConfigurationsComponent {
     });
   }
 
- 
   /**
    * Elimina un objetivo
    */
@@ -375,7 +288,7 @@ export class ConfigurationsComponent {
       accept: () => {
         // Eliminar el objetivo de la lista
         this.goals.update((goals: Goal[]) =>
-          goals.filter((g: Goal) => g.id !== goal.id)
+          goals.filter((g: Goal) => g.goalId !== goal.goalId)
         );
 
         this.messageService.add({

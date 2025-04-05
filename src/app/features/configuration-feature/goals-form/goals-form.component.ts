@@ -77,10 +77,10 @@ export class GoalsFormComponent {
    */
   loadGoalData(): void {
     const goalData = this.dialogConfig.data?.goal as Goal;
-
-    if (goalData && goalData.id) {
+    console.log('goalData', goalData);
+    if (goalData && goalData.goalId) {
       this.isEditMode.set(true);
-      this.goalId.set(goalData.id);
+      this.goalId.set(goalData.goalId);
       this.goalForm.patchValue({
         name: goalData.name,
         description: goalData.description,

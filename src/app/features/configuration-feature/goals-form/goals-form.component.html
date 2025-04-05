@@ -1,7 +1,7 @@
 <form [formGroup]="goalForm" class="pb-4" (ngSubmit)="saveGoal()">
-  <div >
+  <div>
     <!-- Encabezado del formulario -->
-    <div class="pb-4 pb-3 border-bottom">
+    <div class="pb-4 border-bottom">
       <p class="text-sm text-gray-600">
         Complete la información para crear un nuevo objetivo
       </p>
@@ -152,38 +152,17 @@
           >Ícono</label
         >
         <div class="flex flex-wrap gap-2 pt-1">
+          @for (icon of iconsForm; track $index) {
           <button
             type="button"
             class="w-10 h-10 rounded-full border flex items-center justify-center"
-            [class.bg-blue-100]="selectedIcon() === 'pi pi-chart'"
-            (click)="selectIcon('pi pi-chart')"
+            [class.bg-blue-100]="selectedIcon() === icon.icon"
+            (click)="selectIcon(icon.icon)"
           >
-            <i class="pi pi-chart-line"></i>
+            <i [class]="icon.icon"></i>
           </button>
-          <button
-            type="button"
-            class="w-10 h-10 rounded-full border flex items-center justify-center"
-            [class.bg-blue-100]="selectedIcon() === 'pi pi-dollar'"
-            (click)="selectIcon('pi pi-dollar')"
-          >
-            <i class="pi pi-dollar"></i>
-          </button>
-          <button
-            type="button"
-            class="w-10 h-10 rounded-full border flex items-center justify-center"
-            [class.bg-blue-100]="selectedIcon() === 'pi pi-users'"
-            (click)="selectIcon('pi pi-users')"
-          >
-            <i class="pi pi-users"></i>
-          </button>
-          <button
-            type="button"
-            class="w-10 h-10 rounded-full border flex items-center justify-center"
-            [class.bg-blue-100]="selectedIcon() === 'pi pi-flag'"
-            (click)="selectIcon('pi pi-flag')"
-          >
-            <i class="pi pi-flag"></i>
-          </button>
+
+          }
         </div>
       </div>
     </div>
@@ -237,12 +216,11 @@
       </button>
 
       <app-button
-        icon="pi pi-save"
-        text="Guardar"
+        [icon]="isEditMode() ? 'pi pi-save' : 'pi pi-plus'"
+        [text]="isEditMode() ? 'Actualizar' : 'Guardar'"
         bgColor="bg-primary-500"
         moreClasses="py-2"
-        [disabled]="!goalForm.valid"
-        (click)="saveGoal()"
+        [disabled]="!goalForm.valid || saving()"
       />
     </div>
   </div>

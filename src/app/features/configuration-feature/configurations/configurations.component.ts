@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext'; 
+import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
@@ -26,7 +26,7 @@ import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 import { GoalService } from '../../../core/services/goals-services/goals.service';
-import { SelectComponent } from "../../../shared/components/forms/select/select.component";
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 @Component({
   selector: 'app-configurations',
   imports: [
@@ -48,8 +48,9 @@ import { SelectComponent } from "../../../shared/components/forms/select/select.
     ConfirmDialogModule,
     SelectModule,
     Tooltip,
-    SelectComponent
-],
+    SelectComponent,
+    GoalsFormComponent,
+  ],
   providers: [MessageService, DialogService, ConfirmationService],
   templateUrl: './configurations.component.html',
   styleUrl: './configurations.component.scss',
@@ -72,6 +73,8 @@ export class ConfigurationsComponent {
   first = 0;
   totalRecords = 0;
   rowsPerPageOptions = [5, 10, 25, 50];
+  selectedGoal = signal<Goal | undefined>(undefined);
+  showGoalModal = signal<boolean>(false);
 
   // Filtros
   goalTypesOptions = GOAL_TYPES;
@@ -85,7 +88,7 @@ export class ConfigurationsComponent {
   selectedPriority: any = null;
 
   statusOptions = [
-    { label: 'Todos', value:'' },
+    { label: 'Todos', value: '' },
     { label: 'En progreso', value: 'progress' },
     { label: 'Completados', value: 'completed' },
     { label: 'Vencidos', value: 'overdue' },
@@ -102,6 +105,9 @@ export class ConfigurationsComponent {
     this.loadGoals();
   }
 
+  handleRefreshData(): void {
+    this.loadGoals();
+  }
   /**
    * Carga objetivos según filtros y paginación
    */
@@ -195,83 +201,17 @@ export class ConfigurationsComponent {
    * Abre formulario para crear nuevo objetivo
    */
   openGoalForm(): void {
-    this.ref = this.dialogService.open(GoalsFormComponent, {
-      header: 'Nuevo Objetivo',
-      width: '50rem',
-      contentStyle: { overflow: 'auto' },
-      modal: true,
-      closable: true,
-      baseZIndex: 10000,
-      maximizable: true,
-      data: {
-        // Datos iniciales si fuera necesario
-      },
-    });
-
-    this.ref.onClose.subscribe((result: Goal) => {
-      if (result) {
-        // Añadir el nuevo objetivo a la lista
-        this.goals.update((goals: Goal[]) => [
-          ...goals,
-          { ...result, id: Date.now().toString() },
-        ]);
-
-        // Actualizar estadísticas
-        this.totalGoals++;
-        if (this.getProgressPercentage(result) >= 100) {
-          this.completedGoals++;
-        } else if (this.isOverdue(result)) {
-          this.overdueGoals++;
-        } else {
-          this.inProgressGoals++;
-        }
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Objetivo creado',
-          detail: 'El objetivo se ha creado correctamente',
-        });
-      }
-    });
+    this.selectedGoal.set(undefined);
+    this.showGoalModal.set(true);
   }
 
   /**
    * Edita un objetivo existente
    */
   editGoal(goal: Goal): void {
-    console.log('Editing goal:', goal);
-    this.ref = this.dialogService.open(GoalsFormComponent, {
-      header: 'Editar Objetivo',
-      width: '50rem',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-      modal: true,
-      closable: true,
-      data: {
-        goal: { ...goal },
-      },
-    });
-
-    this.ref.onClose.subscribe((result: Goal) => {
-      if (result) {
-        // Actualizar el objetivo en la lista
-        this.goals.update((goals: Goal[]) =>
-          goals.map((g: Goal) =>
-            g.goalId === goal.goalId ? { ...result, id: goal.goalId } : g
-          )
-        );
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Objetivo actualizado',
-          detail: 'El objetivo se ha actualizado correctamente',
-        });
-
-        // Actualizar estadísticas
-        this.updateStats();
-      }
-    });
+    this.selectedGoal.set(goal);
+    this.showGoalModal.set(true);
+    console.log('Editando objetivo:', goal);
   }
 
   /**
@@ -286,21 +226,7 @@ export class ConfigurationsComponent {
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
-      accept: () => {
-        // Eliminar el objetivo de la lista
-        this.goals.update((goals: Goal[]) =>
-          goals.filter((g: Goal) => g.goalId !== goal.goalId)
-        );
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Objetivo eliminado',
-          detail: 'El objetivo ha sido eliminado correctamente',
-        });
-
-        // Actualizar estadísticas
-        this.updateStats();
-      },
+      accept: () => {},
     });
   }
 

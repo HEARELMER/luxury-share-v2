@@ -1,4 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+} from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import {
   FormBuilder,
@@ -13,8 +21,8 @@ import { GOAL_TYPES } from '../constants/configurations.consant';
 import { ICONS_FORM } from '../constants/icons-form.constant';
 import { GoalService } from '../../../core/services/goals-services/goals.service';
 import { MessageService } from 'primeng/api';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Goal } from '../interfaces/goal.interface';
+import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 
 @Component({
   selector: 'app-goals-form',
@@ -25,6 +33,7 @@ import { Goal } from '../interfaces/goal.interface';
     InputFormComponent,
     SelectComponent,
     DatePickerModule,
+    ModalComponent,
   ],
   templateUrl: './goals-form.component.html',
   styleUrl: './goals-form.component.scss',
@@ -33,18 +42,18 @@ export class GoalsFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly goalsService = inject(GoalService);
   private readonly messageService = inject(MessageService);
-  private readonly dialogConfig = inject(DynamicDialogConfig);
-  private readonly dialogRef = inject(DynamicDialogRef);
   selectedIcon = signal<string>('pi pi-chart');
   previewProgress = signal<number>(0);
   iconsForm = ICONS_FORM;
   isEditMode = signal<boolean>(false);
   saving = signal<boolean>(false);
   goalId = signal<string>(' ');
-
+  refresh = output<void>();
+  data = input<Goal>();
+  showModal = model<boolean>(false);
   goalForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    description: ['', [Validators.minLength(10)]],
+    description: ['', [Validators.minLength(5)]],
     type: ['sales', Validators.required],
     priority: ['medium', Validators.required],
     targetValue: [0, [Validators.required, Validators.min(0)]],
@@ -67,8 +76,16 @@ export class GoalsFormComponent {
     { label: 'Dólares ($)', value: '$' },
     { label: 'Unidades', value: 'units' },
   ];
-  ngOnInit(): void {
-    this.loadGoalData();
+
+  constructor() {
+    effect(() => {
+      if (this.showModal()) {
+        this.loadGoalData();
+      } else {
+        this.isEditMode.set(false);
+        this.goalForm.reset();
+      }
+    });
     this.updateProgress();
   }
 
@@ -76,7 +93,7 @@ export class GoalsFormComponent {
    * Carga datos del objetivo si estamos en modo edición
    */
   loadGoalData(): void {
-    const goalData = this.dialogConfig.data?.goal as Goal;
+    const goalData = this.data();
     console.log('goalData', goalData);
     if (goalData && goalData.goalId) {
       this.isEditMode.set(true);
@@ -138,7 +155,8 @@ export class GoalsFormComponent {
             detail: response.message,
           });
           this.saving.set(false);
-          this.closeDialog();
+          this.closeModal();
+          this.refresh.emit();
         },
         error: (error) => {
           this.messageService.add({
@@ -158,7 +176,8 @@ export class GoalsFormComponent {
             detail: response.message,
           });
           this.saving.set(false);
-          this.closeDialog();
+          this.closeModal();
+          this.refresh.emit();
         },
         error: (error) => {
           this.messageService.add({
@@ -200,8 +219,11 @@ export class GoalsFormComponent {
   /**
    * Cierra el diálogo y devuelve el objetivo
    */
-  closeDialog(): void {
-    this.dialogRef.close();
+
+  closeModal() {
+    this.showModal.set(false);
+    this.goalForm.reset();
+    this.isEditMode.set(false);
   }
 
   /**

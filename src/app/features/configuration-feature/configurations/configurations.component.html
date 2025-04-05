@@ -359,7 +359,7 @@
 </main>
 
 <!-- Toast para notificaciones -->
-<p-toast position="top-right" [life]="5000"></p-toast>
+<p-toast position="top-right" [life]="5000" [baseZIndex]="10000" ></p-toast>
 
 <!-- Diálogos de confirmación -->
 <p-confirmDialog
@@ -367,3 +367,9 @@
   header="Confirmación"
   icon="pi pi-exclamation-triangle"
 ></p-confirmDialog>
+
+<app-goals-form
+  (refreshData)="handleRefreshData()"
+  [data]="selectedGoal()"
+  [(showModal)]="showGoalModal"
+/>

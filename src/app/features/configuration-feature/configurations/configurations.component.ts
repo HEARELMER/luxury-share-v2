@@ -27,6 +27,7 @@ import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 import { GoalService } from '../../../core/services/goals-services/goals.service';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { PaginatorModule } from 'primeng/paginator';
 @Component({
   selector: 'app-configurations',
   imports: [
@@ -44,6 +45,7 @@ import { SelectComponent } from '../../../shared/components/forms/select/select.
     SkeletonModule,
     ToastModule,
     TagModule,
+    PaginatorModule,
     TableModule,
     ConfirmDialogModule,
     SelectModule,
@@ -75,6 +77,8 @@ export class ConfigurationsComponent {
   rowsPerPageOptions = [5, 10, 25, 50];
   selectedGoal = signal<Goal | undefined>(undefined);
   showGoalModal = signal<boolean>(false);
+  currentPage = 1;
+  pageSize = 5; 
 
   // Filtros
   goalTypesOptions = GOAL_TYPES;
@@ -313,7 +317,12 @@ export class ConfigurationsComponent {
     );
     return priorityOption?.label || priority;
   }
-
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+    this.loadGoals();
+  }
   /**
    * Obtiene el icono para la prioridad
    */

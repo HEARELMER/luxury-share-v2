@@ -13,20 +13,19 @@ export class GoalService {
   private readonly _httpclient = inject(HttpClient);
 
   getGoals(page: number, size: number, filters?: Filter[]): Observable<any> {
-    // Construir params base
+    let url = `${this._apiUrl}goals`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-
-    // Agregar filtros a los params en lugar de concatenar a la URL
-    if (filters?.length) {
+    let filtersFormat = '';
+    if (filters) {
       filters.forEach((filter) => {
-        params = params.append(`filters[${filter.key}]`, filter.value);
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
       });
+      url = `${url}?${filtersFormat}`;
     }
 
-    // Usar params en la llamada HTTP
-    return this._httpclient.get(`${this._apiUrl}goals`, { params });
+    return this._httpclient.get(url, { params });
   }
 
   createGoal(data: any): Observable<any> {

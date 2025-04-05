@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext'; 
 import { TextareaModule } from 'primeng/textarea';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
@@ -15,6 +14,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { GoalsFormComponent } from '../goals-form/goals-form.component';
 import { Goal } from '../interfaces/goal.interface';
+import { SelectModule } from 'primeng/select';
 import {
   GOAL_COLS_TABLE,
   GOAL_TYPES,
@@ -26,6 +26,7 @@ import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 import { GoalService } from '../../../core/services/goals-services/goals.service';
+import { SelectComponent } from "../../../shared/components/forms/select/select.component";
 @Component({
   selector: 'app-configurations',
   imports: [
@@ -34,21 +35,21 @@ import { GoalService } from '../../../core/services/goals-services/goals.service
     TabViewModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
     TextareaModule,
     SelectButtonModule,
     CalendarModule,
     CheckboxModule,
     AutoCompleteModule,
     InputNumberModule,
-    GoalsFormComponent,
     SkeletonModule,
     ToastModule,
     TagModule,
     TableModule,
     ConfirmDialogModule,
+    SelectModule,
     Tooltip,
-  ],
+    SelectComponent
+],
   providers: [MessageService, DialogService, ConfirmationService],
   templateUrl: './configurations.component.html',
   styleUrl: './configurations.component.scss',
@@ -84,7 +85,7 @@ export class ConfigurationsComponent {
   selectedPriority: any = null;
 
   statusOptions = [
-    { label: 'Todos', value: null },
+    { label: 'Todos', value:'' },
     { label: 'En progreso', value: 'progress' },
     { label: 'Completados', value: 'completed' },
     { label: 'Vencidos', value: 'overdue' },
@@ -118,21 +119,21 @@ export class ConfigurationsComponent {
     if (this.selectedGoalType) {
       filters.push({
         key: 'type',
-        value: this.selectedGoalType.value,
+        value: this.selectedGoalType,
       });
     }
 
     if (this.selectedPriority) {
       filters.push({
         key: 'priority',
-        value: this.selectedPriority.value,
+        value: this.selectedPriority,
       });
     }
 
-    if (this.selectedStatus?.value) {
+    if (this.selectedStatus) {
       filters.push({
         key: 'status',
-        value: this.selectedStatus.value,
+        value: this.selectedStatus,
       });
     }
 

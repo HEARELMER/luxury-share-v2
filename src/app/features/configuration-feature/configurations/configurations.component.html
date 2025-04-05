@@ -30,26 +30,14 @@
           <label class="text-sm font-medium text-gray-700 mb-1"
             >Tipo de objetivo</label
           >
-          <p-dropdown
+          <app-select
+            [(value)]="selectedGoalType"
             [options]="goalTypesOptions"
-            [(ngModel)]="selectedGoalType"
-            placeholder="Todos los tipos"
-            styleClass="w-full"
-            (onChange)="loadGoals({ resetPage: true })"
-          >
-            <ng-template let-item pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="item">
-                <i [class]="item.icon" class="pr-1"></i>
-                <span>{{ item.label }}</span>
-              </div>
-            </ng-template>
-            <ng-template let-goal pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <i [class]="goal.icon" class="pr-1"></i>
-                <span>{{ goal.label }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
+            [placeholder]="'Seleccionar Tipo'"
+            [required]="true"
+            errorType=" "
+            (valueChange)="loadGoals({ resetPage: true })"
+          />
         </div>
 
         <!-- Filtro por prioridad -->
@@ -57,38 +45,26 @@
           <label class="text-sm font-medium text-gray-700 mb-1"
             >Prioridad</label
           >
-          <p-dropdown
+          <app-select
+            [(value)]="selectedPriority"
             [options]="priorityOptions"
-            [(ngModel)]="selectedPriority"
-            placeholder="Todas las prioridades"
-            styleClass="w-full"
-            (onChange)="loadGoals({ resetPage: true })"
-          >
-            <ng-template let-item pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="item">
-                <i [class]="item.icon" class="pr-1"></i>
-                <span>{{ item.label }}</span>
-              </div>
-            </ng-template>
-            <ng-template let-priority pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <i [class]="priority.icon" class="pr-1"></i>
-                <span>{{ priority.label }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
+            [placeholder]="'Seleccionar prioridad'"
+            [required]="true"
+            errorType=" "
+            (valueChange)="loadGoals({ resetPage: true })"
+          />
         </div>
-
-        <!-- Filtro por estado -->
-        <div class="flex flex-col w-auto">
+        <!--     <div class="flex flex-col">
           <label class="text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <p-selectButton
+          <app-select
+            [(value)]="selectedStatus"
             [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            (onOptionClick)="loadGoals({ resetPage: true })"
-            styleClass="w-full"
-          ></p-selectButton>
-        </div>
+            [placeholder]="'Seleccionar prioridad'"
+            [required]="true"
+            errorType=" "
+            (valueChange)="loadGoals({ resetPage: true })"
+          />
+        </div>-->
 
         <!-- Limpiar filtros -->
         <div class="flex flex-col w-40 justify-end">
@@ -199,10 +175,10 @@
       [rows]="rows"
       scrollHeight="400px"
       [totalRecords]="totalRecords"
-      [rowsPerPageOptions]="rowsPerPageOptions" 
+      [rowsPerPageOptions]="rowsPerPageOptions"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
-      selectionMode="single" 
+      selectionMode="single"
       [tableStyle]="{ 'min-width': '50rem' }"
     >
       <ng-template pTemplate="header" let-columns>
@@ -314,13 +290,13 @@
           </td>
           <td>
             <p-tag
-            [value]="goal.registeredBy"
-            [pTooltip]="'Click para ver + '"
-            tooltipPosition="top"
-            [rounded]="true" 
-            styleClass="bg-blue-500 hover:bg-blue-400 text-white"
-            class="cursor-pointer hover:shadow-sm hover:underline transition-all"
-          />
+              [value]="goal.registeredBy"
+              [pTooltip]="'Click para ver + '"
+              tooltipPosition="top"
+              [rounded]="true"
+              styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+              class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+            />
           </td>
           <td>
             <div class="flex gap-1">
@@ -383,7 +359,7 @@
 </main>
 
 <!-- Toast para notificaciones -->
-<p-toast position="top-right" [life]="5000" ></p-toast>
+<p-toast position="top-right" [life]="5000"></p-toast>
 
 <!-- Diálogos de confirmación -->
 <p-confirmDialog

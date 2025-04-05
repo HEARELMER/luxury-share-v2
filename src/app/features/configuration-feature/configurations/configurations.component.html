@@ -178,7 +178,6 @@
       styleClass="p-datatable-gridlines"
       selectionMode="single"
       [tableStyle]="{ 'min-width': '50rem' }"
-    
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -314,7 +313,7 @@
                 [pTooltip]="'Eliminar Objetivo'"
                 tooltipPosition="left"
                 [showDelay]="300"
-                (click)="deleteGoal($event, goal)"
+                (click)="deleteGoal(goal)"
               >
                 <i class="pi pi-trash"></i>
               </button>
@@ -372,14 +371,7 @@
 </main>
 
 <!-- Toast para notificaciones -->
-<p-toast position="top-right" [life]="5000" [baseZIndex]="10000" ></p-toast>
-
-<!-- Diálogos de confirmación -->
-<p-confirmDialog
-  [style]="{ width: '450px' }"
-  header="Confirmación"
-  icon="pi pi-exclamation-triangle"
-></p-confirmDialog>
+<p-toast position="top-right" [life]="5000" [baseZIndex]="10000"></p-toast>
 
 <app-goals-form
   (refreshData)="handleRefreshData()"

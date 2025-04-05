@@ -28,6 +28,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { GoalService } from '../../../core/services/goals-services/goals.service';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { PaginatorModule } from 'primeng/paginator';
+import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 @Component({
   selector: 'app-configurations',
   imports: [
@@ -78,7 +79,7 @@ export class ConfigurationsComponent {
   selectedGoal = signal<Goal | undefined>(undefined);
   showGoalModal = signal<boolean>(false);
   currentPage = 1;
-  pageSize = 5; 
+  pageSize = 5;
 
   // Filtros
   goalTypesOptions = GOAL_TYPES;
@@ -221,16 +222,28 @@ export class ConfigurationsComponent {
   /**
    * Elimina un objetivo
    */
-  deleteGoal(event: Event, goal: Goal): void {
-    event.stopPropagation();
-
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: '¿Está seguro que desea eliminar este objetivo?',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, eliminar',
-      rejectLabel: 'Cancelar',
-      accept: () => {},
+  deleteGoal(goal: Goal): void {
+    const ref = this.dialogService.open(DialogComponent, {
+      header: 'Eliminar Objetivo',
+      modal: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '60vw',
+      },
+      data: {
+        type: 'success',
+        message: `¿Estás seguro de eliminar el objetivo?`,
+        confirmText: 'Continuar',
+        showCancel: false,
+      },
+    });
+    ref.onClose.subscribe((result: boolean) => {
+      if (result) {
+        // Usuario confirmó
+      } else {
+        // Usuario canceló
+      }
     });
   }
 

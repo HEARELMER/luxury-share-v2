@@ -22,8 +22,7 @@
           <app-step1-manifest-form
             [(selectedDate)]="selectedDate"
             [branches]="branches()  "
-            [selectedBranch]="selectedBranch()"
-            [loading]="loading()"
+            [selectedBranch]="selectedBranch()" 
             [loadingBranches]="loadingBranches()"
             (selectionChange)="onBranchSelectionChange($event)"
             (search)="searchSales(activateCallback)"

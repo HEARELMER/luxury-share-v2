@@ -1,14 +1,11 @@
 import { Component, forwardRef, input, model, signal } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-interface Option {
+export interface Option {
   value: string;
   label: string;
 }
 
-export interface SelectOption {
-  value: string;
-  label: string;
-}
+ 
 @Component({
   selector: 'app-select',
   standalone: true,

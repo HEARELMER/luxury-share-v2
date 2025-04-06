@@ -17,8 +17,11 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { BranchService } from '../../../core/services/braches-services/branch.service';
 import { Branch } from '../../branches-feature/interfaces/branch.interface';
 import { Step1ManifestFormComponent } from './steps/step1-manifest-form/step1-manifest-form.component';
-import { Step2ManifestFormComponent } from "./steps/step2-manifest-form/step2-manifest-form.component";
-import { Step3ManifestFormComponent } from "./steps/step3-manifest-form/step3-manifest-form.component";
+import { Step2ManifestFormComponent } from './steps/step2-manifest-form/step2-manifest-form.component';
+import { Step3ManifestFormComponent } from './steps/step3-manifest-form/step3-manifest-form.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { Option } from '../../../shared/components/forms/select/select.component';
 
 interface SuggestedManifest {
   id: string;
@@ -43,7 +46,6 @@ interface BranchForSelection extends Branch {
   imports: [
     CommonModule,
     FormsModule,
-    DatePicker,
     ButtonModule,
     TableModule,
     TagModule,
@@ -55,19 +57,18 @@ interface BranchForSelection extends Branch {
     SkeletonModule,
     Step1ManifestFormComponent,
     Step2ManifestFormComponent,
-    Step3ManifestFormComponent
-],
+    Step3ManifestFormComponent,
+  ],
   templateUrl: './manifest-form.component.html',
   styleUrl: './manifest-form.component.scss',
   providers: [MessageService],
 })
-export class ManifestFormComponent implements OnInit {
+export class ManifestFormComponent {
   // Services using inject pattern
   private readonly manifestsService = inject(ManifestsService);
   private readonly branchService = inject(BranchService);
   private readonly messageService = inject(MessageService);
   private readonly dialogRef = inject(DynamicDialogRef);
-  private readonly dialogConfig = inject(DynamicDialogConfig);
 
   // Wizard control
   currentStep = 1;
@@ -81,8 +82,18 @@ export class ManifestFormComponent implements OnInit {
   selectedDate = signal<Date>(new Date());
   loading = signal<boolean>(false);
   loadingBranches = signal<boolean>(false);
-  branches = signal<BranchForSelection[]>([]);
-  selectedBranches = signal<BranchForSelection[]>([]);
+  branches = toSignal<Option[] | undefined>(
+    this.branchService.getBranches(1, 50).pipe(
+      map((response) =>
+        response.data.branches.map((branch: Branch) => ({
+          value: branch.sucursalId,
+          label: branch.address,
+        }))
+      )
+    )
+  );
+
+  selectedBranch = signal<BranchForSelection | null>(null);
   suggestedManifests = signal<SuggestedManifest[]>([]);
   selectedManifests = signal<SuggestedManifest[]>([]);
   generatedManifests = signal<any[]>([]);
@@ -90,38 +101,6 @@ export class ManifestFormComponent implements OnInit {
   // Dialog details
   showManifestDetail = signal<boolean>(false);
   selectedManifestDetail = signal<SuggestedManifest | null>(null);
-
-  ngOnInit(): void {
-    this.loadBranches();
-  }
-
-  /**
-   * Loads available branches
-   */
-  loadBranches(): void {
-    this.loadingBranches.set(true);
-
-    this.branchService.getBranches(1, 50).subscribe({
-      next: (response) => {
-        const mappedBranches = response.data.branches.map((branch: Branch) => ({
-          ...branch,
-          id: branch.sucursalId, // Add id property for easier selection
-          selected: false,
-        }));
-
-        this.branches.set(mappedBranches);
-        this.loadingBranches.set(false);
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Could not load branches',
-        });
-        this.loadingBranches.set(false);
-      },
-    });
-  }
 
   /**
    * Checks if a specific step can be activated
@@ -137,7 +116,7 @@ export class ManifestFormComponent implements OnInit {
    * Checks if user can advance to next step
    */
   get canAdvance(): boolean {
-    return !!this.selectedDate() && this.selectedBranches().length > 0;
+    return !!this.selectedDate() && this.selectedBranch() !== null;
   }
 
   /**
@@ -150,8 +129,8 @@ export class ManifestFormComponent implements OnInit {
   /**
    * Updates selected branches when selection changes
    */
-  onBranchSelectionChange(event: any): void {
-    this.selectedBranches.set(event || []);
+  onBranchSelectionChange(branch: BranchForSelection | null): void {
+    this.selectedBranch.set(branch);
   }
 
   /**
@@ -167,81 +146,47 @@ export class ManifestFormComponent implements OnInit {
       return;
     }
 
-    if (this.selectedBranches().length === 0) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Select at least one branch',
-        detail: 'You must select at least one branch to search for sales',
+    this.manifestsService
+      .recommendManifests(1, 10, [
+        {
+          value: this.selectedDate().toISOString().split('T')[0],
+          key: 'departureDate',
+        },
+        {
+          value: this.selectedBranch()?.sucursalId || '',
+          key: 'branchId',
+        },
+      ])
+      .subscribe({
+        next: (response) => {
+          const sales = response.data.sales.map((sale: any) => ({
+            ...sale,
+            id: sale.sucursalId, // Add id property for easier selection
+            selected: false,
+          }));
+
+          this.suggestedManifests.set(sales);
+          this.loading.set(false);
+          this.currentStep = 2;
+          activateCallback(2);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Could not load sales',
+          });
+          this.loading.set(false);
+        },
       });
-      return;
-    }
 
     this.loading.set(true);
 
     // Build API parameters
     const params = {
       date: this.selectedDate().toISOString().split('T')[0],
-      branchIds: this.selectedBranches()
-        .map((s) => s.sucursalId)
-        .join(','),
     };
-
-    // Simulate API call - would be replaced with real API call:
-    // this.manifestsService.getSuggestedManifests(params).subscribe({...})
-    setTimeout(() => {
-      // Generate example data based on selected branches
-      const suggestions: SuggestedManifest[] = [];
-
-      // For each selected branch, generate 1-3 suggested manifests
-      this.selectedBranches().forEach((branch) => {
-        const manifestsCount = Math.floor(Math.random() * 3) + 1;
-
-        for (let i = 0; i < manifestsCount; i++) {
-          const serviceType = ['tour', 'hotel', 'transport', 'food'][
-            Math.floor(Math.random() * 4)
-          ];
-          const serviceName = this.getServiceName(serviceType);
-
-          const manifest: SuggestedManifest = {
-            id: crypto.randomUUID().substring(0, 8),
-            serviceName,
-            description: `Description for ${serviceName} in ${branch.name}`,
-            type: serviceType,
-            branch: branch.name,
-            branchId: branch.sucursalId,
-            date: new Date(this.selectedDate().getTime()),
-            sales: this.generateSampleSales(2 + Math.floor(Math.random() * 3)),
-            totalPassengers: 0,
-            passengers: [],
-          };
-
-          // Generate passengers for sales
-          manifest.sales.forEach((sale) => {
-            const passengersCount = 1 + Math.floor(Math.random() * 3);
-            for (let j = 0; j < passengersCount; j++) {
-              manifest.passengers.push(this.generateSamplePassenger(sale.code));
-              manifest.totalPassengers++;
-            }
-          });
-
-          suggestions.push(manifest);
-        }
-      });
-
-      this.suggestedManifests.set(suggestions);
-      this.loading.set(false);
-
-      if (suggestions.length > 0) {
-        // Advance to next step if there are suggestions
-        activateCallback(2);
-      } else {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'No results',
-          detail: 'No pending sales found for the selected branches and date',
-        });
-      }
-    }, 1200);
   }
 
   /**
@@ -411,12 +356,6 @@ export class ManifestFormComponent implements OnInit {
     this.selectedManifests.set([]);
     this.generatedManifests.set([]);
     this.selectedDate.set(new Date());
-    this.selectedBranches.set([]);
-
-    // Reset selection in table
-    this.branches.update((branches) =>
-      branches.map((b) => ({ ...b, selected: false }))
-    );
   }
 
   /**

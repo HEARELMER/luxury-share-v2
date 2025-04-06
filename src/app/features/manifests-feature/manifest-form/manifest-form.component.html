@@ -21,8 +21,8 @@
         <ng-template #content let-activateCallback="activateCallback">
           <app-step1-manifest-form
             [(selectedDate)]="selectedDate"
-            [branches]="branches()"
-            [selectedBranches]="selectedBranches()"
+            [branches]="branches()  "
+            [selectedBranch]="selectedBranch()"
             [loading]="loading()"
             [loadingBranches]="loadingBranches()"
             (selectionChange)="onBranchSelectionChange($event)"

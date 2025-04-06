@@ -1,53 +1,94 @@
-import { Component, input, model, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+} from '@angular/core';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-interface Branch {
-  sucursalId: string;
-  name: string;
-  address: string;
-  city?: string;
-  status: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  selected?: boolean;
-}
+import { ServicesService } from '../../../../../core/services/services_packages-services/services.service';
+import { DatePickerModule } from 'primeng/datepicker';
+import { PaginatorModule } from 'primeng/paginator';
+import {
+  Option,
+  SelectComponent,
+} from '../../../../../shared/components/forms/select/select.component';
+import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../../sales-feature/constants/manifest-form.constant';
 
-interface BranchForSelection extends Branch {
-  selected?: boolean;
-  description?: string;
-}
 @Component({
   selector: 'app-step1-manifest-form',
   imports: [
     CommonModule,
     FormsModule,
-    CalendarModule,
     TableModule,
     ButtonModule,
     SkeletonModule,
+    DatePickerModule,
+    SelectComponent,
+    PaginatorModule,JsonPipe
   ],
   templateUrl: './step1-manifest-form.component.html',
   styleUrl: './step1-manifest-form.component.scss',
 })
 export class Step1ManifestFormComponent {
+  private readonly _servicesService = inject(ServicesService);
   selectedDate = model<Date>(new Date());
-  branches = input<BranchForSelection[]>([]);
-  selectedBranches = model<BranchForSelection[]>([]);
-  loading = input<boolean>(false);
+  branches = input<Option[] | undefined>([]);
+  loading = signal<boolean>(false);
+  services = signal<any>([]);
+  serviciosTableCols = SERVICE_TABLE_COLS_MANIFESTS;
+  currentPage = 1;
+  pageSize = 5;
+  totalRecords = 0;
+  rowsPerPageOptions = [5, 10, 20, 50];
+  first = 0;
+  rows = 5;
+  // Cambio: de array a objeto único
+  selectedBranch = model<any | null>(null);
   loadingBranches = input<boolean>(false);
 
-  selectionChange = output<BranchForSelection[]>();
+  // Cambio: ahora emite un solo objeto
+  selectionChange = output<any | null>();
   search = output<void>();
 
+  constructor() {
+    effect(() => {
+      this.loadServices();
+    });
+  }
+
+  loadServices(): void {
+    this.loading.set(true);
+    this._servicesService.getServices(this.currentPage, this.rows).subscribe({
+      next: (res) => {
+        this.services.set(res.data.services)
+        this.totalRecords = res.data.totalRecords;
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
+    });
+  }
+
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+    this.loadServices();
+  }
+
   /**
-   * Updates selected branches when selection changes
+   * Updates selected branch when selection changes
    */
   onBranchSelectionChange(event: any): void {
-    this.selectedBranches.set(event || []);
+    this.selectedBranch.set(event);
     this.selectionChange.emit(event);
   }
 
@@ -55,7 +96,7 @@ export class Step1ManifestFormComponent {
    * Checks if user can advance to next step
    */
   get canAdvance(): boolean {
-    return !!this.selectedDate() && this.selectedBranches().length > 0;
+    return !!this.selectedDate() && !!this.selectedBranch();
   }
 
   /**

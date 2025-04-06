@@ -32,5 +32,23 @@ export class ManifestsService {
     return this._http.get(`${this._api}manifests`, { params });
   }
 
-  
+  recommendManifests(
+    page: number = 1,
+    size: number = 10,
+    filters?: Filter[]
+  ): Observable<any> {
+    let url = `${this._api}sales`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', size.toString());
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}`;
+    }
+
+    return this._http.get(url, { params });
+  }
 }

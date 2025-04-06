@@ -1,9 +1,9 @@
-<div class="p-4">
-  <h3 class="text-lg font-semibold pb-4">Selecciona fecha y sucursal</h3>
+<div class="px-4">
+  <h3 class="text-sm font-medium pb-4">Selecciona fecha y sucursal</h3>
 
   <!-- Date selection -->
   <section class="flex w-full gap-2 lg:flex-row flex-col">
-    <div class="pb-6 w-full flex flex-col gap-2">
+    <div class="pb-2 w-full flex flex-col gap-2">
       <label class="text-sm font-medium text-gray-700">Fecha de Servicio</label>
       <p-date-picker
         [(ngModel)]="selectedDate"
@@ -18,19 +18,35 @@
         >Selecciona la fecha para buscar ventas pendientes</small
       >
     </div>
-    <app-select
-      [required]="true"
-      errorType=" "
-      label="Sucursal"
-      class="w-full"
-      [options]="branches() || []"
-      placeholder="Selecciona -- "
-    />
+    <div class="flex flex-col w-full">
+      <app-select
+        [(value)]="selectedBranch"
+        (valueChange)="onBranchSelectionChange($event)"
+        [required]="true"
+        [options]="branches() || []"
+        placeholder="Selecciona una sucursal"
+        errorType=" "
+        label="Sucursal"
+        class="w-full"
+      />
+      <small class="text-gray-500 pt-2 block">
+        Selecciona la sucursal donde deseas realizar el servicio
+      </small>
+    </div>
   </section>
 
   <!-- Branch selection (single) -->
-  <div class="pb-6">
-    <label class="text-sm font-medium text-gray-700 pb-2">Servicios</label>
+  <div class="py-6">
+    <div class="  py-3 flex items-center justify-between">
+      <label class="font-medium text-sm text-gray-700"> 
+        Servicios Disponibles
+      </label>
+      <span
+        class="bg-green-400 text-white text-xs font-medium py-1 px-2 rounded-full"
+      >
+        {{ totalRecords }} servicios
+      </span>
+    </div>
     <p-table
       [value]="services()"
       [columns]="serviciosTableCols"
@@ -96,9 +112,7 @@
         </div>
       </div>
     </div>
-    <small class="text-gray-500 mt-1 block"
-      >Selecciona la sucursal en la que deseas buscar ventas</small
-    >
+    <small class="text-gray-500 mt-1 block">Selecciona el servicio </small>
   </div>
 
   <!-- Action buttons -->

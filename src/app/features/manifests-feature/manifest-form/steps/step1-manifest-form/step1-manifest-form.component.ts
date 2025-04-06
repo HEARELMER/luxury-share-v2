@@ -31,7 +31,7 @@ import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../../sales-feature/constant
     SkeletonModule,
     DatePickerModule,
     SelectComponent,
-    PaginatorModule,JsonPipe
+    PaginatorModule
   ],
   templateUrl: './step1-manifest-form.component.html',
   styleUrl: './step1-manifest-form.component.scss',

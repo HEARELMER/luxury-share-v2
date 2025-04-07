@@ -19,8 +19,9 @@ import {
   Option,
   SelectComponent,
 } from '../../../../../shared/components/forms/select/select.component';
-import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../../sales-feature/constants/manifest-form.constant';
+import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../constants/manifest-form.constant';
 import { InputFormComponent } from '../../../../../shared/components/forms/input-form/input-form.component';
+import { Badge } from 'primeng/badge';
 
 @Component({
   selector: 'app-step1-manifest-form',
@@ -52,7 +53,7 @@ export class Step1ManifestFormComponent {
   first = 0;
   rows = 5;
   selectedBranch = model<string>('');
-  selectedServiceId = model<string | null>(null);
+  selectedService = model<any | null>(null);
   loadingBranches = input<boolean>(false);
   search = output<void>();
 
@@ -67,7 +68,7 @@ export class Step1ManifestFormComponent {
     this._servicesService.getServices(this.currentPage, this.rows).subscribe({
       next: (res) => {
         this.services.set(res.data.services);
-        this.totalRecords = res.data.totalRecords;
+        this.totalRecords = res.data.total;
         this.loading.set(false);
       },
       error: () => {
@@ -87,7 +88,7 @@ export class Step1ManifestFormComponent {
    * Updates selected branch when selection changes
    */
   onIdSelectionChange(event: any): void {
-    this.selectedServiceId.set(event.serviceId);
+    this.selectedService.set(event);
   }
 
   /**

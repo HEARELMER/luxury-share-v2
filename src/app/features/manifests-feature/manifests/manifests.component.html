@@ -105,9 +105,7 @@
       [columns]="cols"
       [value]="manifests()"
       [lazy]="true"
-      [scrollable]="true"
-      [virtualScroll]="true"
-      [virtualScrollItemSize]="50"
+      [scrollable]="true" 
       [totalRecords]="totalRecords"
       scrollHeight="400px"
       [resizableColumns]="true"
@@ -254,5 +252,5 @@
 </main>
 
 <!-- Toast para notificaciones -->
-<p-toast position="bottom-right"></p-toast>
+<p-toast position="top-right" [baseZIndex]="1000" ></p-toast>
  

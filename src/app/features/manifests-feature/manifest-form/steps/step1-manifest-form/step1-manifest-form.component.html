@@ -39,7 +39,7 @@
       <span
         class="bg-green-400 text-white text-xs font-medium py-1 px-2 rounded-full"
       >
-        {{ totalRecords }} servicios
+        {{totalRecords}} servicios
       </span>
     </div>
     <p-table
@@ -48,7 +48,7 @@
       [scrollHeight]="'280px'"
       styleClass="p-datatable-sm"
       [scrollable]="true"
-      [selection]="selectedServiceId()"
+      [selection]="selectedService()"
       selectionMode="single"
       (selectionChange)="onIdSelectionChange($event)"
       [resizableColumns]="true"

@@ -163,7 +163,7 @@ export class ManifestsComponent {
    * Abre el modal para crear o editar un manifiesto
    */
   openModal(): void {
-    this.ref = this.dialogService.open(ManifestFormComponent, {
+    const ref = this.dialogService.open(ManifestFormComponent, {
       header: 'Generación Asistida de Manifiestos',
       width: '70vw',
       height: '80vh',
@@ -182,23 +182,22 @@ export class ManifestsComponent {
     });
 
     // Manejar el cierre del diálogo
-    this.ref.onClose.subscribe((result) => {
-      if (result && result.manifestosCreados) {
-        // Refrescar la lista de manifiestos
+    ref.onClose.subscribe((message: string) => {
+      if (message) {
         this.loadManifests();
 
         // Mostrar mensaje de éxito
         this._messageService.add({
           severity: 'success',
-          summary: 'Manifiestos creados',
-          detail: `Se crearon ${result.manifestosCreados.length} manifiestos correctamente`,
+          summary: 'Éxito',
+          detail: message,
         });
       }
     });
   }
 
   openManifestDetails(manifest: Manifest): void {
-    this.ref = this.dialogService.open(ManifestDetailComponent, {
+    const ref = this.dialogService.open(ManifestDetailComponent, {
       header: 'Detalles del Manifiesto',
       width: '70vw',
       height: '80vh',
@@ -208,14 +207,9 @@ export class ManifestsComponent {
       closable: true,
       resizable: true,
       maximizable: true,
-
       breakpoints: {
         '960px': '75vw',
         '640px': '90vw',
-      },
-      data: {
-        manifestId: manifest.manifestId,
-        isViewMode: true,
       },
     });
   }

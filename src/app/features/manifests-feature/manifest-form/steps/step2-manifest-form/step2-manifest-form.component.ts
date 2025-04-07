@@ -5,6 +5,9 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
+import { SUGGESTION_TABLE_COLS_MANIFESTS } from '../../../constants/manifest-form.constant';
+import { PaginatorModule } from 'primeng/paginator';
+import { Badge } from 'primeng/badge';
 interface SuggestedManifest {
   id: string;
   serviceName: string;
@@ -26,19 +29,29 @@ interface SuggestedManifest {
     ButtonModule,
     ProgressBarModule,
     TagModule,
+    Badge,
+    PaginatorModule,
   ],
   templateUrl: './step2-manifest-form.component.html',
   styleUrl: './step2-manifest-form.component.scss',
 })
 export class Step2ManifestFormComponent {
+  serviceSelected = input<any | null>(null);
   selectedDate = model<Date>(new Date());
   suggestedManifests = model<SuggestedManifest[]>([]);
   selectedManifests = model<SuggestedManifest[]>([]);
-
+  suggestedsManifestsTableCols = SUGGESTION_TABLE_COLS_MANIFESTS;
+  totalItems = input<number>(0);
+  pageChange = output<{ currentPage: number; rows: number }>();
+  currentPage = 1;
+  pageSize = 5;
+  rowsPerPageOptions = [5, 10, 20, 50];
+  first = 0;
+  rows = 5;
   goBack = output<void>();
-  generateSelection = output<void>();
+  generateManifest = output<void>();
   viewDetails = output<SuggestedManifest>();
-
+  isLoading = model<boolean>(false);
   /**
    * Checks if there are any selected manifests
    */
@@ -57,11 +70,20 @@ export class Step2ManifestFormComponent {
    * Generate manifests with the selected options
    */
   generateManifests(): void {
-    if (this.hasSelectedManifests) {
-      this.generateSelection.emit();
-    }
+    this.generateManifest.emit();
   }
 
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+
+    // Emitir el evento de paginación al componente padre
+    this.pageChange.emit({
+      currentPage: this.currentPage,
+      rows: this.rows,
+    });
+  }
   /**
    * Show details of a manifest
    */

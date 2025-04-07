@@ -1,121 +1,117 @@
-<div class="p-4">
-  <h3 class="text-lg font-semibold pb-4">Manifiestos sugeridos</h3>
-  <p class="text-sm text-gray-600 pb-4">
-    Basado en las ventas del {{ selectedDate() | date : "MM/dd/yyyy" }}, se sugieren los siguientes manifiestos:
-  </p>
-
-  <p-table
-    [value]="suggestedManifests()"
-    [responsive]="true"
-    styleClass="p-datatable-sm"
-    [rowHover]="true"
-    [tableStyle]="{ 'min-width': '60rem' }"
-    [selection]="selectedManifests()"
-    (selectionChange)="selectedManifests.set($event)"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 3rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th>Servicio</th>
-        <th>Tipo</th>
-        <th>Sucursal</th>
-        <th pSortableColumn="date">
-          Fecha
-          <p-sortIcon field="date"></p-sortIcon>
-        </th>
-      
-        <th pSortableColumn="totalPassengers">
-          Total de pasajeros
-          <p-sortIcon field="totalPassengers"></p-sortIcon>
-        </th>
-        <th>Detalles</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-manifest>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="manifest"></p-tableCheckbox>
-        </td>
-        <td>
-          <div class="font-medium">{{ manifest.serviceName }}</div>
-          <div class="text-xs text-gray-500">
-            {{ manifest.description }}
-          </div>
-        </td>
-        <td>
-          <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-            [ngClass]="{
-              'bg-blue-100 text-blue-800': manifest.type === 'tour',
-              'bg-green-100 text-green-800': manifest.type === 'hotel',
-              'bg-yellow-100 text-yellow-800': manifest.type === 'food',
-              'bg-purple-100 text-purple-800': manifest.type === 'transport'
-            }"
-          >
-            {{ manifest.type | titlecase }}
-          </span>
-        </td>
-        <td>{{ manifest.branch }}</td>
-        <td>
-          {{ manifest.date | date : "MM/dd/yyyy HH:mm" }}
-        </td>
-        <td>
-          <div class="flex gap-1 flex-wrap">
-            <p-tag
-              *ngFor="let sale of manifest.sales.slice(0, 3)"
-              [value]="'#' + sale.code"
-              severity="info"
-            ></p-tag>
-            <p-tag
-              *ngIf="manifest.sales.length > 3"
-              [value]="'+' + (manifest.sales.length - 3)"
-            ></p-tag>
-          </div>
-        </td>
-        <td class="text-center">
-          <div class="text-lg font-bold">
-            {{ manifest.totalPassengers }}
-          </div>
-          <p-progressBar
-            [value]="manifest.totalPassengers * 10"
-            [showValue]="false"
-            [style]="{ height: '4px' }"
-          ></p-progressBar>
-        </td>
-        <td>
-          <button
-            pButton
-            icon="pi pi-eye"
-            class="p-button-text p-button-rounded"
-            (click)="showManifestDetails(manifest)"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-
-  @if (suggestedManifests().length === 0) {
-  <div class="text-center py-8 border rounded-lg bg-gray-50">
-    <i class="pi pi-search text-gray-300 text-5xl pb-3"></i>
-    <h3 class="text-xl font-medium text-gray-600 pb-2">
-      No se encontraron ventas pendientes
+<div class="p-4 flex flex-col justify-between">
+  <div class="flex h-full flex-col">
+    <h3 class="text-lg font-semibold pb-4">
+      Ventas asociadas al Servicio {{ serviceSelected()?.name || "-" }}
     </h3>
-    <p class="text-gray-500 pb-4">
-      No hay ventas programadas para el
-      {{ selectedDate() | date : "MM/dd/yyyy" }}
-      o ya se han creado todos los manifiestos necesarios.
+    <p class="text-sm text-gray-600 pb-4">
+      Basado en las ventas del
+      {{ selectedDate() | date : "MM/dd/yyyy, h:mm a" }}, se sugieren los
+      siguientes manifiestos:
+      <span>
+        <p-badge [value]="totalItems()" severity="success" />
+      </span>
     </p>
-    <button
-      pButton
-      label="Cambiar fecha"
-      icon="pi pi-calendar"
-      class="p-button-outlined"
-      (click)="goBackToDateSelection()"
-    ></button>
+
+    <p-table
+      [value]="suggestedManifests()"
+      [columns]="suggestedsManifestsTableCols"
+      [responsive]="true"
+      [resizableColumns]="true"
+      [scrollable]="true"
+      styleClass="p-datatable-sm"
+      selectionMode="single"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      [selection]="selectedManifests()"
+      (selectionChange)="selectedManifests.set($event)"
+      [totalRecords]="totalItems()"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+          >
+            {{ col.header }}
+          </th>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-columns="columns">
+        <tr [pSelectableRow]="item">
+          @for (col of columns; track $index) {
+          <td>
+            @if (col.field === 'codeSale') {
+            {{ item[col.field] | uppercase }}
+            } @else if (col.field === 'client') {
+            <div class="flex items-center">
+              <div>
+                <span class="font-medium">
+                  {{ item[col.field].name }} {{ item[col.field].firstLastname }}
+                </span>
+                <div class="text-xs text-gray-500">
+                  {{ item[col.field].typeDocument | uppercase }}:
+                  {{ item[col.field].numberDocument }}
+                </div>
+              </div>
+            </div>
+            } @else if (col.field === 'departureDate') {
+            <div class="flex flex-col">
+              <span>{{ item[col.field] | date : "dd-MM-yyyy" }}</span>
+              <span class="text-xs text-gray-500">{{
+                item[col.field] | date : "hh:mm a"
+              }}</span>
+            </div>
+            }
+            <!-- Fecha de creación -->
+            @else if (col.field === 'createdAt') {
+            <span>{{ item[col.field] | date : "dd-MM-yyyy" }}</span>
+            } @else if (col.field === 'branch') {
+            <span>{{ item[col.field].address || "No especificada" }}</span>
+
+            } @else if (col.field === 'observations') {
+            <span>{{ item[col.field] || "Sin observaciones" }}</span>
+            } @else {
+            {{ item[col.field] }}
+            }
+          </td>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="suggestedsManifestsTableCols.length" class="p-0">
+            <div class="p-8 flex flex-col items-center justify-center">
+              <i class="pi pi-info-circle text-4xl text-gray-300 mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-600 mb-2">
+                No hay resultados
+              </h3>
+              <p class="text-sm text-gray-500 text-center max-w-md">
+                Intenta seleccionar otra fecha u otra sucursal para ver los
+                resultados
+              </p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalItems()"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showFirstLastIcon]="false"
+          />
+        </div>
+      </div>
+    </div>
   </div>
-  }
 
   <div class="flex justify-between pt-4">
     <button
@@ -127,9 +123,9 @@
     ></button>
     <button
       pButton
-      label="Generar manifiestos seleccionados"
-      icon="pi pi-check"
-      [disabled]="!hasSelectedManifests"
+      label="Generar manifiesto"
+      icon="pi pi-save"
+      [disabled]="suggestedManifests().length == 0 || isLoading()"
       (click)="generateManifests()"
     ></button>
   </div>

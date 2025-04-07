@@ -24,7 +24,7 @@
             [branches]="branches()"
             [loadingBranches]="loadingBranches()"
             [(selectedBranch)]="selectedBranch"
-            [(selectedServiceId)]="selectedServiceId"
+            [(selectedService)]="selectedService"
             (search)="searchSales(activateCallback)"
           />
         </ng-template>
@@ -37,157 +37,17 @@
             [(suggestedManifests)]="suggestedManifests"
             [(selectedDate)]="selectedDate"
             (goBack)="goBackToDateSelection()"
-            (generateSelection)="generateManifests(activateCallback)"
+            (generateManifest)="generateManifests()"
             (viewDetails)="showManifestDetails($event)"
-          />
-        </ng-template>
-      </p-step-panel>
-
-      <!-- Step 3: Confirmation and results -->
-      <p-step-panel [value]="3" styleClass="flex-grow flex flex-col">
-        <ng-template #content>
-          <app-step3-manifest-form
-            [generatedManifests]="generatedManifests()"
-            (restart)="restartProcess()"
-            (close)="closeDialog()"
+            (pageChange)="handlePageChange($event)"
+            [totalItems]="totalManifestRecords()"
+            [serviceSelected]="selectedService()"
+            [(isLoading)]="loading"
           />
         </ng-template>
       </p-step-panel>
     </p-step-panels>
   </p-stepper>
 </div>
-
-<!-- Dialog for viewing manifest details -->
-<p-dialog
-  [visible]="showManifestDetail()"
-  [style]="{ width: '850px' }"
-  header="Manifest details"
-  [modal]="true"
-  styleClass="p-fluid"
->
-  <div *ngIf="selectedManifestDetail()">
-    <div class="pb-4">
-      <div class="flex justify-between pb-2">
-        <h3 class="text-lg font-bold">
-          {{ selectedManifestDetail()?.serviceName }}
-        </h3>
-        <div class="flex items-center gap-2">
-          <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
-          >
-            {{ selectedManifestDetail()?.type | titlecase }}
-          </span>
-          <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
-          >
-            {{ selectedManifestDetail()?.branch }}
-          </span>
-        </div>
-      </div>
-      <p class="text-gray-600 pb-2">
-        {{ selectedManifestDetail()?.description }}
-      </p>
-      <div class="text-sm text-gray-500">
-        Date: {{ selectedManifestDetail()?.date | date : "MM/dd/yyyy HH:mm" }}
-      </div>
-    </div>
-
-    <p-tabView>
-      <p-tabPanel
-        header="Passengers ({{ selectedManifestDetail()?.passengers?.length }})"
-      >
-        <p-table
-          [value]="selectedManifestDetail()?.passengers ?? []"
-          styleClass="p-datatable-sm"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Customer</th>
-              <th>Document</th>
-              <th>Sale</th>
-              <th>Contact</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-passenger>
-            <tr>
-              <td>
-                <div class="flex items-center">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2"
-                  >
-                    <i class="pi pi-user text-xs text-gray-500"></i>
-                  </div>
-                  <div>
-                    <div class="font-medium">{{ passenger.fullName }}</div>
-                    <div class="text-xs text-gray-500">
-                      {{ passenger.nationality || "Not specified" }}
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                {{ passenger.documentType }}: {{ passenger.documentNupber }}
-              </td>
-              <td>
-                <p-tag
-                  [value]="'#' + passenger.saleCode"
-                  severity="info"
-                ></p-tag>
-              </td>
-              <td>
-                {{ passenger.phone || passenger.email || "Not available" }}
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-tabPanel>
-      <p-tabPanel
-        header="Related sales ({{ selectedManifestDetail()?.sales?.length }})"
-      >
-        <p-table
-          [value]="selectedManifestDetail()?.sales || []"
-          styleClass="p-datatable-sm"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Code</th>
-              <th>Customer</th>
-              <th>Branch</th>
-              <th>Sale date</th>
-              <th>Total</th>
-              <th>Status</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-sale>
-            <tr>
-              <td>
-                <div class="font-medium">#{{ sale.code }}</div>
-              </td>
-              <td>{{ sale.client }}</td>
-              <td>{{ selectedManifestDetail()?.branch }}</td>
-              <td>{{ sale.saleDate | date : "MM/dd/yyyy" }}</td>
-              <td>{{ sale.total | currency }}</td>
-              <td>
-                <p-tag
-                  [value]="sale.status"
-                  [severity]="getStatusSeverity(sale.status)"
-                ></p-tag>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-tabPanel>
-    </p-tabView>
-  </div>
-
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end">
-      <p-button
-        icon="pi pi-times"
-        label="Close"
-        styleClass="p-button-text"
-        (click)="showManifestDetail.set(false)"
-      ></p-button>
-    </div>
-  </ng-template>
-</p-dialog>
+<!-- Toast para notificaciones -->
+<p-toast position="top-right" [life]="5000" [baseZIndex]="1000"></p-toast>

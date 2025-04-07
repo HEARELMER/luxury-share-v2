@@ -51,4 +51,8 @@ export class ManifestsService {
 
     return this._http.get(url, { params });
   }
+
+  createManifest(manifest: any): Observable<any> {
+    return this._http.post(`${this._api}manifests`, manifest);
+  }
 }

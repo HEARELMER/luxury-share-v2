@@ -20,6 +20,7 @@ import {
   SelectComponent,
 } from '../../../../../shared/components/forms/select/select.component';
 import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../../sales-feature/constants/manifest-form.constant';
+import { InputFormComponent } from '../../../../../shared/components/forms/input-form/input-form.component';
 
 @Component({
   selector: 'app-step1-manifest-form',
@@ -31,7 +32,8 @@ import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../../sales-feature/constant
     SkeletonModule,
     DatePickerModule,
     SelectComponent,
-    PaginatorModule
+    PaginatorModule,
+    InputFormComponent,
   ],
   templateUrl: './step1-manifest-form.component.html',
   styleUrl: './step1-manifest-form.component.scss',
@@ -49,12 +51,9 @@ export class Step1ManifestFormComponent {
   rowsPerPageOptions = [5, 10, 20, 50];
   first = 0;
   rows = 5;
-  // Cambio: de array a objeto único
-  selectedBranch = model<any | null>(null);
+  selectedBranch = model<string>('');
+  selectedServiceId = model<string | null>(null);
   loadingBranches = input<boolean>(false);
-
-  // Cambio: ahora emite un solo objeto
-  selectionChange = output<any | null>();
   search = output<void>();
 
   constructor() {
@@ -67,7 +66,7 @@ export class Step1ManifestFormComponent {
     this.loading.set(true);
     this._servicesService.getServices(this.currentPage, this.rows).subscribe({
       next: (res) => {
-        this.services.set(res.data.services)
+        this.services.set(res.data.services);
         this.totalRecords = res.data.totalRecords;
         this.loading.set(false);
       },
@@ -87,9 +86,8 @@ export class Step1ManifestFormComponent {
   /**
    * Updates selected branch when selection changes
    */
-  onBranchSelectionChange(event: any): void {
-    this.selectedBranch.set(event);
-    this.selectionChange.emit(event);
+  onIdSelectionChange(event: any): void {
+    this.selectedServiceId.set(event.serviceId);
   }
 
   /**

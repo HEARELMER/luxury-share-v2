@@ -4,16 +4,12 @@
   <!-- Date selection -->
   <section class="flex w-full gap-2 lg:flex-row flex-col">
     <div class="pb-2 w-full flex flex-col gap-2">
-      <label class="text-sm font-medium text-gray-700">Fecha de Servicio</label>
-      <p-date-picker
-        [(ngModel)]="selectedDate"
-        dateFormat="dd/mm/yy"
-        placeholder="Select date"
-        styleClass="w-full "
-        hourFormat="24"
-        [showTime]="true"
-        [stepMinute]="5"
-      ></p-date-picker>
+      <app-input-form
+        [required]="true"
+        label="Fecha de Servicio"
+        type="datetime-local"
+        [(value)]="selectedDate"
+      />
       <small class="text-gray-500 mt-1 block"
         >Selecciona la fecha para buscar ventas pendientes</small
       >
@@ -21,7 +17,6 @@
     <div class="flex flex-col w-full">
       <app-select
         [(value)]="selectedBranch"
-        (valueChange)="onBranchSelectionChange($event)"
         [required]="true"
         [options]="branches() || []"
         placeholder="Selecciona una sucursal"
@@ -37,8 +32,8 @@
 
   <!-- Branch selection (single) -->
   <div class="py-6">
-    <div class="  py-3 flex items-center justify-between">
-      <label class="font-medium text-sm text-gray-700"> 
+    <div class="py-3 flex items-center justify-between">
+      <label class="font-medium text-sm text-gray-700">
         Servicios Disponibles
       </label>
       <span
@@ -53,9 +48,9 @@
       [scrollHeight]="'280px'"
       styleClass="p-datatable-sm"
       [scrollable]="true"
-      [selection]="selectedBranch()"
+      [selection]="selectedServiceId()"
       selectionMode="single"
-      (selectionChange)="onBranchSelectionChange($event)"
+      (selectionChange)="onIdSelectionChange($event)"
       [resizableColumns]="true"
       [totalRecords]="totalRecords"
     >

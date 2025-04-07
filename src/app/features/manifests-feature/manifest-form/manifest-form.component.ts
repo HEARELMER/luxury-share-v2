@@ -80,6 +80,7 @@ export class ManifestFormComponent {
 
   // Process variables using signals
   selectedDate = signal<Date>(new Date());
+  selectedServiceId = signal<string | null>(null);
   loading = signal<boolean>(false);
   loadingBranches = signal<boolean>(false);
   branches = toSignal<Option[] | undefined>(
@@ -93,7 +94,7 @@ export class ManifestFormComponent {
     )
   );
 
-  selectedBranch = signal<BranchForSelection | null>(null);
+  selectedBranch = signal<string>('');
   suggestedManifests = signal<SuggestedManifest[]>([]);
   selectedManifests = signal<SuggestedManifest[]>([]);
   generatedManifests = signal<any[]>([]);
@@ -116,6 +117,7 @@ export class ManifestFormComponent {
    * Checks if user can advance to next step
    */
   get canAdvance(): boolean {
+    console.log(this.selectedDate(), this.selectedBranch());
     return !!this.selectedDate() && this.selectedBranch() !== null;
   }
 
@@ -124,13 +126,6 @@ export class ManifestFormComponent {
    */
   get hasSelectedManifests(): boolean {
     return this.selectedManifests().length > 0;
-  }
-
-  /**
-   * Updates selected branches when selection changes
-   */
-  onBranchSelectionChange(branch: BranchForSelection | null): void {
-    this.selectedBranch.set(branch);
   }
 
   /**
@@ -149,12 +144,16 @@ export class ManifestFormComponent {
     this.manifestsService
       .recommendManifests(1, 10, [
         {
-          value: this.selectedDate().toISOString().split('T')[0],
+          value: this.selectedDate().toString(),
           key: 'departureDate',
         },
         {
-          value: this.selectedBranch()?.sucursalId || '',
-          key: 'branchId',
+          value: this.selectedBranch() || '',
+          key: 'sucursalId',
+        },
+        {
+          key: 'serviceId',
+          value: this.selectedServiceId() || '',
         },
       ])
       .subscribe({
@@ -182,11 +181,6 @@ export class ManifestFormComponent {
       });
 
     this.loading.set(true);
-
-    // Build API parameters
-    const params = {
-      date: this.selectedDate().toISOString().split('T')[0],
-    };
   }
 
   /**

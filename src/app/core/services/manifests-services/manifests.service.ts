@@ -37,7 +37,7 @@ export class ManifestsService {
     size: number = 10,
     filters?: Filter[]
   ): Observable<any> {
-    let url = `${this._api}sales`;
+    let url = `${this._api}sales/find-sales-for-manifests`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());

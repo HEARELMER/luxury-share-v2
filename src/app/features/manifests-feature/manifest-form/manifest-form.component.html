@@ -21,10 +21,10 @@
         <ng-template #content let-activateCallback="activateCallback">
           <app-step1-manifest-form
             [(selectedDate)]="selectedDate"
-            [branches]="branches()  "
-            [selectedBranch]="selectedBranch()" 
+            [branches]="branches()"
             [loadingBranches]="loadingBranches()"
-            (selectionChange)="onBranchSelectionChange($event)"
+            [(selectedBranch)]="selectedBranch"
+            [(selectedServiceId)]="selectedServiceId"
             (search)="searchSales(activateCallback)"
           />
         </ng-template>

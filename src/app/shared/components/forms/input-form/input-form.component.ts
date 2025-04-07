@@ -36,7 +36,7 @@ export class InputFormComponent implements ControlValueAccessor {
   maxLength = input<number>(250);
   readonly = input<boolean>(false);
   isPositive = input<boolean>(false);
-  value = model<string>('');
+  value = model<string | Date >('');
   isTouched = signal(false);
   showError = signal(false);
   errorMessage = signal('');

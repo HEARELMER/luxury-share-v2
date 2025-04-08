@@ -18,7 +18,7 @@ interface SuggestedManifest {
   date: Date;
   sales: any[];
   totalPassengers: number;
-  passengers: any[];
+  participants: any[];
 }
 @Component({
   selector: 'app-step2-manifest-form',

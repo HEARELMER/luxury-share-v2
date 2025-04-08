@@ -10,7 +10,7 @@
             <i class="pi pi-check-circle text-primary-500 text-xl"></i>
           </div>
           <h2 class="text-xl font-bold text-gray-800">
-            {{ manifestData.title }}
+            {{ response().title }}
           </h2>
         </div>
 
@@ -20,7 +20,7 @@
             <p>15/04/2025</p>
             <span class="text-gray-300 mx-1">|</span>
             <i class="pi pi-info-circle text-primary-400"></i>
-            <p>Descripcion servicio</p>
+            <p>{{response().description}}</p>
           </div>
         </div>
 
@@ -107,7 +107,7 @@
   <!-- Lista de pasajeros -->
   <div class="pt-4 flex flex-col">
     <p-table
-      [value]="passengers"
+      [value]="clients()"
       [scrollable]="true"
       scrollHeight="400px"
       [columns]="checkInTableCols"
@@ -132,7 +132,39 @@
           }
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-passenger let-i="rowIndex">
+      <ng-template pTemplate="body" let-participant let-columns="columns">
+        <tr
+          [ngClass]="{
+            'bg-green-50': participant.checkInStatus == 'COMPLETADO'
+          }"
+        >
+          @for (col of columns; track $index) {
+          <td>
+            @if (col.field == "#") {
+            <p-tableCheckbox [value]="participant"></p-tableCheckbox>
+            } @else if (col.field=="check-in") {
+            <p-inputSwitch [(ngModel)]="checkedIn"></p-inputSwitch>
+            } @else if (col.field=="actions") {
+            <div class="flex gap-1 items-center">
+              <div class="flex gap-1">
+                <button
+                  class="button-table-actions"
+                  [pTooltip]="'Eliminar'"
+                  tooltipPosition="left"
+                  [showDelay]="300"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </div>
+            } @else {
+            {{ participant[col.field] }}
+            }
+          </td>
+          }
+        </tr>
+      </ng-template>
+      <!-- <ng-template pTemplate="body" let-passenger let-i="rowIndex">
         <tr [ngClass]="{ 'bg-green-50': passenger.checkedIn }">
           <td>
             <p-tableCheckbox [value]="passenger"></p-tableCheckbox>
@@ -188,7 +220,7 @@
             </div>
           </td>
         </tr>
-      </ng-template>
+      </ng-template> -->
     </p-table>
     <div class="card flex flex-col gap-4">
       <div class="flex items-center justify-center">

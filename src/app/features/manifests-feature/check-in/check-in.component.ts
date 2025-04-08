@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -15,9 +15,11 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { CHECK_IN_TABLE_COLS } from '../constants/check-in.constant';
 import { PaginatorModule } from 'primeng/paginator';
-import { InputFormComponent } from "../../../shared/components/forms/input-form/input-form.component";
-import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
-
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
+import { ManifestsService } from '../../../core/services/manifests-services/manifests.service';
+import { ToggleSwitch } from 'primeng/toggleswitch';
+import { InputSwitchModule } from 'primeng/inputswitch';
 interface Passenger {
   id: string;
   name: string;
@@ -46,18 +48,24 @@ interface Passenger {
     ConfirmDialogModule,
     PaginatorModule,
     InputFormComponent,
-    ButtonComponent
-],
+    ButtonComponent,
+    InputSwitchModule,
+  ],
   templateUrl: './check-in.component.html',
   styleUrl: './check-in.component.scss',
 })
 export class CheckInComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  private readonly manifestService = inject(ManifestsService);
   private dialogRef = inject(DynamicDialogRef);
-
+  private dialogConfig = inject(DynamicDialogConfig);
+  manifestId = signal<string>('');
+  response = signal<any>({});
+  clients = signal<any[]>([]);
   checkInTableCols = CHECK_IN_TABLE_COLS;
-
+  checkedIn = signal<boolean>(false);
+  loading = signal<boolean>(false);
   // Datos estáticos para el manifiesto
   manifestData = {
     id: 'MNF-20250407-001',
@@ -82,9 +90,34 @@ export class CheckInComponent {
   selectedView: string = 'all';
 
   ngOnInit() {
+    if (this.dialogConfig && this.dialogConfig.data?.manifestId) {
+      this.manifestId.set(this.dialogConfig.data.manifestId);
+    }
+
+    // Load data
+    this.loadManifestData();
     // Generar datos de pasajeros aleatorios
     this.generatePassengers();
     this.updateCheckedInCount();
+  }
+
+  loadManifestData() {
+    this.loading.set(true);
+    this.manifestService.findManifestById(this.manifestId()).subscribe({
+      next: (res) => {
+        this.response.set(res);
+        this.clients.set(res.participants);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo cargar la información del manifiesto',
+        });
+      },
+    });
   }
 
   generatePassengers() {

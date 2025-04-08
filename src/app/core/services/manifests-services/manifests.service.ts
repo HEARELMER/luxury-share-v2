@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environmentDev } from '../../../environments/environment.development';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Filter } from '../../interfaces/api/filters';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -54,5 +54,11 @@ export class ManifestsService {
 
   createManifest(manifest: any): Observable<any> {
     return this._http.post(`${this._api}manifests`, manifest);
+  }
+
+  findManifestById(id: string): Observable<any> {
+    return this._http
+      .get(`${this._api}manifests/${id}`)
+      .pipe(map((response: any) => response.data));
   }
 }

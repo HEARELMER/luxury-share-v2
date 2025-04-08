@@ -33,7 +33,7 @@ interface SuggestedManifest {
   date: Date;
   sales: any[];
   totalPassengers: number;
-  passengers: any[];
+  participants: any[];
 }
 
 @Component({
@@ -92,7 +92,7 @@ export class ManifestFormComponent {
   );
 
   selectedBranch = signal<string>('');
-  suggestedManifests = signal<SuggestedManifest[]>([]);
+  suggestedManifests = signal<SuggestedManifest[] | any>([]);
   selectedManifests = signal<SuggestedManifest[]>([]);
 
   // Dialog details
@@ -205,6 +205,7 @@ export class ManifestFormComponent {
    */
   generateManifests(): void {
     this.loading.set(true);
+
     const data = {
       serviceId: this.selectedService().serviceId || '',
       sucursalId: this.selectedBranch() || '',
@@ -213,8 +214,19 @@ export class ManifestFormComponent {
       title: this.selectedService().name || '',
       description: this.selectedService().description || '',
       registeredBy: '73464945',
+      participants: this.suggestedManifests().map((sale: any) => ({
+        clientId: sale.client.clientId,
+        clientName:
+          sale.client.name +
+          ' ' +
+          sale.client.firstLastname +
+          ' ' +
+          sale.client.secondLastname,
+        saleId: sale.saleId,
+        saleDetailId: sale.details[0].detailSaleId,
+        comments: sale.observations,
+      })),
     };
-
     this.manifestsService.createManifest(data).subscribe({
       next: (response) => {
         this.selectedManifests.set([]);

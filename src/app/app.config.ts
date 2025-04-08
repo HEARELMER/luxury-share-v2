@@ -9,7 +9,7 @@ import { TruncateDecimalPipe } from './shared/pipes/truncate-decimal.pipe';
 import { providePrimeNG } from 'primeng/config';
 import MyPreset from '../../mypreset';
 import { LocalstorageService } from './core/services/localstorage-services/localstorage.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
 import { FilterEmptyValuesPipe } from './shared/pipes/filter-empty-value.pipe';
 import { providePdfConfig } from './core/services/pdf-services/pdf-generator.config';
@@ -74,5 +74,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     CapitalizePipe,
     FilterEmptyValuesPipe,
+    ConfirmationService
   ],
 };

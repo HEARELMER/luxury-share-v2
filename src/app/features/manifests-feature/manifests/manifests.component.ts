@@ -20,6 +20,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ManifestFormComponent } from '../manifest-form/manifest-form.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ManifestDetailComponent } from '../manifest-detail/manifest-detail.component';
+import { CheckInComponent } from '../check-in/check-in.component';
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -196,11 +197,11 @@ export class ManifestsComponent {
     });
   }
 
-  openManifestDetails(manifest: Manifest): void {
-    const ref = this.dialogService.open(ManifestDetailComponent, {
-      header: 'Detalles del Manifiesto',
+  openManifestCheckIn(manifestId: string): void {
+    const ref = this.dialogService.open(CheckInComponent, {
+      header: 'Check In',
       width: '70vw',
-      height: '80vh',
+      height: '90vh',
       contentStyle: { 'max-height': '90vh', overflow: 'auto' },
       baseZIndex: 10000,
       modal: true,

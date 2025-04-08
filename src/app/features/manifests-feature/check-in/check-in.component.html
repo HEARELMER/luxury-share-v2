@@ -1,0 +1,208 @@
+<div class="flex flex-col h-full">
+  <!-- Encabezado con información del servicio -->
+  <div class="pb-4">
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+    >
+      <div>
+        <div class="flex items-center gap-3 pb-2">
+          <div class="bg-primary-50 p-2 rounded-full">
+            <i class="pi pi-check-circle text-primary-500 text-xl"></i>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800">
+            {{ manifestData.title }}
+          </h2>
+        </div>
+
+        <div class="ml-1 pb-2">
+          <div class="flex items-center gap-2 text-sm text-gray-600">
+            <i class="pi pi-calendar-plus text-primary-400"></i>
+            <p>15/04/2025</p>
+            <span class="text-gray-300 mx-1">|</span>
+            <i class="pi pi-info-circle text-primary-400"></i>
+            <p>Descripcion servicio</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-2">
+          <p-tag
+            severity="warn"
+            [value]="manifestData.branch"
+            icon="pi pi-map-marker"
+          ></p-tag>
+          <p-tag
+            severity="info"
+            [value]="'Clientes: ' + manifestData.totalPassengers"
+            icon="pi pi-users"
+          ></p-tag>
+        </div>
+      </div>
+
+      <div class="md:border-l md:pl-4 md:ml-2 py-2">
+        <div class="flex flex-col gap-2">
+          <span
+            class="text-xs uppercase tracking-wider text-gray-500 font-medium"
+            >Progreso de registro</span
+          >
+          <div class="flex items-center gap-3">
+            <p-progressBar styleClass="h-2.5 w-32 md:w-48"></p-progressBar>
+            <span
+              class="text-sm font-medium text-primary-700 bg-primary-50 px-2 py-1 rounded"
+            >
+              {{ checkedInCount }}/{{ manifestData.totalPassengers }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel de control y búsqueda -->
+  <div class="py-4 border-y">
+    <div class="flex flex-col lg:flex-row gap-4 justify-between">
+      <!-- Search section -->
+      <div class="flex gap-2 w-full lg:w-auto">
+        <app-input-form
+          placeholder="Buscar por número de documento"
+          [required]="true"
+          errorType=" "
+          [isPositive]="true"
+          class="w-full lg:w-80"
+        />
+        <p-button
+          icon="pi pi-search"
+          styleClass="p-button-outlined py-2 p-button-sm h-full"
+          pTooltip="Buscar"
+        ></p-button>
+      </div>
+
+      <!-- Controls section -->
+      <div
+        class="flex flex-wrap gap-2 items-center justify-between sm:justify-end w-full lg:w-auto"
+      >
+        <div class="flex gap-2 flex-shrink-0">
+          <app-button
+            text="Check-In Grupal"
+            icon="pi pi-users"
+            [disabled]="selectedPassengers.length === 0"
+            moreClasses="py-2 text-sm"
+            bgColor="bg-purple-500"
+            pTooltip="Aplicar check-in a todos los seleccionados"
+            tooltipPosition="left"
+          />
+          <app-button
+            text="Exportar PDF"
+            bgColor="bg-primary-500"
+            icon="pi pi-file-pdf"
+            [disabled]="selectedPassengers.length === 0"
+            moreClasses="py-2 text-sm"
+            pTooltip="Exportar listado en formato PDF"
+            tooltipPosition="left"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de pasajeros -->
+  <div class="pt-4 flex flex-col">
+    <p-table
+      [value]="passengers"
+      [scrollable]="true"
+      scrollHeight="400px"
+      [columns]="checkInTableCols"
+      styleClass="p-datatable-sm"
+      [rowHover]="true"
+      [(selection)]="selectedPassengers"
+      selectionMode="multiple"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      responsiveLayout="scroll"
+      [resizableColumns]="true"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+          >
+            {{ col.header }}
+          </th>
+
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-passenger let-i="rowIndex">
+        <tr [ngClass]="{ 'bg-green-50': passenger.checkedIn }">
+          <td>
+            <p-tableCheckbox [value]="passenger"></p-tableCheckbox>
+          </td>
+          <td class="font-mono text-xs">{{ i + 1 }}</td>
+          <td>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700"
+              >
+                {{ passenger.name.charAt(0) }}{{ passenger.lastName.charAt(0) }}
+              </div>
+              <div>
+                <div class="font-medium">
+                  {{ passenger.name }} {{ passenger.lastName }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  <span class="font-semibold">{{ passenger.docType }}:</span>
+                  {{ passenger.docNupber }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <p-tag
+              [severity]="passenger.checkedIn ? 'success' : 'warn'"
+              [value]="passenger.checkedIn ? 'Confirmado' : 'Pendiente'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+              <p-checkbox
+                [(ngModel)]="passenger.checkedIn"
+                [binary]="true"
+                inputId="check_{{ passenger.id }}"
+              ></p-checkbox>
+              <label
+                for="check_{{ passenger.id }}"
+                class="text-sm cursor-pointer"
+              >
+                {{ passenger.checkedIn ? "Registrado" : "Marcar asistencia" }}
+              </label>
+            </div>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                pTooltip="Eliminar"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator [showFirstLastIcon]="false" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toast position="bottom-right"></p-toast>
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  header="Confirmación"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

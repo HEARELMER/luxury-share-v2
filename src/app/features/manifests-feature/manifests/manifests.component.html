@@ -105,7 +105,7 @@
       [columns]="cols"
       [value]="manifests()"
       [lazy]="true"
-      [scrollable]="true" 
+      [scrollable]="true"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
       [resizableColumns]="true"
@@ -184,17 +184,17 @@
                 [pTooltip]="'Detalles'"
                 tooltipPosition="left"
                 [showDelay]="300"
-                (click)="openManifestDetails(manifest)"
+                (click)="openManifestCheckIn(manifest.manifestId)"
               >
                 <i class="pi pi-eye"></i>
               </button>
               <button
                 class="button-table-actions"
-                [pTooltip]="'Editar Sucursal'"
+                [pTooltip]="'Eliminar Manifiesto'"
                 tooltipPosition="left"
                 [showDelay]="300"
               >
-                <i class="pi pi-file-edit"></i>
+                <i class="pi pi-trash"></i>
               </button>
               <button
                 class="button-table-actions"
@@ -252,5 +252,4 @@
 </main>
 
 <!-- Toast para notificaciones -->
-<p-toast position="top-right" [baseZIndex]="1000" ></p-toast>
- 
+<p-toast position="top-right" [baseZIndex]="1000"></p-toast>

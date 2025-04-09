@@ -123,17 +123,11 @@ export class ManifestPdfService {
     return new Observable((observer) => {
       this.manifestsService.findManifestById(manifestId).subscribe({
         next: (response) => {
-          if (!response || !response.data) {
-            console.error(
-              'No se encontró el manifiesto con el ID proporcionado.'
-            );
-            observer.error(
-              'No se encontró el manifiesto con el ID proporcionado.'
-            );
+          if (!response) {
             return;
           }
 
-          const manifestData = response.data;
+          const manifestData = response;
           const pdf = this.generateManifestPdf(manifestData);
 
           if (pdf) {
@@ -149,7 +143,6 @@ export class ManifestPdfService {
           observer.complete();
         },
         error: (err) => {
-          console.error('Error al obtener datos del manifiesto:', err);
           observer.error(err);
         },
       });

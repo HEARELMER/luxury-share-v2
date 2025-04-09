@@ -259,27 +259,22 @@ export class ManifestsComponent {
     });
   }
 
-   downloadManifestPdf(manifestId: string): void {
-    console.log('Descargando PDF del manifiesto con ID:', manifestId);
+  downloadManifestPdf(manifestId: string): void {
     this._manifestPdfService.downloadManifestPdf(manifestId).subscribe({
       next: (response) => {
         this._messageService.add({
           severity: 'success',
           summary: 'Éxito',
-          detail: 'El PDF del manifiesto se está descargando'
+          detail: 'El PDF del manifiesto se está descargando',
         });
       },
       error: (error) => {
         this._messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudo descargar el PDF del manifiesto'
+          detail: 'No se pudo descargar el PDF del manifiesto',
         });
-        console.error('Error al descargar el PDF:', error);
-      }
+      },
     });
   }
-
-
-
 }

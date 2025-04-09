@@ -5,7 +5,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import {
+  DialogService,
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -20,16 +24,8 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { ManifestsService } from '../../../core/services/manifests-services/manifests.service';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { InputSwitchModule } from 'primeng/inputswitch';
-interface Passenger {
-  id: string;
-  name: string;
-  lastName: string;
-  docType: string;
-  docNumber: string;
-  checkedIn: boolean;
-  seatNumber?: string;
-  observations?: string;
-}
+import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
+import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
 
 @Component({
   selector: 'app-check-in',
@@ -56,29 +52,20 @@ interface Passenger {
 })
 export class CheckInComponent {
   private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
   private readonly manifestService = inject(ManifestsService);
-  private dialogRef = inject(DynamicDialogRef);
+  public readonly dialogService = inject(DialogService);
   private dialogConfig = inject(DynamicDialogConfig);
+  private manifestPdfService = inject(ManifestPdfService);
   manifestId = signal<string>('');
   response = signal<any>({});
   clients = signal<any[]>([]);
   checkInTableCols = CHECK_IN_TABLE_COLS;
   checkedIn = signal<boolean>(false);
   loading = signal<boolean>(false);
-  // Datos estáticos para el manifiesto
-  manifestData = {
-    id: 'MNF-20250407-001',
-    title: 'Tour Valle Sagrado',
-    date: new Date(),
-    status: 'pendiente',
-    branch: 'Ayacucho',
-    totalPassengers: 15,
-  };
 
   // Datos estáticos de pasajeros
-  passengers: Passenger[] = [];
-  selectedPassengers: Passenger[] = [];
+  passengers: any[] = [];
+  selectedPassengers: any[] = [];
   checkedInCount = 0;
 
   // Opciones para vista
@@ -96,8 +83,6 @@ export class CheckInComponent {
 
     // Load data
     this.loadManifestData();
-    // Generar datos de pasajeros aleatorios
-    this.generatePassengers();
     this.updateCheckedInCount();
   }
 
@@ -120,70 +105,133 @@ export class CheckInComponent {
     });
   }
 
-  generatePassengers() {
-    const names = [
-      'Juan',
-      'María',
-      'Carlos',
-      'Ana',
-      'Luis',
-      'Sofia',
-      'Pedro',
-      'Laura',
-    ];
-    const lastNames = [
-      'García',
-      'Pérez',
-      'Rodríguez',
-      'López',
-      'Martínez',
-      'González',
-      'Torres',
-      'Sánchez',
-    ];
-
-    this.passengers = Array.from(
-      { length: this.manifestData.totalPassengers },
-      (_, i) => {
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        const randomLastName =
-          lastNames[Math.floor(Math.random() * lastNames.length)];
-        const randomChecked = Math.random() > 0.6;
-
-        return {
-          id: `PAS-${i + 1}`,
-          name: randomName,
-          lastName: randomLastName,
-          docType: 'DNI',
-          docNumber: `${40000000 + Math.floor(Math.random() * 9000000)}`,
-          checkedIn: randomChecked,
-          seatNumber: `A${i + 1}`,
-        };
-      }
-    );
-  }
-
   updateCheckedInCount() {
     this.checkedInCount = this.passengers.filter((p) => p.checkedIn).length;
   }
 
   calculateProgress(): number {
-    return (this.checkedInCount / this.manifestData.totalPassengers) * 100;
+    return (this.checkedInCount / this.response().participants.length) * 100;
   }
 
-  completeCheckIn() {
-    this.confirmationService.confirm({
-      message: '¿Está seguro que desea finalizar el check-in del servicio?',
-      accept: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Check-In Completado',
-          detail: `Se han registrado ${this.checkedInCount} de ${this.manifestData.totalPassengers} pasajeros`,
-        });
-        setTimeout(() => {
-          this.dialogRef.close({ success: true });
-        }, 1500);
+  toggleCheckIn(participant: any, isChecked: any) {
+    participant.checkInStatus = isChecked.checked ? 'REGISTRADO' : 'PENDIENTE';
+    const payload = {
+      participants: [
+        {
+          participantId: participant.participantId,
+          checkInStatus: participant.checkInStatus,
+        },
+      ],
+      updatedBy: '14160945',
+      manifestId: this.manifestId(),
+    };
+
+    // Llamar al servicio con los datos actualizados
+    this.manifestService
+      .checkInPartcipants(
+        payload.manifestId,
+        payload.participants,
+        payload.updatedBy
+      )
+      .subscribe({
+        next: (res) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Check-In',
+            detail: `Se ha ${
+              participant.checkInStatus === 'REGISTRADO'
+                ? 'registrado'
+                : 'cancelado'
+            } el check-in de ${participant.clientName || 'cliente'}`,
+          });
+          this.updateCheckedInCount();
+        },
+        error: (err) => {
+          // Revertir el cambio local si la llamada a la API falla
+          participant.checkInStatus =
+            participant.checkInStatus === 'REGISTRADO'
+              ? 'PENDIENTE'
+              : 'REGISTRADO';
+
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo actualizar el estado del check-in',
+          });
+        },
+      });
+  }
+
+  applyGroupCheckIn() {}
+
+  removeParticipant(participant: any) {
+    const ref = this.dialogService.open(DialogComponent, {
+      header: 'Quitar participante',
+      modal: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '60vw',
+      },
+      data: {
+        type: 'success',
+        message: `¿Estás seguro de quitar el participante?`,
+        confirmText: 'Confirmar',
+        showCancel: false,
       },
     });
+    ref.onClose.subscribe((result: boolean) => {
+      if (result) {
+        this.manifestService
+          .removeParticipant(this.manifestId(), participant.participantId)
+          .subscribe({
+            next: (res) => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Eliminado',
+                detail: `Se ha quitado el participante ${participant.clientName}`,
+              });
+              this.loadManifestData();
+            },
+            error: (err) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No se pudo eliminar el participante',
+              });
+            },
+          });
+      }
+    });
+  }
+
+  exportToPdf() {
+    if (!this.manifestId()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No hay un manifiesto seleccionado para exportar.',
+      });
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      this.manifestPdfService.generateManifestPdf(this.response(), true);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'El PDF se está descargando...',
+      });
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo generar el PDF.',
+      });
+      console.error('Error al generar PDF:', error);
+    } finally {
+      this.loading.set(false);
+    }
   }
 }

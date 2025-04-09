@@ -205,12 +205,10 @@ export class ManifestFormComponent {
    */
   generateManifests(): void {
     this.loading.set(true);
-
     const data = {
       serviceId: this.selectedService().serviceId || '',
       sucursalId: this.selectedBranch() || '',
-      serviceType: this.selectedService().type || '',
-      date: new Date().toString(),
+      serviceType: this.selectedService().type || '', 
       title: this.selectedService().name || '',
       description: this.selectedService().description || '',
       registeredBy: '73464945',

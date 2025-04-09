@@ -19,8 +19,9 @@ import { Skeleton } from 'primeng/skeleton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ManifestFormComponent } from '../manifest-form/manifest-form.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ManifestDetailComponent } from '../manifest-detail/manifest-detail.component';
 import { CheckInComponent } from '../check-in/check-in.component';
+import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
+import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -47,6 +48,7 @@ export class ManifestsComponent {
   private readonly _manifestService = inject(ManifestsService);
   private readonly _messageService = inject(MessageService);
   public readonly dialogService = inject(DialogService);
+  private readonly _manifestPdfService = inject(ManifestPdfService);
   ref: DynamicDialogRef | undefined;
 
   // Signals
@@ -217,4 +219,67 @@ export class ManifestsComponent {
       },
     });
   }
+
+  deleteManifest(manifestId: string): void {
+    const ref = this.dialogService.open(DialogComponent, {
+      header: 'Eliminar Manifiesto',
+      modal: true,
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '60vw',
+      },
+      data: {
+        type: 'success',
+        message: `¿Estás seguro de eliminar el manifiesto?`,
+        confirmText: 'Confirmar',
+        showCancel: false,
+      },
+    });
+    ref.onClose.subscribe((result: boolean) => {
+      if (result) {
+        this._manifestService.removeManifest(manifestId).subscribe({
+          next: (response) => {
+            this.loadManifests({ resetPage: true });
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: response.message,
+            });
+          },
+          error: (error) => {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error.message,
+            });
+          },
+        });
+      }
+    });
+  }
+
+   downloadManifestPdf(manifestId: string): void {
+    console.log('Descargando PDF del manifiesto con ID:', manifestId);
+    this._manifestPdfService.downloadManifestPdf(manifestId).subscribe({
+      next: (response) => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'El PDF del manifiesto se está descargando'
+        });
+      },
+      error: (error) => {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo descargar el PDF del manifiesto'
+        });
+        console.error('Error al descargar el PDF:', error);
+      }
+    });
+  }
+
+
+
 }

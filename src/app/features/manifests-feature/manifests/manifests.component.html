@@ -193,6 +193,7 @@
                 [pTooltip]="'Eliminar Manifiesto'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="deleteManifest(manifest.manifestId)"
               >
                 <i class="pi pi-trash"></i>
               </button>
@@ -201,18 +202,10 @@
                 [pTooltip]="'Editar Sucursal'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="downloadManifestPdf(manifest.manifestId)"
               >
                 <i class="pi pi-file-pdf"></i>
               </button>
-              <!-- <button
-                  class="button-table-actions"
-                  class="button-table-actions"
-                  [pTooltip]="'Eliminar Sucursal'"
-                  tooltipPosition="left"
-                  [showDelay]="300" 
-                >
-                  <i class="pi pi-trash"></i>
-                </button> -->
             </div>
             } @else {
             {{ manifest[col.field] }}

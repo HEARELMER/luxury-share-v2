@@ -61,4 +61,35 @@ export class ManifestsService {
       .get(`${this._api}manifests/${id}`)
       .pipe(map((response: any) => response.data));
   }
+
+  removeManifest(id: string): Observable<any> {
+    return this._http.delete(`${this._api}manifests/${id}`);
+  }
+
+  checkInPartcipants(
+    manifestId: string,
+    participants: any[],
+    updatedBy: string
+  ): Observable<any> {
+    const body = {
+      manifestId,
+      participants,
+      updatedBy,
+    };
+    return this._http.patch(
+      `${this._api}manifests/participants/check-in`,
+      body
+    );
+  }
+
+  removeParticipant(
+    manifestId: string,
+    participantId: string,
+    updatedBy?: string
+  ): Observable<any> {
+    return this._http.patch(
+      `${this._api}manifests/${manifestId}/participants/${participantId}`,
+      { updatedBy }
+    );
+  }
 }

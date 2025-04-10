@@ -21,3 +21,25 @@
 [cdkDragHandle] {
   @apply cursor-move;
 }
+
+/* Ajustes responsivos para los gráficos */
+@media (max-width: 640px) {
+  :host ::ng-deep {
+    .p-chart {
+      height: 220px !important;
+    }
+    
+    .chart-title {
+      font-size: 0.9rem !important;
+    }
+    
+    .chart-subtitle {
+      font-size: 0.75rem !important;
+    }
+  }
+}
+
+/* Altura mínima para evitar saltos bruscos al cargar */
+.min-h-card {
+  min-height: 100px;
+}

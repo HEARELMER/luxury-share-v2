@@ -4,7 +4,15 @@ export const MANIFEST_TABLE_COLS = [
   { field: 'description', header: 'Descripción' },
   { field: 'serviceType', header: 'Tipo' },
   { field: 'status', header: 'Estado' },
-  { field: 'checkedInCount', header: 'Clientes' },
+  { field: 'checkedInCount', header: 'Clientes ✅' },
   { field: 'registeredBy', header: 'Registrado por' },
-  { field: 'actions', header: 'Acciones' }
+  { field: 'actions', header: 'Acciones' },
+];
+
+export const MANIFEST_STATUS = [
+  { label: 'Todos', value: '' },
+  { label: 'Pendiente', value: 'pending' },
+  { label: 'Completado', value: 'completed' },
+  { label: 'Cancelado', value: 'canceled' },
+  { label: 'En Proceso', value: 'in_process' },
 ];

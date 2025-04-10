@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
 import { FilterOptions } from '../../../core/interfaces/api/filters';
 import { ManifestsService } from '../../../core/services/manifests-services/manifests.service';
 import { Manifest } from '../interfaces/manifests';
-import { MANIFEST_TABLE_COLS } from '../constants/manifests';
+import { MANIFEST_STATUS, MANIFEST_TABLE_COLS } from '../constants/manifests';
 import { Skeleton } from 'primeng/skeleton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ManifestFormComponent } from '../manifest-form/manifest-form.component';
@@ -22,6 +22,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CheckInComponent } from '../check-in/check-in.component';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
+import { InputFormComponent } from "../../../shared/components/forms/input-form/input-form.component";
+import { SelectComponent } from "../../../shared/components/forms/select/select.component";
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -39,7 +41,9 @@ import { ManifestPdfService } from '../../../core/services/manifests-services/ma
     PaginatorModule,
     Skeleton,
     SelectButtonModule,
-  ],
+    InputFormComponent,
+    SelectComponent
+],
   templateUrl: './manifests.component.html',
   styleUrl: './manifests.component.scss',
   providers: [MessageService, DialogService],
@@ -65,10 +69,10 @@ export class ManifestsComponent {
   first = 0;
   rows = 10;
   rowsPerPageOptions = [10, 25, 50];
-
+  statusService = MANIFEST_STATUS
   // Filtros
   tiposServicio = [
-    { label: 'Todos', value: null },
+    { label: 'Todos', value: '' },
     { label: 'Hotel', value: 'hotel' },
     { label: 'Tour', value: 'tour' },
     { label: 'Transporte', value: 'transporte' },

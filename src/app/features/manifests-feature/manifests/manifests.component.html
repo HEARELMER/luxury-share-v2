@@ -23,58 +23,58 @@
       </div>
     </header>
 
-    <div class="px-6 py-4 border-b">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="px-3 sm:px-6 py-3 sm:py-4 border-b">
+      <!-- Filtros con diseño responsivo -->
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+      >
         <!-- Filtro por tipo de servicio -->
         <div class="flex flex-col">
-          <label class="text-sm font-medium text-gray-700 mb-1"
-            >Tipo de servicio</label
-          >
-          <p-dropdown
+          <app-select
             [options]="tiposServicio"
             placeholder="Todos los servicios"
-            styleClass="w-full"
             (onChange)="loadManifests({ resetPage: true })"
-          ></p-dropdown>
+            [required]="true"
+            label="Tipo de servicio"
+            errorType=" "
+          ></app-select>
         </div>
 
         <!-- Filtro por fecha -->
         <div class="flex flex-col">
-          <label class="text-sm font-medium text-gray-700 mb-1">Fecha</label>
-          <p-calendar
-            [showIcon]="true"
-            placeholder="Seleccionar fecha"
-            styleClass="w-full"
-            dateFormat="dd/mm/yy"
-            (onSelect)="loadManifests({ resetPage: true })"
-          ></p-calendar>
+          <app-input-form
+            placeholder="Buscar por fecha"
+            [required]="true"
+            errorType=" "
+            type="date"
+            class="w-full"
+            label="Fecha"
+            (valueChange)="loadManifests({ resetPage: true })"
+          ></app-input-form>
         </div>
 
-        <!-- Estado del manifiesto (fila adicional) -->
-        <div class="mt-4 col-span-2">
-          <label class="text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <div class="flex items-center gap-2">
-            <p-selectButton
-              [options]="[
-                { label: 'Todos', value: null },
-                { label: 'Pendiente', value: 'PENDIENTE' },
-                { label: 'En progreso', value: 'EN_PROGRESO' },
-                { label: 'Completado', value: 'COMPLETADO' },
-                { label: 'Cancelado', value: 'CANCELADO' }
-              ]"
-              (onOptionClick)="loadManifests({ resetPage: true })"
-              styleClass="flex-grow"
-            ></p-selectButton>
+        <!-- Estado del manifiesto -->
+        <div class="flex flex-col">
+          <app-select
+            label="Estado"
+            [options]="statusService"
+            [required]="true"
+            errorType=" "
+            placeholder="Todos los estados"
+            class="w-full"
+          />
+        </div>
 
-            <button
-              (click)="clearFilters()"
-              tooltipPosition="left"
-              class="ml-2 p-button-outlined py-2 px-4 rounded-lg p-button-secondary"
-            >
-              <i class="pi pi-filter-slash"></i>
-              Limpiar filtros
-            </button>
-          </div>
+        <!-- Botón limpiar filtros -->
+        <div class="flex items-end">
+          <button
+            (click)="clearFilters()"
+            tooltipPosition="left"
+            class="w-full sm:w-auto p-button-outlined py-2 px-4 rounded-lg p-button-secondary flex items-center justify-center gap-2"
+          >
+            <i class="pi pi-filter-slash"></i>
+            <span>Limpiar filtros</span>
+          </button>
         </div>
       </div>
     </div>

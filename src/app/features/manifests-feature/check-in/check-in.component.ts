@@ -1,17 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import {
-  DialogService,
-  DynamicDialogConfig,
-  DynamicDialogRef,
-} from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressBarModule } from 'primeng/progressbar';
+import { ProgressBar } from 'primeng/progressbar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -22,10 +18,11 @@ import { PaginatorModule } from 'primeng/paginator';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { ManifestsService } from '../../../core/services/manifests-services/manifests.service';
-import { ToggleSwitch } from 'primeng/toggleswitch';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
+import { ScheduleReportDialogComponent } from "../../reports-feature/schedule-report-dialog/schedule-report-dialog.component";
+import { SelectComponent } from "../../../shared/components/forms/select/select.component";
 
 @Component({
   selector: 'app-check-in',
@@ -38,7 +35,7 @@ import { ManifestPdfService } from '../../../core/services/manifests-services/ma
     CheckboxModule,
     TagModule,
     ToastModule,
-    ProgressBarModule,
+    ProgressBar,
     SelectButtonModule,
     TooltipModule,
     ConfirmDialogModule,
@@ -46,7 +43,9 @@ import { ManifestPdfService } from '../../../core/services/manifests-services/ma
     InputFormComponent,
     ButtonComponent,
     InputSwitchModule,
-  ],
+    ScheduleReportDialogComponent,
+    SelectComponent
+],
   templateUrl: './check-in.component.html',
   styleUrl: './check-in.component.scss',
 })
@@ -62,11 +61,32 @@ export class CheckInComponent {
   checkInTableCols = CHECK_IN_TABLE_COLS;
   checkedIn = signal<boolean>(false);
   loading = signal<boolean>(false);
+  clientsChecked = computed(() => {
+    return this.clients().filter(
+      (client) => client.checkInStatus === 'REGISTRADO'
+    ).length;
+  });
+  searchDocNumber = signal<string>('');
+  filteredClients = computed(() => {
+    const search = this.searchDocNumber().trim().toLowerCase();
 
-  // Datos estáticos de pasajeros
-  passengers: any[] = [];
+    if (!search || search.length < 3) {
+      return this.clients(); // Si no hay búsqueda, mostrar todos
+    }
+
+    return this.clients().filter((client) => {
+      // Verificar si el cliente tiene propiedad client y numberDocument
+      if (client.client && client.client.numberDocument) {
+        return client.client.numberDocument.toLowerCase().includes(search);
+      }
+      return false;
+    });
+  });
   selectedPassengers: any[] = [];
-  checkedInCount = 0;
+  calculatedProgress = computed(() => {
+    const total = this.clients().length || 1;
+    return parseFloat(((this.clientsChecked() / total) * 100).toFixed(0));
+  });
 
   // Opciones para vista
   viewOptions = [
@@ -83,7 +103,6 @@ export class CheckInComponent {
 
     // Load data
     this.loadManifestData();
-    this.updateCheckedInCount();
   }
 
   loadManifestData() {
@@ -103,14 +122,6 @@ export class CheckInComponent {
         });
       },
     });
-  }
-
-  updateCheckedInCount() {
-    this.checkedInCount = this.passengers.filter((p) => p.checkedIn).length;
-  }
-
-  calculateProgress(): number {
-    return (this.checkedInCount / this.response().participants.length) * 100;
   }
 
   toggleCheckIn(participant: any, isChecked: any) {
@@ -144,7 +155,6 @@ export class CheckInComponent {
                 : 'cancelado'
             } el check-in de ${participant.clientName || 'cliente'}`,
           });
-          this.updateCheckedInCount();
         },
         error: (err) => {
           // Revertir el cambio local si la llamada a la API falla
@@ -203,6 +213,15 @@ export class CheckInComponent {
           });
       }
     });
+  }
+
+  onSearch(docNumber: any) {
+    this.searchDocNumber.set(docNumber);
+  }
+
+  // Método para limpiar la búsqueda
+  clearSearch() {
+    this.searchDocNumber.set('');
   }
 
   exportToPdf() {

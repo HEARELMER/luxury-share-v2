@@ -33,35 +33,36 @@
           <app-select
             [options]="tiposServicio"
             placeholder="Todos los servicios"
-            (onChange)="loadManifests({ resetPage: true })"
             [required]="true"
             label="Tipo de servicio"
             errorType=" "
-          ></app-select>
-        </div>
-
-        <!-- Filtro por fecha -->
-        <div class="flex flex-col">
-          <app-input-form
+            (valueChange)="updateFilter('serviceType', $event)"
+            ></app-select>
+          </div>
+          
+          <!-- Filtro por fecha -->
+          <div class="flex flex-col">
+            <app-input-form
             placeholder="Buscar por fecha"
             [required]="true"
             errorType=" "
             type="date"
             class="w-full"
             label="Fecha"
-            (valueChange)="loadManifests({ resetPage: true })"
-          ></app-input-form>
-        </div>
-
-        <!-- Estado del manifiesto -->
-        <div class="flex flex-col">
-          <app-select
+            (valueChange)="updateFilter('date', $event)"
+            ></app-input-form>
+          </div>
+          
+          <!-- Estado del manifiesto -->
+          <div class="flex flex-col">
+            <app-select
             label="Estado"
             [options]="statusService"
             [required]="true"
             errorType=" "
             placeholder="Todos los estados"
             class="w-full"
+            (valueChange)="updateFilter('status', $event)"
           />
         </div>
 

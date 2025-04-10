@@ -202,9 +202,9 @@ export class Step2SaleFormComponent {
   // Metodo para cargar los items
   loadItems(): void {
     this.loading.set(true);
-    const { first, rows, filters } = this.tableState();
-
-    this.loadData()(first / rows + 1, rows, filters).subscribe({
+    const { first, rows } = this.tableState();
+    const updatedFilters = [{ key: 'status', value: 'true' }]; 
+    this.loadData()(first / rows + 1, rows, updatedFilters).subscribe({
       next: (response) => {
         this.items.set(response.data[this.currentView()]);
         this.totalRecords.set(response.data.total);

@@ -14,6 +14,7 @@ export class ServicesService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getServices(page: number, size: number, filters?: Filter[]): Observable<any> {
+ 
     let url = `${this._api}services`;
     let params = new HttpParams()
       .set('page', page.toString())

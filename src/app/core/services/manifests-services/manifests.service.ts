@@ -16,20 +16,19 @@ export class ManifestsService {
     size: number,
     filters?: Filter[]
   ): Observable<any> {
-    // Construir params base
+    let url = `${this._api}manifests`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-
-    // Agregar filtros a los params en lugar de concatenar a la URL
-    if (filters?.length) {
+    let filtersFormat = '';
+    if (filters) {
       filters.forEach((filter) => {
-        params = params.append(`filters[${filter.key}]`, filter.value);
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
       });
+      url = `${url}?${filtersFormat}`;
     }
 
-    // Usar params en la llamada HTTP
-    return this._http.get(`${this._api}manifests`, { params });
+    return this._http.get(url, { params });
   }
 
   recommendManifests(

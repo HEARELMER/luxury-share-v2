@@ -22,8 +22,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CheckInComponent } from '../check-in/check-in.component';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
-import { InputFormComponent } from "../../../shared/components/forms/input-form/input-form.component";
-import { SelectComponent } from "../../../shared/components/forms/select/select.component";
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -42,8 +42,8 @@ import { SelectComponent } from "../../../shared/components/forms/select/select.
     Skeleton,
     SelectButtonModule,
     InputFormComponent,
-    SelectComponent
-],
+    SelectComponent,
+  ],
   templateUrl: './manifests.component.html',
   styleUrl: './manifests.component.scss',
   providers: [MessageService, DialogService],
@@ -69,7 +69,7 @@ export class ManifestsComponent {
   first = 0;
   rows = 10;
   rowsPerPageOptions = [10, 25, 50];
-  statusService = MANIFEST_STATUS
+  statusService = MANIFEST_STATUS;
   // Filtros
   tiposServicio = [
     { label: 'Todos', value: '' },
@@ -82,6 +82,16 @@ export class ManifestsComponent {
 
   constructor() {
     this.loadManifests();
+  }
+
+  updateFilter(key: string, value: any) {
+    const index = this.filters().findIndex((filter) => filter.key === key);
+    if (index > -1) {
+      this.filters()[index].value = value;
+    } else {
+      this.filters().push({ key, value });
+    }
+    this.loadManifests({ resetPage: true });
   }
 
   /**

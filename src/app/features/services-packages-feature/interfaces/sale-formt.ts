@@ -3,7 +3,7 @@ export interface TableState {
   rows: number;
   sortField?: string;
   sortOrder?: number;
-  filters?: Record<string, any>;
+  filters?: any[]
 }
 export interface ColumnDef {
   field: string;

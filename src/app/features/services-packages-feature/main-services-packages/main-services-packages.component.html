@@ -1,115 +1,57 @@
 <main class="flex flex-col gap-4">
-  <div class="flex items-end gap-2 w-full bg-white rounded-lg border p-4">
-    <div class="flex-none w-64">
-      <app-input-form
-        type="text"
-        [isPositive]="true"
-        [maxLength]="8"
-        label="Buscar por nombre"
-        placeholder="Buscar por nombre"
-      />
-    </div>
-
-    <button
-      (click)="setFilter()"
-      class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+  <div class="bg-white rounded-t-lg border">
+    <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
+    <div
+      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
-      <i class="pi pi-search"></i>
-    </button>
-    <!-- <div class="flex-none w-64">
-      <app-select
-        label="Ordernar Por:"
-        [options]="[
-        {
-          label: 'Nombre',
-          value: 'name',
-        },
-        {
-          label: 'DNI',
-          value: 'numDni',
-        },
-        {
-          label: 'Por Defecto',
-          value: 'default',
-        }
-      ]"
-      />
-    </div> -->
-    <div class="flex gap-2 ml-auto">
-      <app-button
-        icon="pi pi-plus"
-        text="Nuevo Servicio"
-        moreClasses="py-2"
-        bgColor="bg-primary-500"
-        (click)="openModalService()"
-      />
-      <app-button
-        icon="pi pi-plus"
-        text="Nuevo Paquete"
-        moreClasses="py-2"
-        bgColor="bg-primary-500"
-        (click)="openmodalPackage()"
-      />
-    </div>
-  </div>
+      <div>
+        <h1 class="text-xl font-bold">Servicios y Paquetes</h1>
+        <p class="text-sm text-gray-500">
+          Gestión de servicios y paquetes turísticos
+        </p>
+      </div>
 
-  <div class="bg-white rounded-lg border w-full">
-    <div class="w-full py-3 flex px-4 justify-between items-center">
-      <div class="flex gap-2">
-        <app-button
-          text="Servicios"
-          icon="pi pi-car"
-          [bgColor]="
-            currentView() === 'services' ? 'bg-white' : 'bg-primary-500'
-          "
-          [textColor]="
-            currentView() === 'services' ? 'text-primary-500' : 'text-white'
-          "
-          (click)="changeView('services')"
-          [moreClasses]="
-            currentView() === 'services' ? 'ring-2  ring-primary-100' : ''
-          "
-        />
-        <app-button
-          text="Paquetes Turísticos"
-          icon="pi pi-box"
-          [bgColor]="
-            currentView() === 'packages'
-              ? 'bg-white text-primary-500'
-              : 'bg-primary-500'
-          "
-          (click)="changeView('packages')"
-          [textColor]="
-            currentView() === 'packages' ? 'text-primary-500' : 'text-white'
-          "
-          [moreClasses]="
-            currentView() === 'packages' ? 'ring-2  ring-primary-100' : ''
-          "
-        />
-        @for (item of filters(); track $index) {
-        <div
-          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
-        >
-          <p-tag [value]="item.key"></p-tag>
-          <button
-            (click)="clearFilters()"
-            class="hover:text-red-500 text-sm text-red-300"
-          >
-            <i class="pi pi-times"></i>
-          </button>
+      <!-- Botones de acción - responsivos -->
+      <div class="flex flex-wrap gap-2 lg:justify-end">
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <app-button
+            icon="pi pi-plus"
+            text="Nuevo Servicio"
+            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
+            bgColor="bg-primary-500"
+            (click)="openModalService()"
+          />
+          <app-button
+            icon="pi pi-plus"
+            text="Nuevo Paquete"
+            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
+            bgColor="bg-primary-500"
+            (click)="openmodalPackage()"
+          />
         </div>
-        }
-      </div>
-      <div class="gap-2 flex">
-        <app-button
-          text="Descargar Excel"
-          icon="pi pi-file-excel"
-          bgColor="bg-green-500"
-          (click)="exportData()"
-        />
       </div>
     </div>
-    <div class="pb-4 flex px-4 gap-2 items-center">
+
+    <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
+      <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
+      <div class="flex flex-1 gap-2 items-end">
+        <div class="flex-grow max-w-xs">
+          <app-input-form
+            type="text"
+            label="Buscar por nombre"
+            placeholder="Buscar por nombre"
+            [required]="true"
+            errorType=" "
+          />
+        </div>
+
+        <button
+          (click)="setFilter()"
+          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-search"></i>
+        </button>
+      </div>
       <app-select
         [class.hidden]="currentView() == 'packages'"
         label="Tipo"
@@ -119,11 +61,6 @@
         [required]="true"
         errorType=" "
       />
-      <!-- <app-select
-        class="w-full"
-        label="Precio"
-        [options]="filterServiceByPrice"
-      /> -->
       <app-select
         label="Estado"
         [options]="filterServiceByStatus"
@@ -131,9 +68,78 @@
         (valueChange)="applyFilters('status', $event)"
         [required]="true"
         errorType=" "
-        
       />
     </div>
+  </div>
+
+  <div class="bg-white rounded-b-lg border w-full">
+    <div class="w-full py-3 px-4 border-b">
+      <!-- Contenedor flexible que cambia a columna en móvil -->
+      <div
+        class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between"
+      >
+        <!-- Filtros con scroll horizontal en móvil -->
+        <div class="overflow-x-auto p-2 flex-grow">
+          <div class="flex gap-2 min-w-max">
+            <app-button
+              text="Servicios"
+              icon="pi pi-car"
+              [bgColor]="
+                currentView() === 'services' ? 'bg-white' : 'bg-primary-500'
+              "
+              [textColor]="
+                currentView() === 'services' ? 'text-primary-500' : 'text-white'
+              "
+              (click)="changeView('services')"
+              [moreClasses]="
+                currentView() === 'services' ? 'ring-2 ring-primary-100' : ''
+              "
+              moreClasses="text-xs sm:text-sm"
+            />
+            <app-button
+              text="Paquetes Turísticos"
+              icon="pi pi-box"
+              [bgColor]="
+                currentView() === 'packages' ? 'bg-white' : 'bg-primary-500'
+              "
+              [textColor]="
+                currentView() === 'packages' ? 'text-primary-500' : 'text-white'
+              "
+              (click)="changeView('packages')"
+              [moreClasses]="
+                currentView() === 'packages' ? 'ring-2 ring-primary-100' : ''
+              "
+              moreClasses="text-xs sm:text-sm"
+            />
+            @for (item of filters(); track $index) {
+            <div
+              class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+            >
+              <p-tag [value]="item.key"></p-tag>
+              <button
+                (click)="clearFilters()"
+                class="hover:text-red-500 text-sm text-red-300"
+              >
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Botón de exportar en su propio contenedor -->
+        <div class="mt-3 sm:mt-0">
+          <app-button
+            text="Descargar Excel"
+            icon="pi pi-file-excel"
+            bgColor="bg-green-500"
+            (click)="exportData()"
+            moreClasses="w-full sm:w-auto text-sm"
+          />
+        </div>
+      </div>
+    </div>
+
     <p-table
       [columns]="currentView() === 'services' ? cols : packageCols"
       [value]="virtualServices()"
@@ -173,23 +179,21 @@
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (item[col.field] === false) {
             <p-tag class="bg-primary-500" value="No Disponible"></p-tag>
-            } }
-            @else if (col.field=="registeredBy") {
+            } } @else if (col.field=="registeredBy") {
 
-              <div class="flex items-center gap-2">
-                <p-tag
-                  [value]="item[col.field]"
-                  [pTooltip]="'Click para ver + '"
-                  tooltipPosition="top"
-                  [rounded]="true"
-                  (click)="viewUserDetails(item[col.field])"
-                  styleClass="bg-blue-500 hover:bg-blue-400 text-white"
-                  class="cursor-pointer hover:shadow-sm hover:underline transition-all"
-                />
-              </div>
-  
-              }
-            @else if (col.field == "createdAt") {
+            <div class="flex items-center gap-2">
+              <p-tag
+                [value]="item[col.field]"
+                [pTooltip]="'Click para ver + '"
+                tooltipPosition="top"
+                [rounded]="true"
+                (click)="viewUserDetails(item[col.field])"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                class="cursor-pointer hover:shadow-sm hover:underline transition-all"
+              />
+            </div>
+
+            } @else if (col.field == "createdAt") {
             {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
             } @else if (col.field == "updatedAt") {
             {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}

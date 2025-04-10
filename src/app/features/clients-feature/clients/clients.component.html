@@ -1,35 +1,52 @@
 <main class="flex flex-col gap-4">
-  <div class="flex items-end gap-2 w-full bg-white rounded-lg border p-4">
-    <div class="flex-none w-64">
-      <app-input-form
-        type="text"
-        label="Nª de Documento"
-        [required]="true"
-        errorType=" "
-        placeholder="90239023"
-        [isPositive]="true"
-        [(value)]="filterClientByDocumentNumber"
-      />
+  <div class="bg-white rounded-t-lg border">
+    <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
+    <div class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-bold">Clientes</h1>
+        <p class="text-sm text-gray-500">Gestión de Clientes</p>
+      </div>
+  
+      <!-- Botón de nuevo cliente - responsivo -->
+      <div class="flex flex-wrap gap-2 lg:justify-end">
+        <div class="w-full sm:w-auto">
+          <app-button
+            icon="pi pi-plus"
+            text="Nuevo Cliente"
+            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
+            bgColor="bg-primary-500"
+            (click)="openClientModal()"
+          />
+        </div>
+      </div>
     </div>
-
-    <button
-      (click)="searchClient()"
-      class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
-    >
-      <i class="pi pi-search"></i>
-    </button>
-    <div class="flex gap-2 ml-auto">
-      <app-button
-        icon="pi pi-plus"
-        text="Nuevo Cliente"
-        moreClasses="py-2"
-        bgColor="bg-primary-500"
-        (click)="openClientModal()"
-      />
+    
+    <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
+      <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
+      <div class="flex flex-1 gap-2 items-end">
+        <div class="flex-grow max-w-xs">
+          <app-input-form
+            type="text"
+            label="Nº de Documento"
+            [required]="true"
+            errorType=" "
+            placeholder="90239023"
+            [isPositive]="true"
+            [(value)]="filterClientByDocumentNumber"
+          />
+        </div>
+  
+        <button
+          (click)="searchClient()"
+          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+        >
+          <i class="pi pi-search"></i>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="bg-white rounded-lg border w-full">
+  <div class="bg-white rounded-b-lg border w-full">
     <div class="w-full py-5 flex px-4 justify-between">
       <div class="flex gap-2">
         @for (item of filters(); track $index) {

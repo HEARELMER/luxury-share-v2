@@ -14,19 +14,19 @@ export class SalesService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getSales(page: number, size: number, filters?: Filter[]): Observable<any> {
-    // Construir params base
+    let url = `${this._apiUrl}sales`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-
-    // Agregar filtros a los params en lugar de concatenar a la URL
-    if (filters?.length) {
+    let filtersFormat = '';
+    if (filters) {
       filters.forEach((filter) => {
-        params = params.append(`filters[${filter.key}]`, filter.value);
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
       });
+      url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(`${this._apiUrl}sales`, { params });
+    return this._httpclient.get(url, { params });
   }
 
   createSale(sale: any): Observable<any> {

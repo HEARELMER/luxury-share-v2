@@ -74,7 +74,7 @@ export class SalesComponent {
   searchSale() {
     if (this.filterSaleByCodeSale()) {
       this.filters.set([
-        { key: 'saleCode', value: this.filterSaleByCodeSale() },
+        { key: 'codeSale', value: this.filterSaleByCodeSale() },
       ]);
       this.loadSales({ resetPage: true });
     }

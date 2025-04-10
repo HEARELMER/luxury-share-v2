@@ -1,6 +1,6 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex items-center justify-between pb-6">
     <div class="flex items-center gap-4">
       <i class="pi pi-file-excel text-xl text-green-600"></i>
 
@@ -22,7 +22,7 @@
   <!-- Content -->
   <div class="space-y-6">
     <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
-      <div class="flex items-center gap-2 text-gray-600 mb-2">
+      <div class="flex items-center gap-2 text-gray-600 pb-2">
         <i class="pi pi-info-circle"></i>
         <span class="text-sm"
           >Total de registros disponibles: {{ total() }}</span
@@ -60,7 +60,7 @@
   </div>
 
   <!-- Footer -->
-  <div class="flex justify-end gap-3 mt-8 pt-4 border-t">
+  <div class="flex justify-end gap-3 pt-8 pt-4 border-t">
     <app-button
       text="Cancelar"
       bgColor="bg-gray-100"

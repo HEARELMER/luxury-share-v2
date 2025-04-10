@@ -1,5 +1,5 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border ">
+  <div class="bg-white rounded-t-lg border">
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
       class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
@@ -167,8 +167,6 @@
       [value]="virtualUsers"
       [lazy]="true"
       [scrollable]="true"
-      [virtualScroll]="true"
-      [virtualScrollItemSize]="50"
       [loading]="loading"
       [totalRecords]="totalRecords"
       scrollHeight="400px"
@@ -242,7 +240,13 @@
           }
         </tr>
       </ng-template>
-
+      <ng-template pTemplate="emptymessage" let-columns="columns">
+        <tr>
+          <td colspan="100%" class="text-center py-4 text-gray-500">
+            No se encontraron resultados
+          </td>
+        </tr>
+      </ng-template>
       <ng-template pTemplate="loadingbody" let-columns="columns">
         <tr>
           @for (col of columns; track $index) {

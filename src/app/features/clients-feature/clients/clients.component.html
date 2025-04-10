@@ -1,12 +1,14 @@
 <main class="flex flex-col gap-4">
   <div class="bg-white rounded-t-lg border">
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
-    <div class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3">
+    <div
+      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+    >
       <div>
         <h1 class="text-xl font-bold">Clientes</h1>
         <p class="text-sm text-gray-500">Gestión de Clientes</p>
       </div>
-  
+
       <!-- Botón de nuevo cliente - responsivo -->
       <div class="flex flex-wrap gap-2 lg:justify-end">
         <div class="w-full sm:w-auto">
@@ -20,7 +22,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
       <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
       <div class="flex flex-1 gap-2 items-end">
@@ -35,7 +37,7 @@
             [(value)]="filterClientByDocumentNumber"
           />
         </div>
-  
+
         <button
           (click)="searchClient()"
           class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
@@ -147,7 +149,13 @@
           }
         </tr>
       </ng-template>
-
+      <ng-template pTemplate="emptymessage" let-columns="columns">
+        <tr>
+          <td colspan="100%" class="text-center py-4 text-gray-500">
+            No se encontraron resultados
+          </td>
+        </tr>
+      </ng-template>
       <ng-template pTemplate="loadingbody" let-columns="columns">
         <tr>
           @for (col of columns; track $index) {

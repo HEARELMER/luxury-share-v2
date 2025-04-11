@@ -208,7 +208,8 @@ export class ManifestFormComponent {
     const data = {
       serviceId: this.selectedService().serviceId || '',
       sucursalId: this.selectedBranch() || '',
-      serviceType: this.selectedService().type || '', 
+      serviceType: this.selectedService().type || '',
+      departureDate: new Date(this.selectedDate()).toISOString() || '',
       title: this.selectedService().name || '',
       description: this.selectedService().description || '',
       registeredBy: '73464945',

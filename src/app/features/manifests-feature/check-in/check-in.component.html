@@ -15,16 +15,10 @@
         </div>
 
         <div class="pl-1 pb-2">
-          <div class="flex items-center gap-2 text-md  text-gray-600">
+          <div class="flex items-center gap-2 text-md text-gray-600">
             <i class="pi pi-calendar-plus text-primary-400"></i>
             <p>
-              {{
-                response()?.participants?.length > 0 &&
-                response().participants[0]?.sale?.departureDate
-                  ? (response().participants[0].sale.departureDate
-                    | date : "dd-MM-yyyy hh:mm a")
-                  : "Fecha no disponible"
-              }}
+              {{ response()?.departureDate | date : "dd/MM/yyyy hh:mm a "    }}
             </p>
             <span class="text-gray-300 px-1">|</span>
             <i class="pi pi-info-circle text-primary-400"></i>

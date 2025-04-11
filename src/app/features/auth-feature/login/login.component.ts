@@ -11,7 +11,7 @@ import { AlertComponent } from '../../../shared/components/ui/alert/alert.compon
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
 import { AuthService } from '../../../core/services/auth-services/auth.service';
-import { InputFormComponent } from "../../../shared/components/forms/input-form/input-form.component";
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 
 @Component({
   selector: 'app-login',
@@ -23,8 +23,8 @@ import { InputFormComponent } from "../../../shared/components/forms/input-form/
     FormsModule,
     NgClass,
     ReactiveFormsModule,
-    InputFormComponent
-],
+    InputFormComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -54,7 +54,7 @@ export class LoginComponent {
     ],
     password: ['', [Validators.required]],
   });
- 
+
   showPassword() {
     this.passwordVisible = !this.passwordVisible;
   }
@@ -67,6 +67,22 @@ export class LoginComponent {
         userId: this.form.value.userId as string,
         password: this.form.value.password as string,
       };
+
+      this._authService.signIn(user).subscribe({
+        next: (response) => {
+          this.loading = false;
+          sessionStorage.setItem('user', JSON.stringify(response.user));
+          this._router.navigate(['/luxury']);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.messageLogin = {
+            title: 'Error',
+            message: 'Usuario o contraseña incorrectos',
+            type: 'error',
+          };
+        },
+      });
 
       // const success = await this.authService.login(user);
       // this.messageLogin = this.authService.response_login;

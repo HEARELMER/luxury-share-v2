@@ -71,6 +71,7 @@ export class ConfigurationsComponent {
   loading = signal<boolean>(false);
   activeFilters = signal<{ key: string; value: string }[]>([]);
   headerColsGoals = GOAL_COLS_TABLE;
+  summary = signal<any>({});
   // Paginación
   rows = 10;
   first = 0;
@@ -111,7 +112,7 @@ export class ConfigurationsComponent {
   }
 
   handleRefreshData(): void {
-    this.loadGoals();
+    this.loadGoals({ resetPage: true });
   }
   /**
    * Carga objetivos según filtros y paginación
@@ -159,7 +160,7 @@ export class ConfigurationsComponent {
         // Actualizar datos con la respuesta del servidor
         this.goals.set(response.data.goals);
         this.totalRecords = response.data.total;
-
+        this.summary.set(response.data.summary);
         // Actualizar estadísticas
         this.totalGoals = response.data.stats?.total || 0;
         this.completedGoals = response.data.stats?.completed || 0;
@@ -216,13 +217,12 @@ export class ConfigurationsComponent {
   editGoal(goal: Goal): void {
     this.selectedGoal.set(goal);
     this.showGoalModal.set(true);
-    console.log('Editando objetivo:', goal);
   }
 
   /**
    * Elimina un objetivo
    */
-  deleteGoal(goal: Goal): void {
+  deleteGoal(goalId: string): void {
     const ref = this.dialogService.open(DialogComponent, {
       header: 'Eliminar Objetivo',
       modal: true,
@@ -240,7 +240,20 @@ export class ConfigurationsComponent {
     });
     ref.onClose.subscribe((result: boolean) => {
       if (result) {
-        // Usuario confirmó
+        const data = {
+          id: goalId,
+          deletedBy: '73464945',
+        };
+        this.goalsService.removeGoal(data).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: response.message || 'Objetivo eliminado correctamente',
+            });
+            this.loadGoals({ resetPage: true });
+          },
+        });
       } else {
         // Usuario canceló
       }

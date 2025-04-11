@@ -35,4 +35,8 @@ export class GoalService {
   updateGoal(idGoal: string, data: any): Observable<any> {
     return this._httpclient.put(`${this._apiUrl}goals/${idGoal}`, data);
   }
+
+  removeGoal(data: any): Observable<any> {
+    return this._httpclient.delete(`${this._apiUrl}goals`, { body: data });
+  }
 }

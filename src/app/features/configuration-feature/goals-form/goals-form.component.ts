@@ -48,7 +48,7 @@ export class GoalsFormComponent {
   isEditMode = signal<boolean>(false);
   saving = signal<boolean>(false);
   goalId = signal<string>(' ');
-  refresh = output<void>();
+  refreshData = output<void>();
   data = input<Goal>();
   showModal = model<boolean>(false);
   goalForm = this.fb.group({
@@ -94,7 +94,6 @@ export class GoalsFormComponent {
    */
   loadGoalData(): void {
     const goalData = this.data();
-    console.log('goalData', goalData);
     if (goalData && goalData.goalId) {
       this.isEditMode.set(true);
       this.goalId.set(goalData.goalId);
@@ -155,8 +154,8 @@ export class GoalsFormComponent {
             detail: response.message,
           });
           this.saving.set(false);
+          this.refreshData.emit();
           this.closeModal();
-          this.refresh.emit();
         },
         error: (error) => {
           this.messageService.add({
@@ -176,8 +175,8 @@ export class GoalsFormComponent {
             detail: response.message,
           });
           this.saving.set(false);
+          this.refreshData.emit();
           this.closeModal();
-          this.refresh.emit();
         },
         error: (error) => {
           this.messageService.add({

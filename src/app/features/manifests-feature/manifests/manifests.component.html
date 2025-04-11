@@ -37,12 +37,12 @@
             label="Tipo de servicio"
             errorType=" "
             (valueChange)="updateFilter('serviceType', $event)"
-            ></app-select>
-          </div>
-          
-          <!-- Filtro por fecha -->
-          <div class="flex flex-col">
-            <app-input-form
+          ></app-select>
+        </div>
+
+        <!-- Filtro por fecha -->
+        <div class="flex flex-col">
+          <app-input-form
             placeholder="Buscar por fecha"
             [required]="true"
             errorType=" "
@@ -50,12 +50,12 @@
             class="w-full"
             label="Fecha"
             (valueChange)="updateFilter('date', $event)"
-            ></app-input-form>
-          </div>
-          
-          <!-- Estado del manifiesto -->
-          <div class="flex flex-col">
-            <app-select
+          ></app-input-form>
+        </div>
+
+        <!-- Estado del manifiesto -->
+        <div class="flex flex-col">
+          <app-select
             label="Estado"
             [options]="statusService"
             [required]="true"

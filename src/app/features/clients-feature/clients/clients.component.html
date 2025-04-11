@@ -25,18 +25,16 @@
 
     <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
       <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
-      <div class="flex flex-1 gap-2 items-end">
-        <div class="flex-grow max-w-xs">
-          <app-input-form
-            type="text"
-            label="Nº de Documento"
-            [required]="true"
-            errorType=" "
-            placeholder="90239023"
-            [isPositive]="true"
-            [(value)]="filterClientByDocumentNumber"
-          />
-        </div>
+      <div class="flex gap-2 items-end">
+        <app-input-form
+          type="text"
+          label="Nº de Documento"
+          [required]="true"
+          errorType=" "
+          placeholder="90239023"
+          [isPositive]="true"
+          [(value)]="filterClientByDocumentNumber"
+        />
 
         <button
           (click)="searchClient()"
@@ -45,6 +43,31 @@
           <i class="pi pi-search"></i>
         </button>
       </div>
+
+      <app-select
+        placeholder="Todos los servicios"
+        [required]="true"
+        label="Tipo de servicio"
+        errorType=" "
+        class="w-full lg:w-1/4"
+      ></app-select>
+
+      <app-input-form
+        placeholder="Buscar por fecha"
+        [required]="true"
+        errorType=" "
+        type="date"
+        class="w-full lg:w-1/4"
+        label="Fecha"
+      ></app-input-form>
+
+      <app-select
+        label="Estado"
+        [required]="true"
+        errorType=" "
+        placeholder="Todos los estados"
+        class="w-full lg:w-1/4"
+      />
     </div>
   </div>
 

@@ -18,8 +18,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule, Tag } from 'primeng/tag';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { FormClientComponent } from "../form-client/form-client.component";
+import { FormClientComponent } from '../form-client/form-client.component';
 import { Toast } from 'primeng/toast';
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 
 @Component({
   selector: 'app-clients',
@@ -39,8 +40,10 @@ import { Toast } from 'primeng/toast';
     InputFormComponent,
     TagModule,
     Tag,
-    FormClientComponent,Toast
-],
+    FormClientComponent,
+    Toast,
+    SelectComponent,
+  ],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
   providers: [DialogService],
@@ -125,7 +128,7 @@ export class ClientsComponent {
   /**
    * Busca clientes por dirección
    */
-  searchClient()  {
+  searchClient() {
     if (this.filterClientByDocumentNumber()) {
       this.filters.set([
         { key: 'numberDocument', value: this.filterClientByDocumentNumber() },
@@ -133,7 +136,6 @@ export class ClientsComponent {
       this.loadClients({ resetPage: true });
     }
     this.filterClientByDocumentNumber.set('');
-    
   }
 
   /**
@@ -187,7 +189,6 @@ export class ClientsComponent {
    * @returns void
    */
   viewUserDetails(userId: string) {
-    console.log('User ID:', userId);
     const ref = this.dialogService.open(ViewUserInfoComponent, {
       header: 'Información del usuario',
       modal: true,

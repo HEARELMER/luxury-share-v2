@@ -5,7 +5,7 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-photo-profile',
-  imports: [InputFileComponent, Tooltip, NgClass],
+  imports: [],
   templateUrl: './photo-profile.component.html',
   styleUrl: './photo-profile.component.scss',
 })

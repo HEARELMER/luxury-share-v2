@@ -5,7 +5,7 @@ import { UserService } from '../../../../core/services/users-services/user.servi
 
 @Component({
   selector: 'app-view-user-info',
-  imports: [Tag],
+  imports: [],
   templateUrl: './view-user-info.component.html',
   styleUrl: './view-user-info.component.scss',
 })

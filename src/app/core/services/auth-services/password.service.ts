@@ -16,7 +16,7 @@ export class PasswordService {
   }): Observable<any> {
     return this._http.post<any>(
       `${this._apiUrl}auth/password-recovery/validate-email-numdni`,
-      data
+      data, {withCredentials: true}
     );
   }
 

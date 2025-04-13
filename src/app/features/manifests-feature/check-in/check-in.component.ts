@@ -21,8 +21,6 @@ import { ManifestsService } from '../../../core/services/manifests-services/mani
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
-import { ScheduleReportDialogComponent } from "../../reports-feature/schedule-report-dialog/schedule-report-dialog.component";
-import { SelectComponent } from "../../../shared/components/forms/select/select.component";
 
 @Component({
   selector: 'app-check-in',
@@ -43,9 +41,7 @@ import { SelectComponent } from "../../../shared/components/forms/select/select.
     InputFormComponent,
     ButtonComponent,
     InputSwitchModule,
-    ScheduleReportDialogComponent,
-    SelectComponent
-],
+  ],
   templateUrl: './check-in.component.html',
   styleUrl: './check-in.component.scss',
 })

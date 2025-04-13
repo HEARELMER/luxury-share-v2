@@ -12,11 +12,18 @@ import { ReportsComponent } from './features/reports-feature/reports/reports.com
 import { PasswordRecoveryComponent } from './features/auth-feature/password-recovery/password-recovery.component';
 import { ConfigurationsComponent } from './features/configuration-feature/configurations/configurations.component';
 import { ManifestsComponent } from './features/manifests-feature/manifests/manifests.component';
+import {
+  authGuardAdmin,
+  authGuardGerent,
+  authGuardSeller,
+  publicGuard,
+} from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   {
     path: 'auth',
+    canActivate: [publicGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
@@ -28,16 +35,56 @@ export const routes: Routes = [
     component: MainComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'users', component: UsersComponent },
-      { path: 'profile', component: UserProfileComponent },
-      { path: 'services_packages', component: MainServicesPackagesComponent },
-      { path: 'branches', component: BranchesComponent },
-      { path: 'sales', component: SalesComponent },
-      { path: 'clients', component: ClientsComponent },
-      { path: 'reports', component: ReportsComponent },
-      { path: 'manifests', component: ManifestsComponent },
-      { path: 'configurations', component: ConfigurationsComponent },
+      {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'users',
+        component: UsersComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'profile',
+        component: UserProfileComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'services_packages',
+        component: MainServicesPackagesComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'branches',
+        component: BranchesComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'sales',
+        component: SalesComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'clients',
+        component: ClientsComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'reports',
+        component: ReportsComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'manifests',
+        component: ManifestsComponent,
+        canActivate: [authGuardAdmin, authGuardSeller],
+      },
+      {
+        path: 'configurations',
+        component: ConfigurationsComponent,
+        canActivate: [authGuardAdmin],
+      },
     ],
   },
 ];

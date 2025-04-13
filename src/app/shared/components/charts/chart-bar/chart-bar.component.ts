@@ -6,7 +6,7 @@ import { Tooltip } from 'primeng/tooltip';
 @Component({
   selector: 'app-chart-bar',
   standalone: true,
-  imports: [ChartModule, NgStyle, Tooltip],
+  imports: [ChartModule, NgStyle ],
   templateUrl: './chart-bar.component.html',
   styleUrl: './chart-bar.component.scss',
 })

@@ -1,11 +1,11 @@
-import { Component, Input, input, OnChanges, OnInit } from '@angular/core';
-import { CommonModule, NgStyle } from '@angular/common';
+import { Component, Input, input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'app-chart-bar',
-  imports: [CommonModule, ChartModule, ButtonModule, TooltipModule,NgStyle],
+  imports: [CommonModule, ChartModule, ButtonModule, TooltipModule],
   templateUrl: './chart-bar.component.html',
   styleUrl: './chart-bar.component.scss'
 })

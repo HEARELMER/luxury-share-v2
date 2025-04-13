@@ -26,20 +26,26 @@ export class SalesService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(url, { params });
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 
   createSale(sale: any): Observable<any> {
-    return this._httpclient.post(`${this._apiUrl}sales`, sale);
+    return this._httpclient.post(`${this._apiUrl}sales`, sale, {
+      withCredentials: true,
+    });
   }
 
   cancelSale(data: object): Observable<any> {
-    return this._httpclient.post(`${this._apiUrl}sales/cancel-sale`, data);
+    return this._httpclient.post(`${this._apiUrl}sales/cancel-sale`, data, {
+      withCredentials: true,
+    });
   }
 
   getSaleByCodeSale(codeSale: string): Observable<any> {
     return this._httpclient
-      .get(`${this._apiUrl}sales/find-by-code-sale/${codeSale}`)
+      .get(`${this._apiUrl}sales/find-by-code-sale/${codeSale}`, {
+        withCredentials: true,
+      })
       .pipe(
         map((response: any) => {
           return response.data;

@@ -21,6 +21,7 @@ export class UserService {
 
     return this.httpClient.get<any>(`${this.url}users`, {
       params,
+      withCredentials: true,
     });
   }
 
@@ -41,17 +42,22 @@ export class UserService {
         `${this.url}users${filterRoles ? '/' + filterRoles : ''}`,
         {
           params,
+          withCredentials: true,
         }
       );
     }
   }
 
   createUser(user: any): Observable<any> {
-    return this.httpClient.post(`${this.url}users`, user);
+    return this.httpClient.post(`${this.url}users`, user, {
+      withCredentials: true,
+    });
   }
 
   updateUser(user: any): Observable<any> {
-    return this.httpClient.put(`${this.url}users/${user.userId}`, user);
+    return this.httpClient.put(`${this.url}users/${user.userId}`, user, {
+      withCredentials: true,
+    });
   }
 
   getAllAdmins() {
@@ -112,11 +118,13 @@ export class UserService {
     // Aseguramos que el ID sea una cadena
     const id = userId.toString();
 
-    return this.httpClient.get(`${this.url}users/${id}`).pipe(
-      map((response: any) => {
-        return response.data;
-      })
-    );
+    return this.httpClient
+      .get(`${this.url}users/${id}`, { withCredentials: true })
+      .pipe(
+        map((response: any) => {
+          return response.data;
+        })
+      );
   }
 
   exportToExcel(page: number, size: number): Observable<any> {

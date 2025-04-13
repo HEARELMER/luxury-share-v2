@@ -22,8 +22,7 @@ import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.s
   selector: 'app-form-sale',
   imports: [
     Toast,
-    StepperModule,
-    Button,
+    StepperModule, 
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,

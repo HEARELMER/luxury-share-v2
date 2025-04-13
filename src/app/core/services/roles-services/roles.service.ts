@@ -11,6 +11,6 @@ export class RolesService {
   private readonly _httpclient = inject(HttpClient);
 
   getRoles(): Observable<any> {
-    return this._httpclient.get(`${this._api}roles`);
+    return this._httpclient.get(`${this._api}roles`,{withCredentials: true});
   }
 }

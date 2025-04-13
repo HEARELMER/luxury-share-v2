@@ -23,11 +23,8 @@ import { Router } from '@angular/router';
   selector: 'app-password-recovery',
   imports: [
     ButtonModule,
-    StepperModule,
-    InputFormComponent,
-    ButtonComponent,
-    InputOtpModule,
-    PasswordComponent,
+    StepperModule, 
+    InputOtpModule, 
     ReactiveFormsModule,
     FormsModule,
     Message,

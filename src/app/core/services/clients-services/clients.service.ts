@@ -26,23 +26,27 @@ export class ClientsService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(url, { params });
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 
   searchClientByDni(dni: string): Observable<any> {
     return this._httpclient
-      .get(`${this._apiUrl}clients/search/${dni}`)
+      .get(`${this._apiUrl}clients/search/${dni}`, { withCredentials: true })
       .pipe(map((response: any) => response.data));
   }
 
   searchClientByDniApiExternal(dni: string): Observable<any> {
     return this._httpclient
-      .get(`${this._apiUrl}users/search/api-dni/${dni}`)
+      .get(`${this._apiUrl}users/search/api-dni/${dni}`, {
+        withCredentials: true,
+      })
       .pipe(map((response: any) => response.data || response));
   }
 
   createClient(client: any): Observable<any> {
-    return this._httpclient.post(`${this._apiUrl}clients`, client);
+    return this._httpclient.post(`${this._apiUrl}clients`, client, {
+      withCredentials: true,
+    });
   }
 }
 

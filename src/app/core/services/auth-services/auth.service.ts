@@ -5,6 +5,7 @@ import { catchError, Observable, of, tap } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { UserAccessing } from '../../../shared/interfaces/user';
 import { AuthState } from '../../interfaces/api/auth';
+import { LocalstorageService } from '../localstorage-services/localstorage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +13,13 @@ import { AuthState } from '../../interfaces/api/auth';
 export class AuthService {
   private readonly _router = inject(Router);
   private readonly _http = inject(HttpClient);
-  private readonly _apiUrl = `${environmentDev.apiUrl}auth/`; 
+  private readonly _localStorageService = inject(LocalstorageService);
+  private readonly _apiUrl = `${environmentDev.apiUrl}auth/`;
   private readonly _authState = signal<AuthState>({
     isAuthenticated: false,
     user: null,
     currentBranch: null,
-  }); 
+  });
   readonly authState = this._authState.asReadonly();
 
   constructor() {
@@ -25,49 +27,75 @@ export class AuthService {
   }
 
   private initAuthState(): void {
-    const user = JSON.parse(sessionStorage.getItem('user') || 'null');
-    const currentBranch = sessionStorage.getItem('currentBranch');
-    const isAuthenticated =
-      localStorage.getItem(environmentDev.authStateKey) ===
-      environmentDev.authStateValue;
-
+    const user = this._localStorageService.getUserAuthorized();
+    const currentBranch = this._localStorageService.getBranchId();
+    const isAuthenticated = this._localStorageService.getIsAuthenticated();
     if (isAuthenticated && user) {
       this._authState.set({
         isAuthenticated,
         user,
-        currentBranch,
+        currentBranch: 'name',
       });
     }
+  }
+
+  get isAuthenticated(): boolean {
+    return this._authState().isAuthenticated;
   }
 
   signIn(credentials: UserAccessing): Observable<any> {
     return this._http
       .post<any>(`${this._apiUrl}signin`, credentials, {
         withCredentials: true,
+        observe: 'response',
       })
       .pipe(
         tap((response) => {
-          // Actualizar el estado de autenticación
-          this._authState.set({
-            isAuthenticated: true,
-            user: response.user,
-            currentBranch: null,
-          });
+          if (response.status === 200) {
+            this._authState.set({
+              isAuthenticated: true,
+              user: response.body.data,
+              currentBranch: null,
+            });
 
-          // Guardar información en almacenamiento
-          localStorage.setItem(
-            environmentDev.authStateKey,
-            environmentDev.authStateValue
-          );
-          sessionStorage.setItem('user', JSON.stringify(response.user));
+            // Guardar información en almacenamiento
+            localStorage.setItem(
+              environmentDev.authStateKey,
+              environmentDev.authStateValue
+            );
+            if (
+              response.body.data !== null ||
+              response.body.data !== undefined
+            ) {
+              localStorage.setItem('user', JSON.stringify(response.body.data));
+            }
+            this._router.navigate(['/luxury']);
+            return { success: true, message: response.body.message };
+          } else {
+            return { success: false, message: response.body.message };
+          }
         }),
-        catchError((error) => { 
-          return of({ success: false, error });
+        catchError(() => {
+          return of({ success: false, message: 'Error en la autenticación' });
         })
       );
   }
 
-  get isAuthenticated(): boolean {
-    return this._authState().isAuthenticated;
+  signOut(): Observable<any> {
+    const logout = this._http.get<any>(`${this._apiUrl}signout`, {
+      withCredentials: true,
+    });
+
+    this._authState.set({
+      isAuthenticated: false,
+      user: null,
+      currentBranch: null,
+    });
+    localStorage.removeItem(environmentDev.authStateKey);
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('currentBranch');
+    this._router.navigate(['/auth']);
+
+    return logout;
   }
 }

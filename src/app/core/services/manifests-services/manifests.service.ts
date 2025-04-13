@@ -28,7 +28,7 @@ export class ManifestsService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._http.get(url, { params });
+    return this._http.get(url, { params, withCredentials: true });
   }
 
   recommendManifests(
@@ -48,21 +48,25 @@ export class ManifestsService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._http.get(url, { params });
+    return this._http.get(url, { params, withCredentials: true });
   }
 
   createManifest(manifest: any): Observable<any> {
-    return this._http.post(`${this._api}manifests`, manifest);
+    return this._http.post(`${this._api}manifests`, manifest, {
+      withCredentials: true,
+    });
   }
 
   findManifestById(id: string): Observable<any> {
     return this._http
-      .get(`${this._api}manifests/${id}`)
+      .get(`${this._api}manifests/${id}`, { withCredentials: true })
       .pipe(map((response: any) => response.data));
   }
 
   removeManifest(id: string): Observable<any> {
-    return this._http.delete(`${this._api}manifests/${id}`);
+    return this._http.delete(`${this._api}manifests/${id}`, {
+      withCredentials: true,
+    });
   }
 
   checkInPartcipants(
@@ -77,7 +81,8 @@ export class ManifestsService {
     };
     return this._http.patch(
       `${this._api}manifests/participants/check-in`,
-      body
+      body,
+      { withCredentials: true }
     );
   }
 
@@ -88,7 +93,7 @@ export class ManifestsService {
   ): Observable<any> {
     return this._http.patch(
       `${this._api}manifests/${manifestId}/participants/${participantId}`,
-      { updatedBy }
+      { updatedBy } , {withCredentials: true}
     );
   }
 }

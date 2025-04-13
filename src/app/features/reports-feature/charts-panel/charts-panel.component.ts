@@ -7,8 +7,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { ChartLineComponent } from '../charts/chart-line/chart-line.component';
 import { ChartBarComponent } from '../charts/chart-bar/chart-bar.component';
 import { ChartHorizontalBarComponent } from '../charts/chart-horizontal-bar/chart-horizontal-bar.component';
-import { ChartPieComponent } from '../charts/chart-pie/chart-pie.component';
-import { ChartDounghnutComponent } from '../charts/chart-dounghnut/chart-dounghnut.component';
 @Component({
   selector: 'app-charts-panel',
   imports: [
@@ -19,10 +17,8 @@ import { ChartDounghnutComponent } from '../charts/chart-dounghnut/chart-dounghn
     TooltipModule,
     ChartLineComponent,
     ChartBarComponent,
-    ChartPieComponent,
-    ChartHorizontalBarComponent,
-    ChartDounghnutComponent,
-  ],
+    ChartHorizontalBarComponent
+],
   templateUrl: './charts-panel.component.html',
   styleUrl: './charts-panel.component.scss',
 })

@@ -8,12 +8,7 @@ import { AuthService } from '../../../../core/services/auth-services/auth.servic
 
 @Component({
   selector: 'app-user-menu',
-  imports: [
-    SidebarButtonComponent,
-    AlertComponent, 
-    NgClass,
-    RouterLink,
-  ],
+  imports: [SidebarButtonComponent, AlertComponent, NgClass, RouterLink],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
 })
@@ -28,15 +23,19 @@ export class UserMenuComponent {
   confirm: boolean = false;
   constructor(private authService: AuthService, private router: Router) {}
   logOut() {
-    // this.authService.logOut();
-    // this.messageLogin = this.authService.response_login;
-    // console.log(this.messageLogin);
-    // this.confirm = true;
-
-    setTimeout(() => {
-      this.confirm = false;
-      // this.router.navigate(['/dashboard']);
-    }, 3000); // Esperar 3 segundos antes de redirigir
+    this.authService.signOut().subscribe({
+      next: (res: any) => {
+        this.confirm = true;
+        this.messageLogin = {
+          title: 'Cerrar sesión',
+          message: res.message,
+          type: 'success',
+        };
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
+      },
+    });
   }
   darkMode() {
     this.confirm = true;

@@ -1,26 +1,19 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-import { Skeleton } from 'primeng/skeleton';
 
 import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
 import { KpiCardsComponent, KpiData } from '../kpi-cards/kpi-cards.component';
-import { Select } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { Popover } from 'primeng/popover';
-import { DatePickerComponent } from '../../../shared/components/forms/date-picker/date-picker.component';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MenuItem, MessageService } from 'primeng/api';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { TableModule } from 'primeng/table';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { ChipModule } from 'primeng/chip';
@@ -29,7 +22,6 @@ import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
-import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ScheduleReportDialogComponent } from '../schedule-report-dialog/schedule-report-dialog.component';
 import {
   Goal,
@@ -42,14 +34,10 @@ import {
     ReactiveFormsModule,
     FormsModule,
     SelectComponent,
-    Skeleton,
     KpiCardsComponent,
     ChartsPanelComponent,
     ToggleSwitchModule,
-    Select,
     ButtonModule,
-    ButtonComponent,
-    Popover,
     DatePickerModule,
     DatePipe,
     ProgressBarModule,
@@ -61,8 +49,6 @@ import {
     TagModule,
     DropdownModule,
     InputTextModule,
-    DialogComponent,
-    NgClass,
     ScheduleReportDialogComponent,
     GoalsPanelComponent,
   ],

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { UserAuthorized } from '../../../shared/interfaces/user';
 import { Observable, of } from 'rxjs';
+import { environmentDev } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -8,24 +8,10 @@ import { Observable, of } from 'rxjs';
 export class LocalstorageService {
   constructor() {}
 
-  getUserAuthorized(): UserAuthorized {
-    const user = sessionStorage.getItem('user');
+  getUserAuthorized(): any {
+    const user = localStorage.getItem('user');
     if (user) {
       return JSON.parse(user);
-    } else {
-      return {
-        name: 'Elmer Jesus',
-        email: 'elmer1@dev.com',
-        photoUrl: 'https://github.com/hearelmer.png',
-        phone: '123456759',
-        address: 'Calle 123',
-        birthDate: '1990-01-01',
-        roleId: '1aabf9b1-9255-459b-bf95-b943efaf5e02',
-        numDni: '71916141',
-        firstLastname: 'Huaman',
-        secondLastname: 'Rojas',
-        userId: '1aabf9b1-9255-459b-bf95-b943efaf5e02',
-      };
     }
   }
 
@@ -46,6 +32,13 @@ export class LocalstorageService {
     } else {
       return false;
     }
+  }
+
+  getIsAuthenticated(): boolean {
+    return (
+      localStorage.getItem(environmentDev.authStateKey) ===
+      environmentDev.authStateValue
+    );
   }
 
   getBranchId(): Observable<string> {

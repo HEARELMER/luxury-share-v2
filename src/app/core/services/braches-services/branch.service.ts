@@ -18,16 +18,19 @@ export class BranchService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', size.toString());
-  
+
     // Agregar filtros a los params en lugar de concatenar a la URL
     if (filters?.length) {
       filters.forEach((filter) => {
         params = params.append(`filters[${filter.key}]`, filter.value);
       });
     }
-  
+
     // Usar params en la llamada HTTP
-    return this._httpclient.get(`${this._apiUrl}branches`, { params });
+    return this._httpclient.get(`${this._apiUrl}branches`, {
+      params,
+      withCredentials: true,
+    });
   }
   exportToExcel(page: number, size: number): Observable<any> {
     return this.getBranches(page, size).pipe(
@@ -59,13 +62,16 @@ export class BranchService {
   }
 
   createBranch(branch: any): Observable<any> {
-    return this._httpclient.post(`${this._apiUrl}branches`, branch);
+    return this._httpclient.post(`${this._apiUrl}branches`, branch, {
+      withCredentials: true,
+    });
   }
 
   updateBranch(branch: any): Observable<any> {
     return this._httpclient.put(
       `${this._apiUrl}branches/${branch.sucursalId}`,
-      branch
+      branch,
+      { withCredentials: true }
     );
   }
 }

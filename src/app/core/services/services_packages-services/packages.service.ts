@@ -26,19 +26,25 @@ export class PackagesService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(url, { params });
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 
   createPackage(data: any): Observable<any> {
-    return this._httpclient.post(`${this._api}packages`, data);
+    return this._httpclient.post(`${this._api}packages`, data, {
+      withCredentials: true,
+    });
   }
 
   addServiceToPackage(data: any): Observable<any> {
-    return this._httpclient.post(`${this._api}packages/add-services`, data);
+    return this._httpclient.post(`${this._api}packages/add-services`, data, {
+      withCredentials: true,
+    });
   }
 
   updatePackage(packageId: string, data: any): Observable<any> {
-    return this._httpclient.put(`${this._api}packages/${packageId}`, data);
+    return this._httpclient.put(`${this._api}packages/${packageId}`, data, {
+      withCredentials: true,
+    });
   }
 
   exportToExcel(page: number, size: number): Observable<any> {
@@ -85,7 +91,8 @@ export class PackagesService {
   removeServiceFromPackage(packageId: string, data: any): Observable<any> {
     return this._httpclient.patch(
       `${this._api}packages/${packageId}/remove-services`,
-      data
+      data,
+      { withCredentials: true }
     );
   }
 }

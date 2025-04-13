@@ -7,11 +7,9 @@ import {
 } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AlertComponent } from '../../../shared/components/ui/alert/alert.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
 import { AuthService } from '../../../core/services/auth-services/auth.service';
-import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 
 @Component({
   selector: 'app-login',
@@ -19,11 +17,9 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
   imports: [
     ButtonComponent,
     RouterLink,
-    AlertComponent,
     FormsModule,
     NgClass,
     ReactiveFormsModule,
-    InputFormComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -71,8 +67,6 @@ export class LoginComponent {
       this._authService.signIn(user).subscribe({
         next: (response) => {
           this.loading = false;
-          sessionStorage.setItem('user', JSON.stringify(response.user));
-          this._router.navigate(['/luxury']);
         },
         error: (error) => {
           this.loading = false;
@@ -84,18 +78,7 @@ export class LoginComponent {
         },
       });
 
-      // const success = await this.authService.login(user);
-      // this.messageLogin = this.authService.response_login;
       this.confirmLogin = true;
-
-      // setTimeout(() => {
-      //   this.loading = false;
-      //   if (success) {
-      //     this.router.navigate(['/luxury']);
-      //   } else {
-      //     this.confirmLogin = false;
-      //   }
-      // }, 3000); // Esperar 3 segundos antes de redirigir
     }
   }
 }

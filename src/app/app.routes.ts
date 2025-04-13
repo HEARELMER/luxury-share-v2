@@ -78,13 +78,13 @@ export const routes: Routes = [
       {
         path: 'manifests',
         component: ManifestsComponent,
-        canActivate: [authGuardAdmin, authGuardSeller],
-      },
-      {
-        path: 'configurations',
-        component: ConfigurationsComponent,
         canActivate: [authGuardAdmin],
       },
+      // {
+      //   path: 'configurations',
+      //   component: ConfigurationsComponent,
+      //   canActivate: [authGuardAdmin],
+      // },
     ],
   },
 ];

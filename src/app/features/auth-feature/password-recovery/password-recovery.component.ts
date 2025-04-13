@@ -8,11 +8,8 @@ import {
 
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
-import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { Message } from 'primeng/message';
 import { InputOtpModule } from 'primeng/inputotp';
-import { PasswordComponent } from '../../../shared/components/forms/password/password.component';
 import { PasswordService } from '../../../core/services/auth-services/password.service';
 import { Step1ValidationComponent } from './steps/step1-validation/step1-validation.component';
 import { Step2VerificationComponent } from './steps/step2-verification/step2-verification.component';
@@ -23,8 +20,8 @@ import { Router } from '@angular/router';
   selector: 'app-password-recovery',
   imports: [
     ButtonModule,
-    StepperModule, 
-    InputOtpModule, 
+    StepperModule,
+    InputOtpModule,
     ReactiveFormsModule,
     FormsModule,
     Message,
@@ -78,10 +75,12 @@ export class PasswordRecoveryComponent {
     password: this._fb.control('', [
       Validators.required,
       Validators.minLength(8),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
     passwordConfirm: this._fb.control('', [
       Validators.required,
       Validators.minLength(8),
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
   });
   emailFormControl = this._fb.control('', [
@@ -126,11 +125,10 @@ export class PasswordRecoveryComponent {
     this.error.set('');
 
     this._passwordService.validateCode(this.otpCode.value || '').subscribe({
-      next: (res) => {
+      next: (res) => { 
         this.loading.set(false);
-        if (res.status === 'success') {
-          this.stepsCompleted.update((steps) => ({ ...steps, 2: true }));
-          // Establecer mensaje y navegar al siguiente paso
+        if (res.status === 201) {
+          this.stepsCompleted.update((steps) => ({ ...steps, 2: true })); 
           this.responseMessage.set(res.message);
           this.currentStep.set(3);
           activateCallback(3);

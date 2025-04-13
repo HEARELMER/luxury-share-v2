@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environmentDev } from '../../../environments/environment.development';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,20 +16,23 @@ export class PasswordService {
   }): Observable<any> {
     return this._http.post<any>(
       `${this._apiUrl}auth/password-recovery/validate-email-numdni`,
-      data, {withCredentials: true}
+      data,
+      { withCredentials: true }
     );
   }
 
   validateCode(code: string): Observable<any> {
-    return this._http.post<any>(
-      `${this._apiUrl}auth/password-recovery/validate-code`,
-      {
-        code,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+    return this._http
+      .post<any>(
+        `${this._apiUrl}auth/password-recovery/validate-code`,
+        {
+          code,
+        },
+        {
+          withCredentials: true,
+          observe: 'response',
+        }
+      );
   }
 
   passwordRecovery(newPassword: string, email: string): Observable<any> {

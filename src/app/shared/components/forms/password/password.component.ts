@@ -1,57 +1,142 @@
 import { NgClass } from '@angular/common';
+import { Component, forwardRef, input, model, signal } from '@angular/core';
 import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  model,
-  Output,
-} from '@angular/core';
-import {
-  FormBuilder,
+  ControlValueAccessor,
   FormsModule,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 
 @Component({
   selector: 'app-password',
   standalone: true,
   imports: [NgClass, ReactiveFormsModule, FormsModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PasswordComponent),
+      multi: true,
+    },
+  ],
   templateUrl: './password.component.html',
   styleUrl: './password.component.scss',
 })
-export class PasswordComponent {
-  private readonly formBuilder = inject(FormBuilder);
-  password = model<string>();
- 
+export class PasswordComponent implements ControlValueAccessor {
+  // Inputs
+  label = input<string>('Contraseña');
+  placeholder = input<string>('Ingrese su contraseña');
+  required = input<boolean>(true);
+  minLength = input<number>(8);
+  maxLength = input<number>(50);
+  showStrengthBar = input<boolean>(true);
 
-  passwordVisible: boolean = false;
-  errorMessage: string = '';
+  // Estado interno
+  password = model<string>('');
+  passwordVisible = signal(false);
+  errorMessage = signal('');
+  showError = signal(false);
+  disabled = signal(false);
+  isTouched = signal(false);
 
-  form = this.formBuilder.group({
-    password: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(20),
-        Validators.pattern(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])(?!.*\s).{8,20}$/
-        ),
-      ],
-    ],
-  });
+  // Funciones de callback para ControlValueAccessor
+  onChange: any = () => {};
+  onTouch: any = () => {};
 
-  showPassword() {
-    this.passwordVisible = !this.passwordVisible;
+  // Implementación de ControlValueAccessor
+  writeValue(value: string): void {
+    this.password.set(value || '');
+    this.validatePassword();
   }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouch = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }
+
+  // Eventos de control
+  onInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    this.password.set(value);
+    this.validatePassword();
+    this.onChange(value);
+  }
+
+  onBlur(): void {
+    this.isTouched.set(true);
+    this.validatePassword();
+    this.onTouch();
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible.update((val) => !val);
+  }
+
+  // Validación y feedback
+  validatePassword(): void {
+    const value = this.password();
+
+    if (!value) {
+      if (this.required() && this.isTouched()) {
+        this.showError.set(true);
+        this.errorMessage.set('La contraseña es requerida');
+      } else {
+        this.showError.set(false);
+        this.errorMessage.set('');
+      }
+      return;
+    }
+
+    if (!this.hasMinLength(value)) {
+      this.showError.set(true);
+      this.errorMessage.set(
+        `La contraseña debe tener al menos ${this.minLength()} caracteres`
+      );
+    } else if (!this.hasNumber(value)) {
+      this.showError.set(true);
+      this.errorMessage.set('La contraseña debe tener al menos un número');
+    } else if (!this.hasLowerCase(value)) {
+      this.showError.set(true);
+      this.errorMessage.set(
+        'La contraseña debe tener al menos una letra minúscula'
+      );
+    } else if (!this.hasUpperCase(value)) {
+      this.showError.set(true);
+      this.errorMessage.set(
+        'La contraseña debe tener al menos una letra mayúscula'
+      );
+    } else if (!this.hasSpecialChar(value)) {
+      this.showError.set(true);
+      this.errorMessage.set(
+        'La contraseña debe tener al menos un carácter especial'
+      );
+    } else if (!this.noSpaces(value)) {
+      this.showError.set(true);
+      this.errorMessage.set('La contraseña no puede tener espacios');
+    } else if (value.length > this.maxLength()) {
+      this.showError.set(true);
+      this.errorMessage.set(
+        `La contraseña no puede exceder los ${this.maxLength()} caracteres`
+      );
+    } else {
+      this.showError.set(false);
+      this.errorMessage.set('');
+    }
+  }
+
+  // Verificadores de seguridad
   getStrengthClass(): string {
-    this.updateErrorMessage();
-    const password = this.form.controls['password'].value;
+    const password = this.password();
 
     if (!password) {
-      return 'bg-gray-200';
+      return 'w-0 bg-gray-200';
     }
 
     let strength = 0;
@@ -64,44 +149,19 @@ export class PasswordComponent {
 
     if (strength === 5) {
       return 'w-full bg-green-500';
+    } else if (strength >= 4) {
+      return 'w-4/5 bg-lime-500';
     } else if (strength >= 3) {
-      return 'w-2/3 bg-yellow-500';
-    } else if (strength > 0) {
-      return 'w-1/3 bg-red-500';
+      return 'w-3/5 bg-yellow-500';
+    } else if (strength >= 2) {
+      return 'w-2/5 bg-orange-500';
     } else {
-      return 'bg-gray-200';
-    }
-  }
-
-  updateErrorMessage() {
-    const password = this.form.controls['password'].value;
-    if (!password) {
-      this.errorMessage = '';
-      return;
-    }
-
-    if (!this.hasMinLength(password)) {
-      this.errorMessage = 'La contraseña debe tener al menos 8 caracteres';
-    } else if (!this.hasNumber(password)) {
-      this.errorMessage = 'La contraseña debe tener al menos un número';
-    } else if (!this.hasLowerCase(password)) {
-      this.errorMessage =
-        'La contraseña debe tener al menos una letra minúscula';
-    } else if (!this.hasUpperCase(password)) {
-      this.errorMessage =
-        'La contraseña debe tener al menos una letra mayúscula';
-    } else if (!this.hasSpecialChar(password)) {
-      this.errorMessage =
-        'La contraseña debe tener al menos un carácter especial';
-    } else if (!this.noSpaces(password)) {
-      this.errorMessage = 'La contraseña no puede tener espacios';
-    } else {
-      this.errorMessage = '';
+      return 'w-1/5 bg-red-500';
     }
   }
 
   hasMinLength(password: string): boolean {
-    return password.length >= 8;
+    return password.length >= this.minLength();
   }
 
   hasNumber(password: string): boolean {

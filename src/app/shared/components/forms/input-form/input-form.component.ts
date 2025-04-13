@@ -1,11 +1,4 @@
-import { NgClass } from '@angular/common';
-import {
-  Component,
-  forwardRef,
-  input,
-  model,
-  signal,
-} from '@angular/core';
+import { Component, forwardRef, input, model, signal } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -14,17 +7,16 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-input-form',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule ],
+  selector: 'app-input-form', 
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './input-form.component.html',
   styleUrls: ['./input-form.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => InputFormComponent),
-      multi: true
-    }
+      multi: true,
+    },
   ],
 })
 export class InputFormComponent implements ControlValueAccessor {
@@ -36,7 +28,7 @@ export class InputFormComponent implements ControlValueAccessor {
   maxLength = input<number>(250);
   readonly = input<boolean>(false);
   isPositive = input<boolean>(false);
-  value = model<string | Date >('');
+  value = model<string | Date>('');
   isTouched = signal(false);
   showError = signal(false);
   errorMessage = signal('');
@@ -82,7 +74,7 @@ export class InputFormComponent implements ControlValueAccessor {
         value = 0;
         input.value = '0';
       }
-  
+
       if (value < 0) {
         value = 0;
         input.value = '0';

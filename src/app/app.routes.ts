@@ -34,7 +34,6 @@ export const routes: Routes = [
     path: 'luxury',
     component: MainComponent,
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         component: HomeComponent,
@@ -48,12 +47,12 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: UserProfileComponent,
-        canActivate: [authGuardAdmin],
+        canActivate: [authGuardSeller],
       },
       {
         path: 'services_packages',
         component: MainServicesPackagesComponent,
-        canActivate: [authGuardAdmin],
+        canActivate: [authGuardSeller],
       },
       {
         path: 'branches',
@@ -63,12 +62,12 @@ export const routes: Routes = [
       {
         path: 'sales',
         component: SalesComponent,
-        canActivate: [authGuardAdmin],
+        canActivate: [authGuardSeller],
       },
       {
         path: 'clients',
         component: ClientsComponent,
-        canActivate: [authGuardAdmin],
+        canActivate: [authGuardSeller],
       },
       {
         path: 'reports',
@@ -78,7 +77,7 @@ export const routes: Routes = [
       {
         path: 'manifests',
         component: ManifestsComponent,
-        canActivate: [authGuardAdmin],
+        canActivate: [authGuardSeller],
       },
       // {
       //   path: 'configurations',

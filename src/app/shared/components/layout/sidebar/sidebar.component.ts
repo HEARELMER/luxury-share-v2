@@ -24,7 +24,7 @@ export class SidebarComponent {
   isAdmin = signal<boolean>(this._verifiedRolesService.isAdmin);
   isSeller = signal<boolean>(this._verifiedRolesService.isSeller);
   isGerent = signal<boolean>(this._verifiedRolesService.isGerent);
-  restrictedForSellers = ['users', 'branches', 'reports'];
+  restrictedForSellers = ['users', 'branches', 'reports','home'];
   MENU_OPTIONS: MenuNode[] = MENU_OPTIONS;
   filteredMenu = computed(() => {
     if (this.isAdmin() || this.isGerent()) {

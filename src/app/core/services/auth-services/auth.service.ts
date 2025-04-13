@@ -69,7 +69,15 @@ export class AuthService {
             ) {
               localStorage.setItem('user', JSON.stringify(response.body.data));
             }
-            this._router.navigate(['/luxury']);
+            if (
+              this.authState().user?.role.roleName.toLocaleLowerCase() ===
+                'seller' ||
+              'vendedor'
+            ) {
+              this._router.navigate(['/luxury/sales']);
+            } else {
+              this._router.navigate(['/luxury/home']);
+            }
             return { success: true, message: response.body.message };
           } else {
             return { success: false, message: response.body.message };

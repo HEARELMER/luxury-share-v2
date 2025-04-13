@@ -12,8 +12,14 @@ export const publicGuard: CanActivateFn = async () => {
   const router = inject(Router);
   const authService = inject(AuthService);
   const isAuthenticated = authService.isAuthenticated;
+  const verifiedRoles = inject(VerifiedRolesService);
+  const isSeller = verifiedRoles.isSeller;
   if (isAuthenticated) {
-    router.navigate(['/luxury']);
+    if (isSeller) {
+      router.navigate(['/luxury/clients']);
+    } else {
+      router.navigate(['/luxury/home']);
+    }
   }
 
   return !isAuthenticated;
@@ -39,18 +45,20 @@ export const authGuardSeller: CanActivateFn = () => {
   const authService = inject(AuthService);
   const isAuthenticated = authService.isAuthenticated;
   const isSeller = verifiedRoles.isSeller;
-  if (!isAuthenticated && !isSeller) {
+  const isAdmin = verifiedRoles.isAdmin;
+  const isGerent = verifiedRoles.isGerent;
+  if (!isAuthenticated && !(isSeller || isAdmin || isGerent)) {
     router.navigate(['/auth/login']);
   }
 
-  return !!(isAuthenticated && isSeller);
+  return !!(isAuthenticated && (isSeller || isAdmin || isGerent));
 };
 
 export const authGuardGerent: CanActivateFn = () => {
   const router = inject(Router);
   const verifiedRoles = inject(VerifiedRolesService);
   const authService = inject(AuthService);
-  
+
   const isAuthenticated = authService.isAuthenticated;
   const isGerent = verifiedRoles.isGerent;
 

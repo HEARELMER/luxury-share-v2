@@ -25,7 +25,7 @@
 
     <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
       <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
-      <div class="flex flex-1 gap-2 items-end">
+      <div class="flex gap-2 items-end">
         <div class="flex-grow max-w-xs">
           <app-input-form
             type="text"
@@ -43,6 +43,23 @@
         >
           <i class="pi pi-search"></i>
         </button>
+      </div>
+      <app-select
+        [required]="true"
+        label="Estado de Venta"
+        errorType=" "
+        [options]="salesStatusFilters"
+        (valueChange)="onFilterChange('status', $event)"
+      />
+      <div class="flex items-end">
+        <button
+          pButton
+          icon="pi pi-filter-slash"
+          label="Limpiar filtros"
+          class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+          [disabled]="filters().length === 0"
+          (click)="clearFilters()"
+        ></button>
       </div>
     </div>
   </div>
@@ -78,7 +95,7 @@
       scrollHeight="400px"
       [resizableColumns]="true"
       styleClass="p-datatable-gridlines"
-      [tableStyle]="{ 'min-width': '50rem'  }"
+      [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
     >
       <ng-template pTemplate="header" let-columns>

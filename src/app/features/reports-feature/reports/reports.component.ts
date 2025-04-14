@@ -1,12 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-
 import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
 import { KpiCardsComponent, KpiData } from '../kpi-cards/kpi-cards.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -23,10 +18,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { ScheduleReportDialogComponent } from '../schedule-report-dialog/schedule-report-dialog.component';
-import {
-  Goal,
-  GoalsPanelComponent,
-} from '../goals-panel/goals-panel.component';
+import { Goal } from '../goals-panel/goals-panel.component';
+import { ReportsService } from '../../../core/services/reports-services/reports.service';
+import { SalesSummaryFilesComponent } from '../sales-summary-files/sales-summary-files.component';
+import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 @Component({
   selector: 'app-reports',
   imports: [
@@ -49,7 +44,8 @@ import {
     TagModule,
     DropdownModule,
     InputTextModule,
-    ScheduleReportDialogComponent, 
+    ScheduleReportDialogComponent,
+    SalesSummaryFilesComponent,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
@@ -57,6 +53,9 @@ import {
 export class ReportsComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _messageService = inject(MessageService);
+  private readonly _reportsService = inject(ReportsService);
+  private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
+  kpisData = signal<any[]>([]);
   showFilters = signal<boolean>(false);
   activeFiltersCount = signal<number>(0);
   lastUpdate = signal<Date>(new Date());
@@ -78,11 +77,20 @@ export class ReportsComponent {
       command: () => this.onExport('pdf'),
     },
   ];
+
   updateActiveFiltersCount() {
     const values = this.filtersForm.value;
     const count = Object.values(values).filter((v) => v && v !== 'all').length;
     this.activeFiltersCount.set(count);
   }
+
+  generateReport() {
+    const filters = this.filtersForm.value;
+    this._reportsService.loadReports(filters).subscribe((data) => {
+      this.kpisData.set(data.keyMetrics);
+    });
+  }
+
   // Mostrar/ocultar datos detallados
   showDetailedData = signal<boolean>(false);
 
@@ -280,31 +288,6 @@ export class ReportsComponent {
   showSaveReportDialog = signal<boolean>(false);
   newReportName = signal<string>('');
 
-  // Método para guardar realmente el reporte
-  confirmSaveReport() {
-    if (this.newReportName()) {
-      const newReport = {
-        name: this.newReportName(),
-        id: this.savedReports().length + 1,
-        config: { ...this.filtersForm.value },
-      };
-
-      // Añadir al listado
-      this.savedReports.update((reports) => [...reports, newReport]);
-
-      // Mostrar mensaje de éxito
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Reporte guardado',
-        detail: `El reporte "${this.newReportName()}" ha sido guardado`,
-      });
-
-      // Cerrar diálogo y limpiar
-      this.showSaveReportDialog.set(false);
-      this.newReportName.set('');
-    }
-  }
-
   loading = signal<boolean>(false);
   totalRecords = signal<number>(100);
 
@@ -399,50 +382,217 @@ export class ReportsComponent {
 
   updateReport() {
     this.loading.set(true);
-    // Simulamos la actualización
-    setTimeout(() => {
-      this.lastUpdate.set(new Date());
-      this.loading.set(false);
 
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Reporte actualizado',
-        detail: 'Los datos han sido actualizados correctamente',
-      });
-    }, 1500);
+    try {
+      // 1. Construir payload con datos del formulario
+      const payload = this.buildReportPayload();
+      this.fetchReportData(payload);
+    } catch (error) {
+      this.handleError('Error al preparar los datos del reporte');
+      this.loading.set(false);
+    }
   }
 
+  // Método para construir el payload del reporte
+  private buildReportPayload() {
+    const formValues = this.filtersForm.value;
+
+    // Configura el período (campo obligatorio)
+    const periodConfig = this.configurePeriod(formValues.dateRange ?? '');
+
+    // Construir payload completo
+    const payload = {
+      period: periodConfig,
+      serviceType: formValues.serviceType,
+      packageType: formValues.package,
+      sellerId: formValues.seller,
+    };
+
+    // Filtrar valores vacíos/nulos
+    return this._filterEmptyValuesPipe.transform(payload);
+  }
+
+  // Método para configurar el periodo según el tipo seleccionado
+  private configurePeriod(dateRange: string): any {
+    switch (dateRange) {
+      case 'today':
+        return this.configureToday();
+      case 'yesterday':
+        return this.configureYesterday();
+      case 'last-week':
+        return this.configureLastWeek();
+      case 'last-month':
+        return this.configureLastMonth();
+      case 'last-year':
+        return this.configureLastYear();
+      case 'custom':
+        return this.configureCustomRange();
+      default:
+        return this.configureCurrentMonth(); // Valor predeterminado
+    }
+  }
+
+  // Métodos específicos para cada tipo de periodo
+  private configureToday(): any {
+    const today = new Date();
+    const startOfDay = new Date(today);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'daily',
+      from: startOfDay.toISOString(),
+      to: endOfDay.toISOString(),
+      label: 'Hoy',
+    };
+  }
+
+  private configureYesterday(): any {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const startOfDay = new Date(yesterday);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(yesterday);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'daily',
+      from: startOfDay.toISOString(),
+      to: endOfDay.toISOString(),
+      label: 'Ayer',
+    };
+  }
+
+  // Método similar para otras configuraciones de periodo...
+
+  // Método para el rango personalizado
+  private configureCustomRange(): any {
+    const customStart = this.filtersForm.get('customDateStart')?.value;
+    const customEnd = this.filtersForm.get('customDateEnd')?.value;
+
+    const startDate = customStart ? new Date(customStart) : new Date();
+    const endDate = customEnd ? new Date(customEnd) : new Date();
+
+    // Ajustar horas
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'custom',
+      from: startDate.toISOString(),
+      to: endDate.toISOString(),
+      label: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
+    };
+  }
+
+  private configureLastWeek(): any {
+    const today = new Date();
+    const lastWeek = new Date(today);
+    lastWeek.setDate(today.getDate() - 7);
+
+    lastWeek.setHours(0, 0, 0, 0);
+    today.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'weekly',
+      from: lastWeek.toISOString(),
+      to: today.toISOString(),
+      label: 'Última semana',
+    };
+  }
+
+  private configureLastMonth(): any {
+    const today = new Date();
+    const lastMonth = new Date(today);
+    lastMonth.setMonth(today.getMonth() - 1);
+
+    lastMonth.setHours(0, 0, 0, 0);
+    today.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'monthly',
+      from: lastMonth.toISOString(),
+      to: today.toISOString(),
+      label: 'Último mes',
+    };
+  }
+
+  private configureLastYear(): any {
+    const today = new Date();
+    const lastYear = new Date(today);
+    lastYear.setFullYear(today.getFullYear() - 1);
+
+    lastYear.setHours(0, 0, 0, 0);
+    today.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'yearly',
+      from: lastYear.toISOString(),
+      to: today.toISOString(),
+      label: 'Último año',
+    };
+  }
+
+  private configureCurrentMonth(): any {
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    firstDay.setHours(0, 0, 0, 0);
+    today.setHours(23, 59, 59, 999);
+
+    return {
+      type: 'monthly',
+      from: firstDay.toISOString(),
+      to: today.toISOString(),
+      label: 'Mes actual',
+    };
+  }
+
+  // Método para hacer la petición API
+  private fetchReportData(payload: any) {
+    this._reportsService.loadReports(payload).subscribe({
+      next: (response) => this.handleSuccess(response),
+      error: (error) => this.handleError(error),
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  // Manejo de respuesta exitosa
+  private handleSuccess(response: any) {
+    // Actualizar datos con la respuesta
+    if (response?.keyMetrics) {
+      this.kpisData.set(response.keyMetrics);
+    }
+
+    if (response?.chartData) {
+      this.chartData.set(response.chartData);
+    }
+
+    // Actualizar fecha de actualización
+    this.lastUpdate.set(new Date());
+
+    // Notificar éxito
+    this._messageService.add({
+      severity: 'success',
+      summary: 'Reporte actualizado',
+      detail: 'Los datos del reporte han sido actualizados correctamente',
+    });
+  }
+
+  // Manejo de errores
+  private handleError(error: any) {
+    console.error('Error al cargar los reportes:', error);
+
+    this._messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail:
+        'No se pudieron cargar los datos del reporte. Intente nuevamente.',
+    });
+  }
   // Añade estas propiedades
   selectedRecipients: string[] = ['carlos.lopez@empresa.com'];
-
-  // Usuarios sugeridos para enviar reportes
-  suggestedUsers = [
-    {
-      name: 'María García',
-      email: 'maria.garcia@empresa.com',
-      avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
-    },
-    {
-      name: 'Juan Pérez',
-      email: 'juan.perez@empresa.com',
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    },
-    {
-      name: 'Ana Silva',
-      email: 'ana.silva@empresa.com',
-      avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
-    },
-    {
-      name: 'Roberto Torres',
-      email: 'roberto.torres@empresa.com',
-      avatar: 'https://randomuser.me/api/portraits/men/41.jpg',
-    },
-    {
-      name: 'Elena Salazar',
-      email: 'elena.salazar@empresa.com',
-      avatar: 'https://randomuser.me/api/portraits/women/33.jpg',
-    },
-  ];
 
   // Método para añadir un destinatario desde las sugerencias
   addRecipient(email: string): void {

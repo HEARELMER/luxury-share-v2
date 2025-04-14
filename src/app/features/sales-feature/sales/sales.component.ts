@@ -17,9 +17,12 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { SalesService } from '../../../core/services/sales-services/sales.service';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { SaleDetailsComponent } from '../sale-details/sale-details.component';
-import { FilterOptions } from '../../../core/interfaces/api/filters';
+import { Filter, FilterOptions } from '../../../core/interfaces/api/filters';
 import { MessageService } from 'primeng/api';
 import { SaleDetailsPdfComponent } from '../sale-details-pdf/sale-details-pdf.component';
+import { SALE_STATUS_FILTERS } from '../constants/sales-filters.constant';
+import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { Button, ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -40,6 +43,8 @@ import { SaleDetailsPdfComponent } from '../sale-details-pdf/sale-details-pdf.co
     TagModule,
     Tag,
     InputFormComponent,
+    SelectComponent,
+    ButtonModule
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -59,6 +64,7 @@ export class SalesComponent {
   sales = signal<any[]>([]);
   filters = signal<{ key: string; value: string }[]>([]);
 
+  salesStatusFilters = SALE_STATUS_FILTERS;
   // Configuración de tabla
   salesTableColumns = SALES_TABLE_COLUMNS;
   currentPage = 1;
@@ -69,6 +75,36 @@ export class SalesComponent {
   rows = 5;
   openAddSaleModal() {
     this.showModalAddSale.set(true);
+  }
+
+  onFilterChange(key: string, event: any) {
+    const filter = {
+      key: key,
+      value: event,
+    };
+
+    this.filters.update((prevFilters: Filter[]) => {
+      // Verificar si ya existe un filtro con esta clave
+      const existingFilterIndex = prevFilters.findIndex((f) => f.key === key);
+
+      if (existingFilterIndex >= 0) {
+        // Si existe, crear un nuevo array con el filtro actualizado
+        const updatedFilters = [...prevFilters];
+        updatedFilters[existingFilterIndex] = filter;
+        return updatedFilters;
+      } else {
+        // Si no existe, agregar el nuevo filtro
+        return [...prevFilters, filter];
+      }
+    });
+
+    this.loadSales({ resetPage: true });
+  }
+
+  clearFilters() {
+    this.filters.set([]);
+    this.filterSaleByCodeSale.set('');
+    this.loadSales({ resetPage: true });
   }
 
   searchSale() {

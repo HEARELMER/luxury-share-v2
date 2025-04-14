@@ -1,0 +1,125 @@
+<div class="border rounded-lg shadow-sm overflow-hidden bg-white">
+  <!-- Encabezado del reporte -->
+  <div class="p-4 border-b bg-gray-50">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">{{ reportTitle() }}</h2>
+        <p class="text-sm text-gray-500">Período: {{ reportPeriod() }}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full">
+          Vista Previa
+        </span>
+        <img src="./images/logo.svg" alt="Logo" class="h-10 w-auto" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="bg-gray-50 px-4 py-2 border-b flex justify-end gap-2">
+    <button 
+      pButton 
+      icon="pi pi-print" 
+      label="Imprimir" 
+      class="p-button-sm p-button-outlined"
+      (click)="printReport()">
+    </button>
+    <button 
+      pButton 
+      icon="pi pi-file-pdf" 
+      label="Descargar PDF" 
+      class="p-button-sm p-button-danger p-button-outlined"
+      (click)="downloadAsPdf()">
+    </button>
+  </div>
+
+  <!-- Resumen de métricas clave -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-blue-50/30 border-b">
+    <div class="flex flex-col items-center p-3 bg-white rounded-md border shadow-sm hover:shadow-md transition-shadow">
+      <span class="text-xs uppercase text-gray-500">Total Ventas</span>
+      <span class="text-2xl font-bold text-primary-700">S/ {{ totalSales().toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+      <span class="text-xs text-green-600">+{{ growthPercentage() }}% vs. mes anterior</span>
+    </div>
+    <div class="flex flex-col items-center p-3 bg-white rounded-md border shadow-sm hover:shadow-md transition-shadow">
+      <span class="text-xs uppercase text-gray-500">Transacciones</span>
+      <span class="text-2xl font-bold text-primary-700">{{ totalTransactions().toLocaleString('es-PE') }}</span>
+      <span class="text-xs text-gray-600">Promedio: S/ {{ averageTransaction().toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+    </div>
+    <div class="flex flex-col items-center p-3 bg-white rounded-md border shadow-sm hover:shadow-md transition-shadow">
+      <span class="text-xs uppercase text-gray-500">Método de Pago</span>
+      <span class="text-2xl font-bold text-primary-700">Efectivo: {{ cashPercentage() }}%</span>
+      <div class="flex items-center gap-2 text-xs text-gray-600">
+        <i class="pi pi-credit-card"></i> <span>Tarjeta: {{ cardPercentage() }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de datos -->
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-gray-50 text-left text-xs uppercase">
+          <th class="p-3 border-b text-gray-600 font-medium">Fecha</th>
+          <th class="p-3 border-b text-gray-600 font-medium">Código</th>
+          <th class="p-3 border-b text-gray-600 font-medium">Cliente</th>
+          <th class="p-3 border-b text-gray-600 font-medium">Servicio/Paquete</th>
+          <th class="p-3 border-b text-gray-600 font-medium">Método</th>
+          <th class="p-3 border-b text-gray-600 font-medium text-right">Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of saleItems(); track item.code) {
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 border-b text-sm">{{ item.date }}</td>
+            <td class="p-3 border-b text-sm font-mono">{{ item.code }}</td>
+            <td class="p-3 border-b text-sm">{{ item.clientName }}</td>
+            <td class="p-3 border-b text-sm">{{ item.service }}</td>
+            <td class="p-3 border-b text-sm">
+              <span [class]="'px-2 py-1 rounded-full text-xs ' + getPaymentMethodClass(item.paymentMethod)">
+                {{ item.paymentMethod }}
+              </span>
+            </td>
+            <td class="p-3 border-b text-sm text-right font-medium">
+              S/ {{ item.amount.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
+            </td>
+          </tr>
+        }
+        <tr class="bg-gray-50 font-medium">
+          <td class="p-3 border-b" colspan="5">
+            Vista previa ({{ saleItems().length }} de {{ totalTransactions() }} registros)
+          </td>
+          <td class="p-3 border-b text-right">
+            S/ {{ sampleTotal.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gráfico y análisis -->
+  <div class="p-4 border-t">
+    <h3 class="text-sm font-medium mb-3 text-gray-700">Ventas por Categoría</h3>
+    <div class="h-48 border rounded-md p-3 flex bg-white shadow-inner">
+      <!-- Gráfico de barras dinámico -->
+      <div class="flex items-end gap-3 w-full h-full">
+        @for (category of categories(); track category.name) {
+          <div class="relative flex flex-col items-center h-full flex-1">
+            <div [class]="category.color + ' w-full rounded-t-sm transition-all duration-500'" 
+                 [style.height.%]="category.percentage * 1.5">
+            </div>
+            <div class="absolute bottom-0 w-full h-full flex flex-col justify-end items-center pb-2">
+              <span class="text-xs mt-1 font-medium text-gray-800">{{ category.name }}</span>
+              <span class="text-xs font-bold">{{ category.percentage }}%</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <div class="p-3 bg-gray-50 border-t flex justify-between text-xs text-gray-500">
+    <span>Generado el {{ generationDate() }}</span>
+    <span>Luxury Travel | Vista Previa del Reporte</span>
+  </div>
+</div>

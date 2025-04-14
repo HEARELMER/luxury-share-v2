@@ -25,7 +25,6 @@ export class UserProfileComponent {
 
   ngOnInit(): void {
     this.userInfo = this.localStorageService.getUserAuthorized();
-    console.log(this.userInfo);
   }
 
   viewPasswordRecoveryForm = signal<boolean>(false);

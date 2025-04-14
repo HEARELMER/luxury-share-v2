@@ -1,4 +1,4 @@
-<main class="flex flex-col bg-white rounded-xl gap-4">
+<main class="flex flex-col bg-white lg:rounded-xl gap-4">
   <!-- HEADER: Título, exportar y botones de acción -->
   <header class="border-b py-3 px-4">
     <!-- Sección superior: título y botones principales -->
@@ -48,7 +48,7 @@
             (click)="updateReport()"
           ></button>
 
-          <!-- Botón programar reportes -->
+          <!-- Botón programar reportes
           <button
             pButton
             icon="pi pi-clock"
@@ -58,7 +58,7 @@
             pTooltip="Programar envíos"
             tooltipPosition="bottom"
             (click)="showScheduleDialog.set(true)"
-          ></button>
+          ></button> -->
         </div>
       </div>
     </div>
@@ -123,6 +123,7 @@
                 <i class="pi pi-calendar text-primary-500"></i>
                 Desde
               </label>
+
               <p-datepicker
                 formControlName="customDateStart"
                 (onSelect)="onCustomDateChange()"
@@ -224,8 +225,12 @@
     </form>
   </section>
 
+  <section class=" ">
+    <app-sales-summary-files title="Resumen de ventas para exportar" />
+  </section>
+
   <!-- SECCIÓN DE KPI CARDS -->
-  <section class="px-6 py-4">
+  <section class="px-4 py-4 pb-6 border-b">
     <app-kpi-cards [data]="kpiData()"></app-kpi-cards>
   </section>
 

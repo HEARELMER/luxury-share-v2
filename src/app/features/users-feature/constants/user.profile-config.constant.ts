@@ -4,11 +4,11 @@ export const USER_PROFILE_CONFIG = [
     icon: 'pi pi-user',
     value:0
   },
-  {
-    label: 'Notificaciones',
-    icon: 'pi pi-bell',
-    value:1
-  },
+  // {
+  //   label: 'Notificaciones',
+  //   icon: 'pi pi-bell',
+  //   value:1
+  // },
   {
     label: 'Seguridad',
     icon: 'pi pi-lock',

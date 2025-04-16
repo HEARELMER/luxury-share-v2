@@ -6,19 +6,17 @@
     font(),
     'rounded-lg duration-300 ease-in-out py-1 px-6 ',
     'flex  items-center gap-2',
-    'hover:shadow-lg hover:-translate-y-0.5',
+    'hover:shadow-lg  ',
     'active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
     'border-none outline-none',
     width() ? width() : 'w-full',
     moreClasses()
-
   ]"
 >
-<ng-content></ng-content>
+  <ng-content></ng-content>
   @if (icon()) {
-    <i class="{{ icon() }} {{font()}} "></i>
-  }
-  @if (text()) {
-    <p [ngClass]="{ hidden: textHidden() }">{{ text() }}</p>
+  <i class="{{ icon() }} {{ font() }} "></i>
+  } @if (text()) {
+  <p [ngClass]="{ hidden: textHidden() }">{{ text() }}</p>
   }
 </button>

@@ -18,11 +18,12 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { UserService } from '../../../core/services/users-services/user.service';
- 
+
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { RolesService } from '../../../core/services/roles-services/roles.service';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-add-user',
   imports: [
@@ -42,6 +43,7 @@ export class AddUserComponent {
   private readonly _userService = inject(UserService);
   private readonly _rolesService = inject(RolesService);
   private readonly _messageService = inject(MessageService);
+  private readonly _localStorageService = inject(LocalstorageService);
   rolesOptions = signal<any[]>([]);
   userForm: FormGroup = this._fb.group({
     numDni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
@@ -55,7 +57,7 @@ export class AddUserComponent {
     password: [],
     photoUrl: ['https://github.com/hearelmer.png'],
     roleId: ['', Validators.required],
-    userId: [''],
+    userId: [this._localStorageService.getUserId()],
   });
   showModal = model<boolean>(false);
   rolePreselected = input<string>('');

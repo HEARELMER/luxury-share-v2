@@ -22,6 +22,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { Option } from '../../../shared/components/forms/select/select.component';
 import { Toast } from 'primeng/toast';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 
 interface SuggestedManifest {
   id: string;
@@ -65,6 +66,7 @@ export class ManifestFormComponent {
   private readonly branchService = inject(BranchService);
   private readonly messageService = inject(MessageService);
   private readonly _ref = inject(DynamicDialogRef);
+  private readonly _localStorageService = inject(LocalstorageService);
   currentManifestPage = signal<number>(1);
   manifestPageSize = signal<number>(10);
   totalManifestRecords = signal<number>(0);
@@ -212,7 +214,7 @@ export class ManifestFormComponent {
       departureDate: new Date(this.selectedDate()).toISOString() || '',
       title: this.selectedService().name || '',
       description: this.selectedService().description || '',
-      registeredBy: '73464945',
+      registeredBy: this._localStorageService.getUserId(),
       participants: this.suggestedManifests().map((sale: any) => ({
         clientId: sale.client.clientId,
         clientName:

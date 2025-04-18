@@ -24,6 +24,7 @@ import { SERVICE_TYPES } from '../constants/service-types.contant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { JsonPipe } from '@angular/common';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-add-service',
   imports: [
@@ -33,7 +34,7 @@ import { JsonPipe } from '@angular/common';
     InputFormComponent,
     ModalComponent,
     Toast,
-    SelectComponent, 
+    SelectComponent,
   ],
   templateUrl: './add-service.component.html',
   styleUrl: './add-service.component.scss',
@@ -43,6 +44,7 @@ export class AddServiceComponent {
   private readonly _serviceService = inject(ServicesService);
   private readonly _messageService = inject(MessageService);
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
+  private readonly _localStorageService = inject(LocalstorageService);
 
   showModal = model<boolean>(false);
   refreshData = output<void>();
@@ -81,16 +83,16 @@ export class AddServiceComponent {
       priceUnit: formValues.priceUnit ? parseFloat(formValues.priceUnit) : 0,
       type: formValues.type?.trim(),
       status: Boolean(formValues.status),
-      registeredBy: '73464945',
+      registeredBy: this._localStorageService.getUserId(),
     });
   }
 
   onSubmit() {
-    if (!this.serviceForm.valid) return; 
+    if (!this.serviceForm.valid) return;
     this.formatValues();
     const filteredValues = this._filterEmptyValuesPipe.transform(
       this.serviceForm.value
-    ); 
+    );
     if (this.isEditing()) {
       this.update(filteredValues);
     } else {

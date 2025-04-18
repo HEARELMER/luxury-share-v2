@@ -109,8 +109,7 @@ export class ReportsComponent {
     const payload = this.buildReportPayload();
 
     this._reportsService.loadReports(payload, forceRefresh).subscribe({
-      next: ({ response, lastUpdate }) => {
-        console.log('response', response);
+      next: ({ response, lastUpdate }) => { 
         this.kpisData.set(response?.data?.keyMetrics || []);
         this.chartsData.set(response?.data?.chartData || []);
         this.lastUpdate.set(lastUpdate);

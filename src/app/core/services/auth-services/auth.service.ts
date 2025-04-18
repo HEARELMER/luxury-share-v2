@@ -99,9 +99,7 @@ export class AuthService {
       user: null,
       currentBranch: null,
     });
-    localStorage.removeItem(environmentDev.authStateKey);
-    localStorage.removeItem('user');
-    localStorage.removeItem('currentBranch');
+    localStorage.clear();
     this._router.navigate(['/auth']);
 
     return logout;

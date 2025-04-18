@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  model,
   output,
   signal,
 } from '@angular/core';
@@ -36,7 +37,10 @@ import {
   TableState,
 } from '../../../../services-packages-feature/interfaces/sale-formt';
 import { PAYMENT_METHODS } from '../../../constants/add-sales.constant';
-import { SaleCreationResult } from '../../../interfaces/sale-creation-result.interface';
+import {
+  Client,
+  SaleCreationResult,
+} from '../../../interfaces/sale-creation-result.interface';
 
 @Component({
   selector: 'app-step2-sale-form',
@@ -66,7 +70,7 @@ export class Step2SaleFormComponent {
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
   private readonly _localstorageService = inject(LocalstorageService);
   private readonly _fb = inject(FormBuilder);
-  constructor() { 
+  constructor() {
     effect(() => {
       this.currentView();
       this.loadItems();
@@ -75,6 +79,10 @@ export class Step2SaleFormComponent {
   // Estados
   readonly statusOfSaleCreated = output<SaleCreationResult>();
   readonly submitForm = output<void>();
+  currentClientModel = model.required<Client | null>();
+  clientId = computed(() =>
+    this.currentClientModel() ? this.currentClientModel()!.clientId : ''
+  );
   selectedItems = signal<SaleItem[]>([]);
   discount = signal<any>(0);
   currentView = signal<'services' | 'packages'>('services');
@@ -228,6 +236,11 @@ export class Step2SaleFormComponent {
   // createSale
   createSale() {
     const details = this.formatSaleDetails(this.selectedItems());
+    this,
+      this.formSale.patchValue({
+        clientId: this.clientId(),
+      });
+
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
     );
@@ -236,7 +249,6 @@ export class Step2SaleFormComponent {
       details,
       dateSale: new Date().toISOString(),
     };
-    console.log(saleData);
     this._salesService.createSale(saleData).subscribe({
       next: (response) => {
         this.statusOfSaleCreated.emit({
@@ -262,10 +274,7 @@ export class Step2SaleFormComponent {
 
   reservarSale() {
     const details = this.formatSaleDetails(this.selectedItems());
-    this.formSale.patchValue({
-      clientId: 'e234500d-5166-451f-b072-b88279cd26d1',
-      registeredBy: '73464945',
-    });
+
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
     );

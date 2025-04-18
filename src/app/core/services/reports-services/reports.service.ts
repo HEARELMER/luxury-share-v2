@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { LocalstorageService } from '../localstorage-services/localstorage.service';
 
@@ -33,15 +33,32 @@ export class ReportsService {
       .pipe(
         tap((response) => {
           this._localStorageService.setReportsToCache('reports', response);
-          const lastUpdate = response?.data?.metadata.lastGenerated;
-
-          return { response, lastUpdate };
+        }),
+        map((response) => {
+          return {
+            response: response,
+            lastUpdate: new Date(response.data.metadata.lastGenerated),
+          };
         })
       );
   }
 
-  getDataForFile(filters: any): Observable<any> {
-    return this._httpclient.post<any>(`${this._api}reports/files`, filters, {
+  getDataOfSales(filters: any): Observable<any> {
+    return this._httpclient.post<any>(`${this._api}reports/sales`, filters, {
+      withCredentials: true,
+    });
+  }
+  getDataOfServicesAndPackages(filters: any): Observable<any> {
+    return this._httpclient.post<any>(
+      `${this._api}reports/services-and-packages`,
+      filters,
+      {
+        withCredentials: true,
+      }
+    );
+  }
+  getDataOfBranches(filters: any): Observable<any> {
+    return this._httpclient.post<any>(`${this._api}reports/branches`, filters, {
       withCredentials: true,
     });
   }

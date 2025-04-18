@@ -66,8 +66,7 @@ export class Step2SaleFormComponent {
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
   private readonly _localstorageService = inject(LocalstorageService);
   private readonly _fb = inject(FormBuilder);
-  constructor() {
-    // Efecto para recargar datos cuando cambie la vista
+  constructor() { 
     effect(() => {
       this.currentView();
       this.loadItems();
@@ -114,11 +113,11 @@ export class Step2SaleFormComponent {
     branchId: [this.branchId()],
     dateSale: [''],
     departureDate: [''],
-    registeredBy: [''],
+    registeredBy: [this._localstorageService.getUserId()],
     discount: [0],
     observations: [''],
     paymentMethod: ['', [Validators.required]],
-    status: '',
+    status: ['COMPLETADO'],
   });
 
   serviceColumns: ColumnDef[] = [
@@ -203,7 +202,7 @@ export class Step2SaleFormComponent {
   loadItems(): void {
     this.loading.set(true);
     const { first, rows } = this.tableState();
-    const updatedFilters = [{ key: 'status', value: 'true' }]; 
+    const updatedFilters = [{ key: 'status', value: 'true' }];
     this.loadData()(first / rows + 1, rows, updatedFilters).subscribe({
       next: (response) => {
         this.items.set(response.data[this.currentView()]);
@@ -229,11 +228,6 @@ export class Step2SaleFormComponent {
   // createSale
   createSale() {
     const details = this.formatSaleDetails(this.selectedItems());
-    this.formSale.patchValue({
-      clientId: 'e234500d-5166-451f-b072-b88279cd26d1',
-      registeredBy: '73464945',
-      status: 'COMPLETADO',
-    });
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
     );

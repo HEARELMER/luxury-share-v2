@@ -14,85 +14,11 @@
       </p>
     </div>
   </div>
-  <p-tabView scrollable="true" class="w-full">
-    <!-- Pestaña de Ventas en el tiempo -->
-    <p-tabPanel header="Ventas en el tiempo">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <app-chart-line
-          title="Tendencia de ventas"
-          subtitle="Últimos 12 meses"
-          [chartData]="data().sales"
-        ></app-chart-line>
-
-        <app-chart-line
-          title="Margen de ganancia"
-          subtitle="Evolución mensual (%)"
-          [chartData]="data().profitMargin"
-        ></app-chart-line>
-      </div>
-    </p-tabPanel>
-
-    <!-- Pestaña de Comparativas -->
-    <p-tabPanel header="Comparativas">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <app-chart-bar
-          title="Comparativa anual"
-          subtitle="Este año vs anterior"
-          [chartData]="data().yearComparison"
-        ></app-chart-bar>
-        <app-chart-bar
-          title="Comparativa anual"
-          subtitle="Este año vs anterior"
-          icon="pi pi-calendar"
-          iconBg="bg-blue-50"
-          [labels]="[
-            { label: '2023 - Q1', color: '#94a3b8', quantity: 540 },
-            { label: '2023 - Q2', color: '#4338ca', quantity: 620 },
-            { label: '2024 - Q1', color: '#16a34a', quantity: 650 },
-            { label: '2024 - Q2', color: '#ea580c', quantity: 750 }
-          ]"
-          orientation="x"
-        ></app-chart-bar>
-        <app-chart-horizontal-bar
-          title="Top Vendedores"
-          subtitle="Por volumen de ventas"
-          [labels]="[
-            { label: 'Juan Pérez', color: '#4338ca', quantity: 45000 },
-            { label: 'María García', color: '#4338ca', quantity: 38000 },
-            { label: 'Carlos López', color: '#4338ca', quantity: 32000 },
-            { label: 'Ana Silva', color: '#4338ca', quantity: 28000 },
-            { label: 'Jorge Rodríguez', color: '#4338ca', quantity: 21000 }
-          ]"
-        ></app-chart-horizontal-bar>
-      </div>
-    </p-tabPanel>
-
-    <!-- Pestaña de Distribución -->
-    <p-tabPanel header="Distribución">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <app-chart-bar
-          title="Ventas por categoría"
-          subtitle="Distribución de ingresos"
-          [chartData]="data().categorySales"
-        />
-
-        <app-chart-bar
-          title="Ventas por región"
-          subtitle="Distribución geográfica"
-          [chartData]="data().regionSales"
-        />
-      </div>
-    </p-tabPanel>
-
-    <!-- Pestaña de Desempeño -->
-    <p-tabPanel header="Desempeño">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <app-chart-bar
-          title="Crecimiento mensual"
-          subtitle="Comparado con el mes anterior"
-          [chartData]="data().monthlyGrowth"
-        ></app-chart-bar>
-      </div>
-    </p-tabPanel>
-  </p-tabView>
+  @defer () {
+  <app-chart-line
+    title="Tendencia de ventas"
+    subtitle="Últimos 12 meses"
+    [chartData]="data()"
+  ></app-chart-line>
+  }
 </div>

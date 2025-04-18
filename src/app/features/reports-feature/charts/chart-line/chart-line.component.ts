@@ -1,19 +1,38 @@
-import { Component, input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartModule } from 'primeng/chart';
+import { ChartModule, UIChart } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+
+export interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    fill: boolean;
+    tension: number;
+    borderColor: string;
+  }[];
+}
+
 @Component({
   selector: 'app-chart-line',
   imports: [CommonModule, ChartModule, ButtonModule, TooltipModule],
   templateUrl: './chart-line.component.html',
-  styleUrl: './chart-line.component.scss'
+  styleUrl: './chart-line.component.scss',
 })
 export class ChartLineComponent implements OnInit, OnChanges {
   readonly title = input<string>('');
   readonly subtitle = input<string>('');
-  readonly chartData = input<any>(null);
-
+  readonly chartData = input<ChartData>({} as ChartData);
+  @ViewChild('chart') chartRef!: UIChart;
   options: any;
   data: any;
 
@@ -29,34 +48,17 @@ export class ChartLineComponent implements OnInit, OnChanges {
 
   private initChart() {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color') || '#333333';
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border') || '#e5e7eb';
+    const textColor =
+      documentStyle.getPropertyValue('--text-color') || '#333333';
+    const textColorSecondary =
+      documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
+    const surfaceBorder =
+      documentStyle.getPropertyValue('--surface-border') || '#e5e7eb';
 
-    // Default data
     this.data = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [
-        {
-          label: 'Ventas 2023',
-          data: [65, 59, 80, 81, 56, 55, 40, 38, 45, 60, 70, 75],
-          fill: false,
-          tension: 0.4,
-          borderColor: '#4338ca',
-        },
-        {
-          label: 'Ventas 2024',
-          data: [70, 65, 85, 89, 60, 60, 45, 42, 50, 65, 75, 80],
-          fill: false,
-          tension: 0.4,
-          borderColor: '#16a34a',
-        }
-      ],
+      labels: this.chartData().labels,
+      datasets: this.chartData().datasets,
     };
-
-    if (this.chartData()) {
-      this.updateChartWithData(this.chartData());
-    }
 
     this.options = {
       maintainAspectRatio: false,
@@ -73,8 +75,8 @@ export class ChartLineComponent implements OnInit, OnChanges {
           titleColor: textColor,
           bodyColor: textColorSecondary,
           borderColor: surfaceBorder,
-          borderWidth: 1
-        }
+          borderWidth: 1,
+        },
       },
       scales: {
         x: {
@@ -100,6 +102,36 @@ export class ChartLineComponent implements OnInit, OnChanges {
   private updateChartWithData(chartData: any) {
     if (chartData) {
       this.data = chartData;
+    }
+  }
+
+  downloadChart(format: 'png' | 'jpg' = 'png'): void {
+    if (!this.chartRef || !this.chartRef.chart) {
+      return;
+    }
+
+    const canvas = this.chartRef.chart.canvas;
+    if (!canvas) {
+      return;
+    }
+
+    const imageType = format === 'png' ? 'image/png' : 'image/jpeg';
+    const imageQuality = format === 'png' ? 1 : 0.95;
+
+    try {
+      const imageUrl = canvas.toDataURL(imageType, imageQuality);
+
+      const link = document.createElement('a');
+      const chartTitle = this.title() || 'grafico';
+      const fileName = `${chartTitle
+        .toLowerCase()
+        .replace(/\s+/g, '-')}.${format}`;
+
+      link.download = fileName;
+      link.href = imageUrl;
+      link.click();
+    } catch (error) {
+      console.error('Error al generar la imagen:', error);
     }
   }
 }

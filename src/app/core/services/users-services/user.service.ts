@@ -149,4 +149,10 @@ export class UserService {
       })
     );
   }
+
+  updateProfile(data: any, userId: string): Observable<any> {
+    return this.httpClient.patch(`${this.url}users/${userId}/profile`, data, {
+      withCredentials: true,
+    });
+  }
 }

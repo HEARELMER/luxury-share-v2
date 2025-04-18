@@ -24,8 +24,7 @@
       title="Ventas y Pagos"
       icon="pi pi-shopping-cart"
       borderColor="border-green-200"
-      (onExcel)="generateExcelReport()"
-      (onPdf)="generatePdfReport()"
+      (onExcel)="generateExcelReportOfSales()"
       description="Exporta un reporte con todas las ventas realizadas y los métodos de pago utilizados."
     ></app-card-report>
 
@@ -35,6 +34,7 @@
       icon="pi pi-car"
       borderColor="border-blue-200"
       description="Genera un reporte con el desglose de ventas por servicios y paquetes contratados."
+      (onExcel)="generateExcelReportOfServicesAndPackages()"
     ></app-card-report>
 
     <!-- Reporte de sucursales -->
@@ -43,6 +43,7 @@
       icon="pi pi-building"
       borderColor="border-orange-200"
       description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
+      (onExcel)="generateExcelReportOfBranches()"
     ></app-card-report>
   </div>
 </div>

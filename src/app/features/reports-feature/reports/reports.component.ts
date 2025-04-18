@@ -20,6 +20,7 @@ import { ReportsService } from '../../../core/services/reports-services/reports.
 import { SalesSummaryFilesComponent } from '../sales-summary-files/sales-summary-files.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { DATE_RANGE_OPTIONS } from '../constants/reports.constant';
+import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
 @Component({
   selector: 'app-reports',
   imports: [
@@ -42,6 +43,7 @@ import { DATE_RANGE_OPTIONS } from '../constants/reports.constant';
     DropdownModule,
     InputTextModule,
     SalesSummaryFilesComponent,
+    ChartsPanelComponent,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
@@ -54,6 +56,7 @@ export class ReportsComponent {
 
   // Signals
   kpisData = signal<any[]>([]);
+  chartsData = signal<any[]>([]);
   loading = signal<boolean>(false);
   lastUpdate = signal<any>(new Date());
   showFilters = signal<boolean>(false);
@@ -107,7 +110,9 @@ export class ReportsComponent {
 
     this._reportsService.loadReports(payload, forceRefresh).subscribe({
       next: ({ response, lastUpdate }) => {
+        console.log('response', response);
         this.kpisData.set(response?.data?.keyMetrics || []);
+        this.chartsData.set(response?.data?.chartData || []);
         this.lastUpdate.set(lastUpdate);
         this._messageService.add({
           severity: 'success',
@@ -194,6 +199,20 @@ export class ReportsComponent {
         } else {
           return null; // Manejo de error si las fechas no son válidas
         }
+      case 'this-week':
+        const firstDayThisWeek = new Date(today);
+        firstDayThisWeek.setDate(today.getDate() - today.getDay() + 1);
+        return this.createPeriod(firstDayThisWeek, today, 'Esta semana');
+      case 'this-year':
+        const firstDayThisYear = new Date(today.getFullYear(), 0, 1);
+        return this.createPeriod(firstDayThisYear, today, 'Este año');
+      case 'this-month':
+        const firstDayThisMonth1 = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          1
+        );
+        return this.createPeriod(firstDayThisMonth1, today, 'Este mes');
       default:
         const firstDayThisMonth = new Date(
           today.getFullYear(),

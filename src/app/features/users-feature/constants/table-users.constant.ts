@@ -1,5 +1,6 @@
 export const USER_TABLE_COLS = [
   { field: 'photoUrl', header: 'Foto', sortable: false },
+  {field: 'userId', header: 'ID', sortable: true },
   { field: 'numDni', header: 'DNI', sortable: true },
   { field: 'name', header: 'Nombre', sortable: true },
   { field: 'email', header: 'Correo', sortable: true },

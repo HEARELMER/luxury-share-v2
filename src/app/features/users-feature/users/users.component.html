@@ -204,11 +204,11 @@
               loading="lazy"
             />
             } @else if (col.field == "role") { @if (user[col.field].roleName ===
-            'ADMIN') {
+            'ADMINISTRADOR') {
             <p-tag severity="warn" value="Administrador"></p-tag>
-            } @else if (user[col.field].roleName === 'SELLER') {
+            } @else if (user[col.field].roleName === 'VENDEDOR') {
             <p-tag severity="info" value="Vendedor"></p-tag>
-            } @else if (user[col.field].roleName === 'GERENT') {
+            } @else if (user[col.field].roleName === 'GERENTE') {
             <p-tag severity="success" value="Gerente"></p-tag>
             } } @else if (col.field=="actions") {
             <div class="flex gap-1">

@@ -36,8 +36,7 @@ import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.s
 })
 export class FormSaleComponent {
   // Inyección de dependencias
-  private readonly _fb = inject(FormBuilder);
-  private readonly _salesService = inject(SalesService);
+  private readonly _fb = inject(FormBuilder)
   private readonly _clientsService = inject(ClientsService);
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
   private readonly _pdfSaleService = inject(SalePdfService);

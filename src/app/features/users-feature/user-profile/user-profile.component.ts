@@ -13,6 +13,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { UserService } from '../../../core/services/users-services/user.service';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-user-profile',
   imports: [
@@ -22,13 +25,16 @@ import { DatePipe } from '@angular/common';
     TabsModule,
     PasswordRecoveryComponent,
     ReactiveFormsModule,
-    FormsModule, 
+    FormsModule,
+    Toast,
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
 export class UserProfileComponent {
   private localStorageService = inject(LocalstorageService);
+  private readonly _messageService = inject(MessageService);
+  private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
   userInfo = signal<any>(null);
   menuOptions = USER_PROFILE_CONFIG;
@@ -55,9 +61,20 @@ export class UserProfileComponent {
 
   onSubmit() {
     if (this.userProfile.valid) {
-      console.log(this.userProfile.value);
-    } else {
-      console.log('Formulario inválido');
+      const userId = this.userInfo().userId;
+      this._userService
+        .updateProfile(this.userProfile.value, userId)
+        .subscribe({
+          next: (response) => {
+            this.userInfo.set(response.data);
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: response.message,
+            });
+            this.localStorageService.setUserAuthorized(response.data);
+          },
+        });
     }
   }
 }

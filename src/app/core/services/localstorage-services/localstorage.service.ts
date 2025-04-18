@@ -15,6 +15,10 @@ export class LocalstorageService {
     }
   }
 
+  setUserAuthorized(user: any) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
   getUserDni(): string {
     const user = this.getUserAuthorized();
     return user.numDni;
@@ -41,16 +45,21 @@ export class LocalstorageService {
     );
   }
 
-  getBranchId(): Observable<string> {
-    return of(localStorage.getItem('branchId') || '');
+  getBranchId(): Observable<string | null> {
+    const branchStr = localStorage.getItem('branch');
+    if (branchStr) {
+      try {
+        const branch = JSON.parse(branchStr);
+        return of(branch.branchId);
+      } catch (e) {
+        return of(null);
+      }
+    }
+    return of(null);
   }
 
-  setBranchLoad(value: boolean) {
-    sessionStorage.setItem('branchLoad', JSON.stringify(value));
-  }
-
-  setBranchId(sucursalId: any) {
-    sessionStorage.setItem('sucursalId', sucursalId);
+  setBranch(value: any) {
+    localStorage.setItem('branch', JSON.stringify(value));
   }
 
   getReportsFromCache(key: string): any {
@@ -63,7 +72,7 @@ export class LocalstorageService {
   setReportsToCache(key: string, data: any) {
     localStorage.setItem(key, JSON.stringify(data));
   }
-  
+
   removeReportsFromCache(key: string) {
     localStorage.removeItem(key);
   }

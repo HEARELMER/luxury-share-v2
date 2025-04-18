@@ -36,3 +36,47 @@ export const HEADERS_FOR_REPORT_OF_SALES = {
   seller: 'Vendedor',
   observations: 'Observaciones',
 };
+
+// Constantes para Servicios y Paquetes
+export const SELECTED_COLUMNS_FOR_REPORT_OF_SERVICES = [
+  'name',
+  'type',
+  'quantitySold',
+  'revenue',
+  'salesCount',
+  'isPackage',
+  'averageQuantityPerSale',
+];
+
+export const HEADERS_FOR_REPORT_OF_SERVICES = {
+  name: 'Nombre',
+  type: 'Tipo',
+  quantitySold: 'Cantidad Vendida',
+  revenue: 'Ingresos',
+  salesCount: 'Número de Ventas',
+  isPackage: 'Es Paquete',
+  averageQuantityPerSale: 'Promedio por Venta',
+};
+
+// Constantes para Sucursales
+export const SELECTED_COLUMNS_FOR_REPORT_OF_BRANCHES = [
+  'branchId',
+  'name',
+  'address',
+  'totalSales',
+  'totalRevenue',
+  'salesByStatus',
+  'salesByPaymentMethod',
+  'topSeller',
+];
+
+export const HEADERS_FOR_REPORT_OF_BRANCHES = {
+  branchId: 'ID de Sucursal',
+  name: 'Nombre',
+  address: 'Dirección',
+  totalSales: 'Total de Ventas',
+  totalRevenue: 'Ingresos Totales',
+  salesByStatus: 'Ventas por Estado',
+  salesByPaymentMethod: 'Ventas por Método de Pago',
+  topSeller: 'Mejor Vendedor',
+};

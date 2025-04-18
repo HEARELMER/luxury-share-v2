@@ -15,4 +15,10 @@ export class ReportsService {
       withCredentials: true,
     });
   }
+
+  loadDashboardData(): Observable<any> {
+    return this._httpclient.get<any>(`${this._api}reports/totals`, {
+      withCredentials: true,
+    });
+  }
 }

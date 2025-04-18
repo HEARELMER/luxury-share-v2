@@ -11,8 +11,10 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DatePickerComponent } from "../../../shared/components/forms/date-picker/date-picker.component";
+import { DatePickerComponent } from '../../../shared/components/forms/date-picker/date-picker.component';
 import { ScrollTop } from 'primeng/scrolltop';
+import { ReportsService } from '../../../core/services/reports-services/reports.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -23,16 +25,18 @@ import { ScrollTop } from 'primeng/scrolltop';
     CdkDrag,
     CdkDragPreview,
     CdkDropList,
-    DatePickerModule, 
+    DatePickerModule,
     DatePickerComponent,
     ScrollTop,
-],
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   private readonly dashboardService = inject(DashboardService);
   private readonly dragDropService = inject(DragDropService);
+  private readonly reportsService = inject(ReportsService);
+  countsData = toSignal(this.reportsService.loadDashboardData());
   constructor() {
     const savedCards =
       this.dragDropService.loadOrderFromLocalStorage('dashboard-cards');
@@ -48,7 +52,7 @@ export class HomeComponent {
   totalUsers = 0;
   salesData = [];
   totalSales = 0;
-   
+
   topServices: any[] = [];
   topPackages: any[] = [];
   totalSalesByBranch: any[] = [];
@@ -127,13 +131,13 @@ export class HomeComponent {
       routerLink: 'services_packages',
     },
     {
-      id:'branches',
-      title:'Sucursales',
-      number:0,
-      bg:'bg-blue-400',
-      buttonBg:'bg-blue-500',
-      routerLink:'branches'
-    }, 
+      id: 'branches',
+      title: 'Sucursales',
+      number: 0,
+      bg: 'bg-blue-400',
+      buttonBg: 'bg-blue-500',
+      routerLink: 'branches',
+    },
     {
       id: 'packages',
       title: 'Total de Paquetes',

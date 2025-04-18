@@ -1,10 +1,12 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { PreviewSummaryComponent } from '../preview-summary/preview-summary.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
+import { CardReportComponent } from "../card-report/card-report.component";
 
 @Component({
   selector: 'app-sales-summary-files',
-  imports: [PreviewSummaryComponent],
+  imports: [PreviewSummaryComponent, ButtonComponent, CardReportComponent],
   templateUrl: './sales-summary-files.component.html',
   styleUrl: './sales-summary-files.component.scss',
   providers: [DialogService],
@@ -13,6 +15,7 @@ export class SalesSummaryFilesComponent {
   title = input.required<string>();
   public readonly dialogService = inject(DialogService);
   ref: DynamicDialogRef | undefined;
+  loading = signal<boolean>(false);
 
   // Métodos para generar reportes
   generateExcelReport(): void {}
@@ -43,5 +46,17 @@ export class SalesSummaryFilesComponent {
         console.log('Report preview closed with result:', result);
       }
     });
+  }
+
+    // Métodos para descargar reportes
+  downloadSalesReport(format: 'excel' | 'pdf'): void {
+  }
+  
+  downloadPackagesReport(format: 'excel' | 'pdf'): void {
+    // Implementación similar para reportes de paquetes/servicios
+  }
+  
+  downloadBranchesReport(format: 'excel' | 'pdf'): void {
+    // Implementación similar para reportes de sucursales
   }
 }

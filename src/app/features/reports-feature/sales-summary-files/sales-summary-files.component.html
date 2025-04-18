@@ -18,80 +18,29 @@
   </div>
 
   <!-- Opciones de exportación -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-    <!-- Excel -->
-    <button
-      class="flex flex-col items-center p-6 bg-green-50 rounded-lg border border-green-100 hover:bg-green-100 hover:shadow-md transition-all"
-    >
-      <i class="pi pi-file-excel text-3xl text-green-600 pb-3"></i>
-      <h3 class="text-sm font-medium">Excel</h3>
-      <p class="text-xs text-gray-500 text-center pt-2">
-        Exportar datos detallados para análisis
-      </p>
-    </button>
-
-    <!-- PDF -->
-    <button
-      class="flex flex-col items-center p-6 bg-red-50 rounded-lg border border-red-100 hover:bg-red-100 hover:shadow-md transition-all"
-    >
-      <i class="pi pi-file-pdf text-3xl text-red-600 pb-3"></i>
-      <h3 class="text-sm font-medium">PDF</h3>
-      <p class="text-xs text-gray-500 text-center pt-2">
-        Documento formal para impresión
-      </p>
-    </button>
-
-    <!-- CSV -->
-    <button
-      class="flex flex-col items-center p-6 bg-blue-50 rounded-lg border border-blue-100 hover:bg-blue-100 hover:shadow-md transition-all"
-    >
-      <i class="pi pi-database text-3xl text-blue-600 pb-3"></i>
-      <h3 class="text-sm font-medium">CSV</h3>
-      <p class="text-xs text-gray-500 text-center pt-2">
-        Datos en texto plano para sistemas contables
-      </p>
-    </button>
-
-    <!-- Vista previa -->
-    <button
-    (click)="previewReport()"
-      class="flex flex-col items-center p-6 bg-purple-50 rounded-lg border border-purple-100 hover:bg-purple-100 hover:shadow-md transition-all"
-    >
-      <i class="pi pi-eye text-3xl text-purple-600 pb-3"></i>
-      <h3 class="text-sm font-medium">Vista Previa</h3>
-      <p class="text-xs text-gray-500 text-center pt-2">
-        Visualizar antes de exportar
-      </p>
-    </button>
+   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+    <!-- Reporte detallado de ventas -->
+    <app-card-report
+      title="Ventas y Pagos"
+      icon="pi pi-shopping-cart"
+      borderColor="border-green-200"
+      description="Exporta un reporte con todas las ventas realizadas y los métodos de pago utilizados."
+    ></app-card-report>
+  
+    <!-- Reporte detallado de servicios y/o paquetes -->
+    <app-card-report
+      title="Servicios y Paquetes"
+      icon="pi pi-car"
+      borderColor="border-blue-200"
+      description="Genera un reporte con el desglose de ventas por servicios y paquetes contratados."
+    ></app-card-report>
+  
+    <!-- Reporte de sucursales -->
+    <app-card-report
+      title="Rendimiento por Sucursal"
+      icon="pi pi-building"
+      borderColor="border-orange-200"
+           description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
+    ></app-card-report>
   </div>
-
-  <div class="pt-6">
-    <details class="group">
-      <summary
-        class="flex cursor-pointer items-center gap-2 text-sm font-medium text-primary-600 marker:content-none"
-      >
-        <i class="pi pi-info-circle text-primary-500"></i>
-        <span>Información sobre el reporte</span>
-        <i
-          class="pi pi-chevron-down text-xs ml-auto group-open:rotate-180 transition-transform"
-        ></i>
-      </summary>
-      <div class="pt-3 pl-6 text-sm text-gray-600">
-        <ul class="list-disc space-y-2 pl-4">
-          <li>
-            Los reportes incluyen detalles completos de todas las ventas
-            realizadas en el período seleccionado
-          </li>
-          <li>
-            El formato Excel permite análisis avanzado con tablas dinámicas y
-            fórmulas
-          </li>
-          <li>El formato PDF es ideal para impresión y archivado formal</li>
-          <li>
-            El CSV es compatible con la mayoría de sistemas contables externos
-          </li>
-        </ul>
-      </div>
-    </details>
-  </div>
-</div> 
+</div>

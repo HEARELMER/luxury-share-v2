@@ -9,7 +9,7 @@
       />
     </div>
   </div>
-  <p-tabs [value]="0">
+  <p-tabs [value]="0" scrollable>
     <p-tablist>
       @for (item of menuOptions; track $index) {
       <p-tab [value]="item.value">
@@ -26,43 +26,87 @@
           <div
             class="flex lg:flex-row flex-col lg:justify-normal justify-center lg:items-center gap-6 lg:gap-10 items-normal"
           >
-            <app-photo-profile [photo]="userInfo.photoUrl" />
+            <!-- Foto de perfil con insignia de rol -->
+            <div class="relative">
+              <app-photo-profile [photo]="userInfo().photoUrl" />
+              <div
+                class="absolute -bottom-2 -right-2 bg-primary-500 text-white text-xs px-3 py-1 rounded-full shadow-sm"
+              >
+                {{ userInfo().role?.roleName }}
+              </div>
+            </div>
+
+            <!-- Información del usuario -->
             <div>
               <h1 class="text-xl font-semibold">
                 {{
-                  userInfo.name +
+                  userInfo().name +
                     " " +
-                    userInfo.firstLastname +
+                    userInfo().firstLastname +
                     " " +
-                    userInfo.secondLastname
+                    userInfo().secondLastname
                 }}
               </h1>
-              <p>{{ userInfo.email }}</p>
+              <div class="flex flex-col gap-1 mt-1">
+                <p class="flex items-center gap-1 text-gray-600">
+                  {{ userInfo().email }}
+                </p>
+                <p class="flex items-center gap-1 text-gray-600 font-semibold">
+                  <span class="text-sm font-mono"
+                    >ID: {{ userInfo().userId }}</span
+                  >
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <form>
+        <form [formGroup]="userProfile" (ngSubmit)="onSubmit()">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <app-input-form label="Nombres" placeholder="Elmer" />
-            <app-input-form label="Primer Apellido" placeholder="Huaman" />
-            <app-input-form label="Segundo Apellido" placeholder="Rojas" />
+            <app-input-form
+              label="Nombres"
+              formControlName="name"
+              placeholder="Elmer"
+              [required]="true"
+            />
+            <app-input-form
+              label="Primer Apellido"
+              formControlName="firstLastname"
+              placeholder="Huaman"
+              [required]="true"
+            />
+            <app-input-form
+              label="Segundo Apellido"
+              formControlName="secondLastname"
+              placeholder="Rojas"
+              [required]="true"
+            />
 
             <app-input-form
               label="Fecha de Nacimiento"
               type="date"
+              formControlName="birthDate"
               placeholder="2021-01-01"
             />
             <app-input-form
               label="Correo Electrónico"
+              formControlName="email"
               placeholder="elmer@dev.com"
+              [required]="true"
             />
 
             <app-input-form
               label="Número de Teléfono"
               placeholder="123456789"
+              formControlName="phone"
+              [required]="true"
+              [isPositive]="true"
             />
 
-            <app-input-form label="Dirección" placeholder="Calle 123" />
+            <app-input-form
+              label="Dirección"
+              formControlName="address"
+              placeholder="Calle 123"
+            />
           </div>
           <div class="w-full pt-4 gap-2 flex justify-end">
             <app-button

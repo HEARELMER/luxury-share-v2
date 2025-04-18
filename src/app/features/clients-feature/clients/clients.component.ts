@@ -21,6 +21,7 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { FormClientComponent } from '../form-client/form-client.component';
 import { Toast } from 'primeng/toast';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 
 @Component({
   selector: 'app-clients',
@@ -52,6 +53,7 @@ export class ClientsComponent {
   private readonly _clientsService = inject(ClientsService);
   private readonly _messageService = inject(MessageService);
   public readonly dialogService = inject(DialogService);
+  private readonly _localStorageService = inject(LocalstorageService);
   ref: DynamicDialogRef | undefined;
 
   constructor() {
@@ -176,7 +178,27 @@ export class ClientsComponent {
     });
     ref.onClose.subscribe((result: boolean) => {
       if (result) {
-        // Usuario confirmó
+        const data = {
+          id: client.clientId,
+          updatedBy: this._localStorageService.getUserId(),
+        };
+        this._clientsService.deleteClient(data).subscribe({
+          next: (response) => {
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: response.message,
+            });
+            this.loadClients({ resetPage: true });
+          },
+          error: (error) => {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo eliminar el cliente',
+            });
+          },
+        });
       } else {
         // Usuario canceló
       }

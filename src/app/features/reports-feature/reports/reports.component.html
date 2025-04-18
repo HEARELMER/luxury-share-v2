@@ -23,19 +23,6 @@
 
         <!-- Sección de botones con diseño responsive -->
         <div class="flex items-center gap-2">
-          <!-- Botón exportar -->
-          <button
-            pButton
-            icon="pi pi-cloud-download"
-            size="small"
-            class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
-            [label]="'Exportar'"
-            pTooltip="Exportar reporte"
-            tooltipPosition="bottom"
-            (click)="exportMenu.toggle($event)"
-          ></button>
-          <p-menu #exportMenu [popup]="true" [model]="exportOptions"></p-menu>
-
           <!-- Botón actualizar -->
           <button
             pButton
@@ -45,20 +32,8 @@
             [label]="'Actualizar Reporte'"
             pTooltip="Actualizar datos"
             tooltipPosition="bottom"
-            (click)="updateReport()"
+            (click)="updateReport(true)"
           ></button>
-
-          <!-- Botón programar reportes
-          <button
-            pButton
-            icon="pi pi-clock"
-            [label]="'Programar reportes'"
-            size="small"
-            class="p-button-outlined"
-            pTooltip="Programar envíos"
-            tooltipPosition="bottom"
-            (click)="showScheduleDialog.set(true)"
-          ></button> -->
         </div>
       </div>
     </div>
@@ -104,50 +79,26 @@
           <i class="pi pi-calendar text-primary-500"></i>
           Período
         </label>
-        <div class="flex flex-col gap-2">
-          <app-select
-            [options]="dateRangeOptions"
-            [value]="filtersForm.get('dateRange')?.value || ''"
-            (valueChange)="onDateRangeChange($event)"
-            formControlName="dateRange"
-            placeholder="Seleccione un período"
-            [required]="true"
-            errorType=" "
-          />
-          @if (filtersForm.get('dateRange')?.value === 'custom') {
-          <div class="grid grid-cols-2 gap-2">
-            <div class="flex flex-col gap-1">
-              <label
-                class="text-sm font-medium text-gray-700 flex items-center gap-2"
-              >
-                <i class="pi pi-calendar text-primary-500"></i>
-                Desde
-              </label>
-
-              <p-datepicker
-                formControlName="customDateStart"
-                (onSelect)="onCustomDateChange()"
-              />
-            </div>
-            <div class="flex flex-col gap-1">
-              <label
-                class="text-sm font-medium text-gray-700 flex items-center gap-2"
-              >
-                <i class="pi pi-calendar text-primary-500"></i>
-                Hasta
-              </label>
-              <p-datepicker
-                formControlName="customDateEnd"
-                (onSelect)="onCustomDateChange()"
-              />
-            </div>
+        <app-select
+          [options]="dateRangeOptions"
+          formControlName="dateRange"
+          placeholder="Seleccione un período"
+          [required]="true"
+          errorType=" "
+        ></app-select>
+        @if(filtersForm.get('dateRange')?.value === 'custom'){
+        <div class="grid grid-cols-2 gap-2">
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Desde</label>
+            <p-datepicker formControlName="customDateStart"></p-datepicker>
           </div>
-          } @if (filtersForm.get('dateRange')?.value) {
-          <p class="text-xs text-gray-500 italic">
-            Mostrando datos para: {{ getDateRangeText() }}
-          </p>
-          }
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Hasta</label>
+            <p-datepicker formControlName="customDateEnd"></p-datepicker>
+          </div>
         </div>
+
+        }
       </div>
 
       <!-- Tipo de servicio -->
@@ -159,35 +110,13 @@
           Tipo de servicio
         </label>
         <app-select
+          [required]="true"
+          errorType=" "
           [options]="serviceTypeOptions"
           formControlName="serviceType"
           placeholder="Todos los tipos"
-          [required]="true"
-          errorType=" "
-        />
-        <p class="text-xs text-gray-500">
-          Opcional: Filtra por categoría de servicio
-        </p>
+        ></app-select>
       </div>
-
-      <!-- Servicios específicos -->
-      @if (filtersForm.get('serviceType')?.value) {
-      <div class="col-span-1 space-y-2">
-        <label
-          class="text-sm font-medium text-gray-700 flex items-center gap-2"
-        >
-          <i class="pi pi-list text-primary-500"></i>
-          Servicios
-        </label>
-        <app-select
-          [options]="serviceOptions"
-          formControlName="service"
-          placeholder="Todos los servicios"
-          [required]="true"
-          errorType=" "
-        />
-      </div>
-      }
 
       <!-- Paquetes -->
       <div class="col-span-1 space-y-2">
@@ -199,11 +128,11 @@
         </label>
         <app-select
           [options]="packageOptions"
-          placeholder="Todos los Paquetes"
           formControlName="package"
+          placeholder="Todos los paquetes"
           [required]="true"
           errorType=" "
-        />
+        ></app-select>
       </div>
 
       <!-- Vendedor -->
@@ -220,34 +149,21 @@
           placeholder="Todos los vendedores"
           [required]="true"
           errorType=" "
-        />
+        ></app-select>
       </div>
     </form>
   </section>
-
-  <section class=" ">
-    <app-sales-summary-files title="Resumen de ventas para exportar" />
+  <!-- SECCIÓN DE RESUMEN DE VENTAS -->
+  <section>
+    <app-sales-summary-files
+      title="Resumen de ventas para exportar"
+    ></app-sales-summary-files>
   </section>
 
   <!-- SECCIÓN DE KPI CARDS -->
   <section class="px-4 py-4 pb-6 border-b">
-    <app-kpi-cards [data]="kpiData()"></app-kpi-cards>
+    <app-kpi-cards [data]="kpisData()"></app-kpi-cards>
   </section>
-
-  <!-- SECCIÓN DE OBJETIVOS Y CUMPLIMIENTO
-  <app-goals-panel [goals]="goalsData()" /> -->
-
-  <!-- SECCIÓN DE GRÁFICOS -->
-  <section>
-    <app-charts-panel [data]="chartData()"></app-charts-panel>
-  </section>
-
-  <!-- DIÁLOGOS: Programación de reportes -->
-  <app-schedule-report-dialog
-    [(visible)]="showScheduleDialog"
-    (onClose)="showScheduleDialog.set(false)"
-    (save)="scheduleReport()"
-  />
 
   <!-- Toast para notificaciones -->
   <p-toast position="bottom-right"></p-toast>

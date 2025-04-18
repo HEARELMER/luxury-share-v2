@@ -22,5 +22,5 @@ export interface KpiData {
   styleUrl: './kpi-cards.component.scss',
 })
 export class KpiCardsComponent {
-  data = input.required<KpiData>();
+  data = input.required<any>();
 }

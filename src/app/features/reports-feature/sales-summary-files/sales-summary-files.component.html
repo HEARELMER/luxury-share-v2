@@ -18,15 +18,17 @@
   </div>
 
   <!-- Opciones de exportación -->
-   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
     <!-- Reporte detallado de ventas -->
     <app-card-report
       title="Ventas y Pagos"
       icon="pi pi-shopping-cart"
       borderColor="border-green-200"
+      (onExcel)="generateExcelReport()"
+      (onPdf)="generatePdfReport()"
       description="Exporta un reporte con todas las ventas realizadas y los métodos de pago utilizados."
     ></app-card-report>
-  
+
     <!-- Reporte detallado de servicios y/o paquetes -->
     <app-card-report
       title="Servicios y Paquetes"
@@ -34,13 +36,13 @@
       borderColor="border-blue-200"
       description="Genera un reporte con el desglose de ventas por servicios y paquetes contratados."
     ></app-card-report>
-  
+
     <!-- Reporte de sucursales -->
     <app-card-report
       title="Rendimiento por Sucursal"
       icon="pi pi-building"
       borderColor="border-orange-200"
-           description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
+      description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
     ></app-card-report>
   </div>
 </div>

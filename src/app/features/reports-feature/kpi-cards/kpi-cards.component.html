@@ -8,126 +8,35 @@
     <h2 class="text-lg font-semibold text-gray-800 m-0 leading-tight">
       Indicadores clave
     </h2>
-    <p class="text-xs text-gray-500 mt-1">Resumen de métricas principales</p>
+    <p class="text-xs text-gray-500 pt-1">Resumen de métricas principales</p>
   </div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-  <!-- Total Ventas -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Total Ventas</h3>
-      <i class="pi pi-shopping-cart text-primary-500"></i>
-    </div>
-    <p class="text-2xl font-bold mt-2">{{ data().totalSales }}</p>
-    <p class="text-xs text-gray-500 mt-1">Período actual</p>
-  </div>
+  @for (metric of data(); track $index) {
 
-  <!-- Ingresos -->
   <div
     class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
   >
     <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Ingresos</h3>
-      <i class="pi pi-dollar text-green-500"></i>
+      <h3 class="text-sm font-medium text-gray-600">{{ metric.label }}</h3>
+      <i [class]="metric.icon + ' text-primary-500'"></i>
     </div>
-    <p class="text-2xl font-bold mt-2">
-      S/. {{ data().totalIncome.toFixed(2) }}
+    <p class="text-2xl font-bold pt-2">
+      <ng-container [ngSwitch]="metric.type">
+        <span *ngSwitchCase="'currency'">S/. {{ metric.value }}</span>
+        <span *ngSwitchCase="'percentage'">{{ metric.value }}%</span>
+        <span *ngSwitchCase="'number'">{{ metric.value }}</span>
+        <span *ngSwitchCase="'text'">{{ metric.value }}</span>
+      </ng-container>
     </p>
-    <p class="text-xs text-gray-500 mt-1">Total generado</p>
-  </div>
-
-  <!-- Promedio Tickets -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Prom. Ventas/Día</h3>
-      <i class="pi pi-ticket text-yellow-500"></i>
-    </div>
-    <p class="text-2xl font-bold mt-2">{{ data().averageTickets }}</p>
-    <p class="text-xs text-gray-500 mt-1">Tickets por día</p>
-  </div>
-
-  <!-- Crecimiento -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Crecimiento</h3>
-      <i
-        [class]="
-          'pi ' +
-          (data().growthRate >= 0
-            ? 'pi-arrow-up text-green-500'
-            : 'pi-arrow-down text-red-500')
-        "
-      ></i>
-    </div>
-    <p
-      class="text-2xl font-bold mt-2"
-      [class.text-green-500]="data().growthRate >= 0"
-      [class.text-red-500]="data().growthRate < 0"
+    <p class="text-xs text-gray-500 pt-1">{{ metric.description }}</p>
+    <div
+      *ngIf="metric.trend"
+      class="flex items-center text-xs text-green-500 pt-2"
     >
-      {{ data().growthRate }}%
-    </p>
-    <p class="text-xs text-gray-500 mt-1">vs mes anterior</p>
-  </div>
-
-  <!-- Mejor Vendedor -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Mejor Vendedor</h3>
-      <i class="pi pi-user text-blue-500"></i>
+      <i class="pi pi-arrow-up pr-1"></i>
+      <span>{{ metric.trend.value }}% {{ metric.trend.label }}</span>
     </div>
-    <p class="text-lg font-bold mt-2">{{ data().topSeller.name }}</p>
-    <p class="text-sm text-gray-500 mt-1">
-      {{ data().topSeller.sales }} ventas
-    </p>
   </div>
-
-  <!-- Valor Promedio -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Valor Promedio</h3>
-      <i class="pi pi-money-bill text-indigo-500"></i>
-    </div>
-    <p class="text-2xl font-bold mt-2">
-      S/. {{ data().averageValue?.toFixed(2) || "0.00" }}
-    </p>
-    <p class="text-xs text-gray-500 mt-1">Por venta</p>
-  </div>
-
-  <!-- Tasa de Conversión -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Conversión</h3>
-      <i class="pi pi-percentage text-cyan-500"></i>
-    </div>
-    <p class="text-2xl font-bold mt-2">
-      {{ data().conversionRate?.toFixed(1) || "0" }}%
-    </p>
-    <p class="text-xs text-gray-500 mt-1">De cotizaciones</p>
-  </div>
-
-  <!-- Retención Clientes -->
-  <div
-    class="bg-white p-4 rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-  >
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-medium text-gray-600">Retención</h3>
-      <i class="pi pi-heart-fill text-red-500"></i>
-    </div>
-    <p class="text-2xl font-bold mt-2">
-      {{ data().customerRetention?.toFixed(1) || "0" }}%
-    </p>
-    <p class="text-xs text-gray-500 mt-1">Clientes recurrentes</p>
-  </div>
+  }
 </div>

@@ -1,26 +1,38 @@
 <main class="flex w-full gap-3 sm:gap-4 justify-center flex-col lg:p-2 sm:p-4">
-  <section class="flex flex-col gap-2 bg-white rounded-lg sm:rounded-xl shadow-sm border p-3 sm:p-4">
+  <section
+    class="flex flex-col gap-2 bg-white rounded-lg sm:rounded-xl shadow-sm border p-3 sm:p-4"
+  >
     <!-- header dashboard -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4 md:mb-6">
+    <div
+      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4 md:mb-6"
+    >
       <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 flex items-center justify-center">
+        <div
+          class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 flex items-center justify-center"
+        >
           <i class="pi pi-chart-line text-lg md:text-xl text-primary-500"></i>
         </div>
         <div class="flex-1">
-          <h1 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900">Dashboard</h1>
-          <p class="text-xs md:text-sm text-gray-500">Resumen general del negocio</p>
+          <h1
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900"
+          >
+            Dashboard
+          </h1>
+          <p class="text-xs md:text-sm text-gray-500">
+            Resumen general del negocio
+          </p>
         </div>
       </div>
-      
+
       <!-- Podría añadirse un selector de período aquí para pantallas pequeñas -->
-      <div class="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+      <!-- <div class="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
         <select class="text-xs sm:text-sm p-2 border rounded-md sm:hidden w-full">
           <option>Hoy</option>
           <option>Esta semana</option>
           <option selected>Este mes</option>
           <option>Este año</option>
         </select>
-      </div>
+      </div> -->
     </div>
 
     <!-- cards info-->
@@ -31,13 +43,14 @@
       class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 xs:gap-3 md:gap-4 w-full"
     >
       @for (card of cards(); track card.id) {
-      <div
-        cdkDrag
-        class="relative group"
-        [class.shadow-lg]="card.isDragging"
-      >
+      <div cdkDrag class="relative group" [class.shadow-lg]="card.isDragging">
         <!-- Preview mientras se arrastra -->
-        <div *cdkDragPreview class="rounded-lg xs:rounded-xl p-2 xs:p-3 sm:p-4 opacity-70 {{ card.bg }}">
+        <div
+          *cdkDragPreview
+          class="rounded-lg xs:rounded-xl p-2 xs:p-3 sm:p-4 opacity-70 {{
+            card.bg
+          }}"
+        >
           <app-card-home
             [title]="card.title"
             [number]="card.number"
@@ -54,9 +67,11 @@
           [bg]="card.bg"
           [buttonBg]="card.buttonBg"
           [routerLink]="card.routerLink"
-          class="min-h-[90px] xs:min-h-[100px] cursor-move "
+          class="min-h-[90px] xs:min-h-[100px] cursor-move"
         >
-          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <div
+            class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200"
+          >
             <i class="pi pi-grip-lines text-white/50"></i>
           </div>
         </app-card-home>
@@ -66,14 +81,13 @@
   </section>
 
   <!-- grid bento -->
-  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-    <!-- Card de filtro de fechas -->
-    <app-date-picker
-      class="bg-white rounded-lg sm:rounded-xl col-span-1 md:col-span-2 shadow-sm border w-full order-1"
-    />
-    
+  <section
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
+  >
     <!-- Ventas por Sucursal -->
-    <div class="col-span-1 md:col-span-2 lg:col-span-4 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-2 p-3 sm:p-4 min-h-[250px] sm:min-h-[300px]">
+    <div
+      class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-2 p-3 sm:p-4 min-h-[250px] sm:min-h-[300px]"
+    >
       @defer {
       <app-chart-bar
         [labels]="totalSalesByBranch"
@@ -81,19 +95,28 @@
         icon="pi pi-map-marker text-red-500"
         iconBg="bg-red-50"
       ></app-chart-bar>
-      }
-      @placeholder {
-        <div class="w-full h-full flex items-center justify-center">
-          <div class="animate-pulse flex flex-col items-center gap-2">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-32 w-full bg-gray-100 rounded"></div>
-          </div>
+      } @placeholder {
+      <div class="w-full h-full flex items-center justify-center">
+        <div class="animate-pulse flex flex-col items-center gap-2">
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 rounded"></div>
         </div>
+      </div>
       }
     </div>
-
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow order-5 min-h-[250px] sm:min-h-[300px]">
+      <app-chart-line
+        class="w-full"
+        [title]="'Total de ventas realizadas'"
+        [subtitle]="'Evolución mensual'"
+        icon="pi pi-chart-line text-green-500"
+        iconBg="bg-green-50"
+      ></app-chart-line>
+    </div>
     <!-- Top Paquetes -->
-    <div class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-3 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]">
+    <div
+      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-3 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
+    >
       @defer {
       <app-chart-bar
         [orientation]="'y'"
@@ -104,19 +127,20 @@
         iconBg="bg-orange-50"
         class="h-full"
       />
-      }
-      @placeholder {
-        <div class="w-full h-full flex items-center justify-center">
-          <div class="animate-pulse flex flex-col items-center gap-2">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-32 w-full bg-gray-100 rounded"></div>
-          </div>
+      } @placeholder {
+      <div class="w-full h-full flex items-center justify-center">
+        <div class="animate-pulse flex flex-col items-center gap-2">
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 rounded"></div>
         </div>
+      </div>
       }
     </div>
 
     <!-- Top Servicios -->
-    <div class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-4 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]">
+    <div
+      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-4 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
+    >
       @defer {
       <app-chart-bar
         title="Top Servicios"
@@ -126,28 +150,17 @@
         [orientation]="'y'"
         [labels]="topServices"
       />
-      }
-      @placeholder {
-        <div class="w-full h-full flex items-center justify-center">
-          <div class="animate-pulse flex flex-col items-center gap-2">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-32 w-full bg-gray-100 rounded"></div>
-          </div>
+      } @placeholder {
+      <div class="w-full h-full flex items-center justify-center">
+        <div class="animate-pulse flex flex-col items-center gap-2">
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 rounded"></div>
         </div>
+      </div>
       }
-    </div>
-
-    <div class="col-span-1 md:col-span-2 lg:col-span-6 bg-white rounded-lg sm:rounded-xl shadow-sm border p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow order-5 min-h-[250px] sm:min-h-[300px]">
-      <app-chart-line
-        class="w-full"
-        [title]="'Total de ventas realizadas'"
-        [subtitle]="'Evolución mensual'"
-        icon="pi pi-chart-line text-green-500"
-        iconBg="bg-green-50"
-      ></app-chart-line>
     </div>
   </section>
-  
+
   <p-scrolltop
     target="parent"
     [threshold]="100"

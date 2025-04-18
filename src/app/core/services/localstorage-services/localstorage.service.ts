@@ -52,4 +52,19 @@ export class LocalstorageService {
   setBranchId(sucursalId: any) {
     sessionStorage.setItem('sucursalId', sucursalId);
   }
+
+  getReportsFromCache(key: string): any {
+    const reports = localStorage.getItem(key);
+    if (reports) {
+      return JSON.parse(reports);
+    }
+  }
+
+  setReportsToCache(key: string, data: any) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+  
+  removeReportsFromCache(key: string) {
+    localStorage.removeItem(key);
+  }
 }

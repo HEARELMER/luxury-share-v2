@@ -20,6 +20,7 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { ButtonModule } from 'primeng/button';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 
 @Component({
   selector: 'app-form-client',
@@ -39,7 +40,7 @@ export class FormClientComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _fb = inject(FormBuilder);
   private readonly _clientsService = inject(ClientsService);
-
+  private readonly _localStorageService = inject(LocalstorageService);
   showModal = model<boolean>(false);
   isEditing = signal<boolean>(false);
   clientToEdit = input<any>(null);
@@ -54,7 +55,7 @@ export class FormClientComponent {
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: [''],
-    registeredBy: [''],
+    registeredBy: [this._localStorageService.getUserId()],
     clientId: [''],
   });
 
@@ -68,11 +69,7 @@ export class FormClientComponent {
   }
 
   createClient() {
-    if (this.clientForm.valid) {
-      this.clientForm.patchValue({
-        registeredBy: '34203588',
-      });
-      console.log(this.clientForm.value);
+    if (this.clientForm.valid) { 
       const filteredValues = this.filterEmptyValues(this.clientForm.value);
       console.log(filteredValues);
       this._clientsService.createClient(filteredValues).subscribe({

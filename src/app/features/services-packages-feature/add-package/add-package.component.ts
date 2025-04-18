@@ -34,6 +34,7 @@ import { Filter } from '../../../core/interfaces/api/filters';
 import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
 import { ViewServicesToPackageComponent } from '../templates/view-services-to-package/view-services-to-package.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-add-package',
   imports: [
@@ -41,7 +42,7 @@ import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.
     ReactiveFormsModule,
     ButtonComponent,
     InputFormComponent,
-    ModalComponent, 
+    ModalComponent,
     SelectComponent,
     PickListModule,
     CommonModule,
@@ -59,6 +60,7 @@ export class AddPackageComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _packagesService = inject(PackagesService);
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
+  private readonly _localStorageService = inject(LocalstorageService);
 
   sourceServices = signal<any[]>([]);
   targetServices = signal<any[]>([]);
@@ -81,7 +83,7 @@ export class AddPackageComponent {
     name: ['', Validators.required],
     description: ['', Validators.required],
     priceUnit: ['', [Validators.required, Validators.min(0)]],
-    registeredBy: ['34855749'],
+    registeredBy: [this._localStorageService.getUserId()],
     services: [[]],
     status: [true],
     packageId: [''],
@@ -137,7 +139,6 @@ export class AddPackageComponent {
 
   formatValues() {
     this.packageForm.patchValue({
-      registeredBy: '73464945',
       priceUnit: parseFloat(this.packageForm.value.priceUnit),
     });
   }

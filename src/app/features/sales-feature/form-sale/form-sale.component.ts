@@ -18,11 +18,12 @@ import { Step2SaleFormComponent } from './steps/step2-sale-form/step2-sale-form.
 import { SaleCreationResult } from '../interfaces/sale-creation-result.interface';
 import { Step3SummarySaleComponent } from './steps/step3-summary-sale/step3-summary-sale.component';
 import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.service';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-form-sale',
   imports: [
     Toast,
-    StepperModule, 
+    StepperModule,
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,
@@ -40,6 +41,7 @@ export class FormSaleComponent {
   private readonly _clientsService = inject(ClientsService);
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
   private readonly _pdfSaleService = inject(SalePdfService);
+  private readonly _localStorageService = inject(LocalstorageService);
   // Signals,variables constantes y outputs
   saleCreationResult = signal<SaleCreationResult | null>(null);
   currentClient = signal<any>(null);
@@ -66,7 +68,7 @@ export class FormSaleComponent {
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: [''],
-    registeredBy: [''],
+    registeredBy: [this._localStorageService.getUserId()],
   });
 
   closeModal() {
@@ -84,10 +86,6 @@ export class FormSaleComponent {
       this.currentStep.set(2);
       activateCallback(2);
     } else if (this.clientForm.valid) {
-      this.clientForm.patchValue({
-        registeredBy: '73464945',
-      });
-      console.log(this.clientForm.value);
       const filteredValues = this._filterEmmptyValues.transform(
         this.clientForm.value
       );

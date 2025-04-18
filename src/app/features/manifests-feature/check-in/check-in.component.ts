@@ -21,6 +21,7 @@ import { ManifestsService } from '../../../core/services/manifests-services/mani
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.component';
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 
 @Component({
   selector: 'app-check-in',
@@ -51,6 +52,7 @@ export class CheckInComponent {
   public readonly dialogService = inject(DialogService);
   private dialogConfig = inject(DynamicDialogConfig);
   private manifestPdfService = inject(ManifestPdfService);
+  private readonly _localStorageService = inject(LocalstorageService);
   manifestId = signal<string>('');
   response = signal<any>({});
   clients = signal<any[]>([]);
@@ -129,7 +131,7 @@ export class CheckInComponent {
           checkInStatus: participant.checkInStatus,
         },
       ],
-      updatedBy: '14160945',
+      updatedBy: this._localStorageService.getUserId(),
       manifestId: this.manifestId(),
     };
 

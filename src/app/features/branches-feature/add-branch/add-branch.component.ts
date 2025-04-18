@@ -15,6 +15,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { BranchService } from '../../../core/services/braches-services/branch.service';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-add-branch',
   imports: [
@@ -33,6 +34,7 @@ export class AddBranchComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _branchService = inject(BranchService);
   private readonly _messageService = inject(MessageService);
+  private readonly _localStorageService = inject(LocalstorageService);
   showModal = model<boolean>(false);
   refreshData = output<void>();
   isEditing = signal<boolean>(false);
@@ -43,7 +45,7 @@ export class AddBranchComponent {
     address: ['', Validators.required],
     description: ['', Validators.required],
     status: [true],
-    registeredBy: ['', Validators.minLength(8)],
+    registeredBy: [this._localStorageService.getUserId()],
     sucursalId: [''],
   });
 
@@ -60,11 +62,10 @@ export class AddBranchComponent {
         this.branchForm.reset();
       }
     });
-  } 
+  }
 
   formatValues() {
     this.branchForm.patchValue({
-      registeredBy: '34203588',
       status: this.branchForm.value.status === 'true' ? true : false,
       priceUnit: parseFloat(this.branchForm.value.priceUnit),
     });
@@ -104,7 +105,7 @@ export class AddBranchComponent {
       },
     });
   }
-  
+
   update(data: any) {
     this.isSubmitting.set(true);
     const formatedData = {

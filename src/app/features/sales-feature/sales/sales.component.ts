@@ -22,7 +22,6 @@ import { MessageService } from 'primeng/api';
 import { SaleDetailsPdfComponent } from '../sale-details-pdf/sale-details-pdf.component';
 import { SALE_STATUS_FILTERS } from '../constants/sales-filters.constant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-import { Button, ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -44,7 +43,6 @@ import { Button, ButtonModule } from 'primeng/button';
     Tag,
     InputFormComponent,
     SelectComponent,
-    ButtonModule
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',

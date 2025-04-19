@@ -10,11 +10,14 @@ import { RouterLink } from '@angular/router';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UserAuthorized } from '../../../interfaces/user';
 import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
+import { Option, SelectComponent } from '../../forms/select/select.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, UserMenuComponent],
+  imports: [RouterLink, UserMenuComponent, SelectComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -22,7 +25,17 @@ export class HeaderComponent {
   private localStorageService = inject(LocalstorageService);
   private elementRef = inject(ElementRef); //nos permite acceder al DOM
   viewMenu = signal(false);
-
+  branchSelected = toSignal(this.localStorageService.getBranchId()); //obtiene el id de la sucursal seleccionada
+  branches = toSignal<Option[]>(
+    this.localStorageService.getBranches().pipe(
+      map((branches: any) =>
+        branches.map((item: any) => ({
+          label: item.address,
+          value: item.branchId,
+        }))
+      )
+    )
+  );
   admin: UserAuthorized;
   constructor() {
     this.admin = this.localStorageService.getUserAuthorized();

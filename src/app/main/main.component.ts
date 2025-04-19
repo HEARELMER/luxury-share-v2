@@ -53,6 +53,7 @@ export class MainComponent {
     }
     this.selectedBranch.set(this.selectedBranch());
     this._localStorageService.setBranch(this.selectedBranch());
+    this._localStorageService.setBranches(this.branches());
     this.activeModalSelectBranch.set(false);
   }
 }

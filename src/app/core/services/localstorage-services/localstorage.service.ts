@@ -62,6 +62,18 @@ export class LocalstorageService {
     localStorage.setItem('branch', JSON.stringify(value));
   }
 
+  setBranches(value: any) {
+    localStorage.setItem('branches', JSON.stringify(value));
+  }
+
+  getBranches(): Observable<any> {
+    const branches = localStorage.getItem('branches');
+    if (branches) {
+      return of(JSON.parse(branches));
+    }
+    return of(null);
+  }
+
   getReportsFromCache(key: string): any {
     const reports = localStorage.getItem(key);
     if (reports) {

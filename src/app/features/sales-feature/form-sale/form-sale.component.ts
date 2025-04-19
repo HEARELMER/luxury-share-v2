@@ -69,6 +69,7 @@ export class FormSaleComponent {
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: [''],
     registeredBy: [this._localStorageService.getUserId()],
+    nationality: ['',Validators.minLength(3)],
   });
 
   closeModal() {

@@ -57,6 +57,7 @@ export class FormClientComponent {
     birthDate: [''],
     registeredBy: [this._localStorageService.getUserId()],
     clientId: [''],
+    nationality: ['', Validators.minLength(3)],
   });
 
   constructor() {
@@ -69,7 +70,7 @@ export class FormClientComponent {
   }
 
   createClient() {
-    if (this.clientForm.valid) { 
+    if (this.clientForm.valid) {
       const filteredValues = this.filterEmptyValues(this.clientForm.value);
       console.log(filteredValues);
       this._clientsService.createClient(filteredValues).subscribe({

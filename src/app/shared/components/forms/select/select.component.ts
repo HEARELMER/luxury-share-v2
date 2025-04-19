@@ -5,23 +5,24 @@ export interface Option {
   label: string;
 }
 
- 
 @Component({
   selector: 'app-select',
   standalone: true,
   imports: [FormsModule],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => SelectComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SelectComponent),
+      multi: true,
+    },
+  ],
 })
 export class SelectComponent {
   label = input<string>('');
   required = input<boolean>(false);
-  options = input<Option[]>([]);
+  options = input<Option[] | any>([]);
   placeholder = input<string>('Seleccione una opción');
   value = model<string>('');
   disabled = signal(false);

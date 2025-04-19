@@ -1,10 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { Filter } from '../../interfaces/api/filters';
 import { ExportFilesService } from '../files-services/export-files.service';
-import { LocalstorageService } from '../localstorage-services/localstorage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +45,12 @@ export class ClientsService {
 
   createClient(client: any): Observable<any> {
     return this._httpclient.post(`${this._apiUrl}clients`, client, {
+      withCredentials: true,
+    });
+  }
+
+  updateClient(id: string, client: any): Observable<any> {
+    return this._httpclient.patch(`${this._apiUrl}clients/${id}`, client, {
       withCredentials: true,
     });
   }

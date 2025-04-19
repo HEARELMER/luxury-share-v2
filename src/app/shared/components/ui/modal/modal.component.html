@@ -1,19 +1,19 @@
- 
 @if (isOpen()) {
-  <main 
-    (click)="onBackdropClick($event)"
-    class="fixed inset-0 flex items-{{position()}} justify-{{position()}} bg-black/50 backdrop-blur-sm z-[9999]"
-    @fadeAnimation
+<main
+  (click)="onBackdropClick($event)"
+  class="fixed inset-0 flex items-{{ position() }} justify-{{
+    position()
+  }} bg-black/50 backdrop-blur-sm z-[9999]"
+  @fadeAnimation
+>
+  <section
+    [class]="customClass()"
+    class="bg-white rounded-lg shadow-xl pointer-events-auto"
+    @slideAnimation
   >
-    <section 
-      [class]="customClass()"
-      class="bg-white rounded-lg shadow-xl pointer-events-auto"
-      @slideAnimation
-    >
-     
-      <div class="p-4">
-        <ng-content></ng-content>
-      </div>
-    </section>
-  </main>
+    <div class="p-4">
+      <ng-content></ng-content>
+    </div>
+  </section>
+</main>
 }

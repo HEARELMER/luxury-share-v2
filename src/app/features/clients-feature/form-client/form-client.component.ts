@@ -21,6 +21,7 @@ import { SelectComponent } from '../../../shared/components/forms/select/select.
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { ButtonModule } from 'primeng/button';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 
 @Component({
   selector: 'app-form-client',
@@ -41,10 +42,12 @@ export class FormClientComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _clientsService = inject(ClientsService);
   private readonly _localStorageService = inject(LocalstorageService);
+  private readonly _filterEmptyValues = inject(FilterEmptyValuesPipe);
   showModal = model<boolean>(false);
   isEditing = signal<boolean>(false);
   clientToEdit = input<any>(null);
   refreshData = output<void>();
+  loading = signal<boolean>(false);
 
   clientForm = this._fb.group({
     typeDocument: ['', [Validators.required]],
@@ -70,20 +73,72 @@ export class FormClientComponent {
   }
 
   createClient() {
+    this.loading.set(true);
+    const filteredValues = this._filterEmptyValues.transform(
+      this.clientForm.value
+    );
+    this._clientsService.createClient(filteredValues).subscribe({
+      next: (response: any) => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Cliente creado',
+          detail: response.message,
+        });
+        this.closeModal();
+        this.refreshData.emit();
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error.message,
+        });
+        this.loading.set(false);
+      },
+    });
+  }
+
+  updateClient() {
+    this.loading.set(true);
+    //el bakcned no acpeta estos campos lo ponemos como vacio para no enviar nada
+    const clientId = this.clientForm.get('clientId')?.value || '';
+    this.clientForm.patchValue({
+      registeredBy: null,
+      clientId: null,
+    });
+    const filteredValues = this._filterEmptyValues.transform(
+      this.clientForm.value
+    );
+    this._clientsService.updateClient(clientId, filteredValues).subscribe({
+      next: (response: any) => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Cliente actualizado',
+          detail: response.message,
+        });
+        this.closeModal();
+        this.refreshData.emit();
+        this.loading.set(false);
+      },
+      error: (error) => {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error.message,
+        });
+        this.loading.set(false);
+      },
+    });
+  }
+
+  onSubmit() {
     if (this.clientForm.valid) {
-      const filteredValues = this.filterEmptyValues(this.clientForm.value);
-      console.log(filteredValues);
-      this._clientsService.createClient(filteredValues).subscribe({
-        next: (response: any) => {
-          this._messageService.add({
-            severity: 'success',
-            summary: 'Cliente creado',
-            detail: response.message,
-          });
-          this.closeModal();
-          this.refreshData.emit();
-        },
-      });
+      if (this.isEditing()) {
+        this.updateClient();
+      } else {
+        this.createClient();
+      }
     }
   }
 
@@ -99,15 +154,6 @@ export class FormClientComponent {
           }
         });
     }
-  }
-
-  private filterEmptyValues(formValues: any): any {
-    return Object.keys(formValues)
-      .filter((key) => formValues[key] !== null && formValues[key] !== '')
-      .reduce((obj: any, key) => {
-        obj[key] = formValues[key];
-        return obj;
-      }, {});
   }
 
   closeModal() {

@@ -1,6 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { AlertComponent } from '../../ui/alert/alert.component';
-import { FormsModule, NgModel } from '@angular/forms';
+import { Component, Input } from '@angular/core'; 
 import { Router, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { SidebarButtonComponent } from '../../ui/sidebar-button/sidebar-button.component';
@@ -8,7 +6,7 @@ import { AuthService } from '../../../../core/services/auth-services/auth.servic
 
 @Component({
   selector: 'app-user-menu',
-  imports: [SidebarButtonComponent, AlertComponent, NgClass, RouterLink],
+  imports: [SidebarButtonComponent,  NgClass, RouterLink],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
 })

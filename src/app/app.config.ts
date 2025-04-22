@@ -54,8 +54,8 @@ export const appConfig: ApplicationConfig = {
       tables: {
         theme: 'striped',
         headerColors: {
-          fill:[255, 240, 240],
-          text:[255, 35, 35],
+          fill: [255, 240, 240],
+          text: [255, 35, 35],
         },
         alternateRowColors: [
           [249, 249, 250], // Azul muy claro
@@ -74,6 +74,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     CapitalizePipe,
     FilterEmptyValuesPipe,
-    ConfirmationService
+    ConfirmationService,
   ],
 };

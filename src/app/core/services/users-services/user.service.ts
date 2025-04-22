@@ -150,6 +150,12 @@ export class UserService {
     );
   }
 
+  searchUserByDni(dni: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.url}users/search/api-dni/${dni}`, {
+      withCredentials: true,
+    });
+  }
+
   updateProfile(data: any, userId: string): Observable<any> {
     return this.httpClient.patch(`${this.url}users/${userId}/profile`, data, {
       withCredentials: true,

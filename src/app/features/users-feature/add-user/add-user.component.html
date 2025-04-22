@@ -14,16 +14,26 @@
     <div
       class="grid grid-cols-1 pb-4 md:grid-cols-2 w-full min-w-[40rem] gap-6"
     >
-      <app-input-form
-        type="text"
-        formControlName="numDni"
-        label="DNI"
-        placeholder="71916103"
-        [isPositive]="true"
-        [required]="true"
-        [maxLength]="8"
-      />
-
+      <div class="flex items-start gap-2">
+        <app-input-form
+          type="text"
+          formControlName="numDni"
+          label="DNI"
+          placeholder="71916103"
+          [isPositive]="true"
+          [required]="true"
+          [maxLength]="8"
+        />
+        <div class="pt-6">
+          <button
+            pButton
+            type="button"
+            icon="pi pi-search"
+            class="p-button-rounded p-button-primary w-10 px-2 h-10"
+            (click)="searchClientByDni()"
+          ></button>
+        </div>
+      </div>
       <app-input-form
         type="text"
         formControlName="name"
@@ -108,4 +118,4 @@
     </div>
   </form>
 </app-modal>
-<p-toast  [life]="2000" />
+<p-toast [life]="2000" />

@@ -24,6 +24,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { RolesService } from '../../../core/services/roles-services/roles.service';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-add-user',
   imports: [
@@ -34,6 +35,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
     ModalComponent,
     SelectComponent,
     ToastModule,
+    ButtonModule,
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss',
@@ -81,6 +83,22 @@ export class AddUserComponent {
         console.log(this.userToEdit());
       }
     });
+  }
+
+  searchClientByDni() {
+    const dni = this.userForm.get('numDni')?.value;
+    if (dni.length === 8) {
+      this._userService.searchUserByDni(dni).subscribe({
+        next: (response) => {
+          this.userForm.patchValue({
+            name: response.data.name,
+            firstLastname: response.data.firstLastname,
+            secondLastname: response.data.secondLastname,
+            numDni: response.data.numberDocument,
+          });
+        },
+      });
+    }
   }
 
   private loadRolesAndSetSelected(): void {

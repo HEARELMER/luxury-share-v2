@@ -12,10 +12,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { UserService } from '../../../core/services/users-services/user.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ModalComponent } from "../../../shared/components/ui/modal/modal.component";
 @Component({
   selector: 'app-user-profile',
   imports: [
@@ -27,7 +27,8 @@ import { MessageService } from 'primeng/api';
     ReactiveFormsModule,
     FormsModule,
     Toast,
-  ],
+    ModalComponent
+],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })

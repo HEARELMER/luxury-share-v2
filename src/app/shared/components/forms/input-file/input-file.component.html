@@ -1,9 +1,9 @@
 <div class="relative inline-block">
   <!-- Botón personalizado -->
-  <label 
-    [for]="'file-input-' "
-    [class.opacity-50]="disabled"
-    [class.cursor-not-allowed]="disabled"
+  <label
+    [for]="'file-input-'"
+    [class.opacity-50]="disabled()"
+    [class.cursor-not-allowed]="disabled()"
     class="relative inline-block"
   >
     <ng-content></ng-content>
@@ -11,22 +11,24 @@
 
   <!-- Input file oculto -->
   <input
-    [id]="'file-input-' "
+    [id]="'file-input-'"
     type="file"
     class="hidden"
-    [accept]="accept"
-    [multiple]="multiple"
-    [disabled]="disabled"
+    [accept]="accept()"
+    [multiple]="multiple()"
+    [disabled]="disabled()"
     (change)="handleFileInput($event)"
-  >
+  />
 
   <!-- Área de drop (opcional) -->
-  <div 
-    *ngIf="multiple"
+  <div
+    *ngIf="multiple()"
     class="fixed inset-0 bg-primary-500 bg-opacity-10 pointer-events-none opacity-0 transition-opacity duration-300"
     [class.opacity-100]="isDragging"
   >
-    <div class="absolute inset-0 border-2 border-dashed border-primary-500 m-8 rounded-lg flex items-center justify-center">
+    <div
+      class="absolute inset-0 border-2 border-dashed border-primary-500 m-8 rounded-lg flex items-center justify-center"
+    >
       <div class="text-center text-primary-500">
         <i class="pi pi-upload text-3xl mb-2"></i>
         <p class="text-lg font-medium">Suelta los archivos aquí</p>

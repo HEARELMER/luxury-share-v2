@@ -20,42 +20,71 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel [value]="0">
-        <div
-          class="w-full h-full flex items-center justify-center lg:justify-start pb-4"
-        >
+        <div class="bg-white rounded-lg p-2">
           <div
-            class="flex lg:flex-row flex-col lg:justify-normal justify-center lg:items-center gap-6 lg:gap-10 items-normal"
+            class="flex flex-col lg:flex-row items-center lg:items-start gap-8"
           >
-            <!-- Foto de perfil con insignia de rol -->
-            <div class="relative">
-              <app-photo-profile [photo]="userInfo().photoUrl" />
-              <div
-                class="absolute -bottom-2 -right-2 bg-primary-500 text-white text-xs px-3 py-1 rounded-full shadow-sm"
-              >
-                {{ userInfo().role?.roleName }}
+            <!-- Columna de foto de perfil con efectos mejorados -->
+            <div class="relative group">
+              <!-- Foto de perfil con borde y sombra mejorada -->
+              <div class="rounded-full overflow-hidden shadow-lg">
+                <app-photo-profile [photo]="userInfo().photoUrl" />
               </div>
+
+              <!-- Botón para cambiar la foto -->
+              <app-input-file
+                class="absolute -bottom-2 -right-1"
+                [accept]="'.png, .jpg, .jpeg'"
+                (onChange)="onFileSelected($event)"
+              >
+                <div
+                  class="cursor-pointer bg-primary-500 hover:bg-primary-600 flex items-center justify-center text-white p-3 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"
+                >
+                  <i class="pi pi-camera"></i>
+                </div>
+              </app-input-file>
             </div>
 
-            <!-- Información del usuario -->
-            <div>
-              <h1 class="text-xl font-semibold">
-                {{
-                  userInfo().name +
-                    " " +
-                    userInfo().firstLastname +
-                    " " +
-                    userInfo().secondLastname
-                }}
-              </h1>
-              <div class="flex flex-col gap-1 mt-1">
-                <p class="flex items-center gap-1 text-gray-600">
-                  {{ userInfo().email }}
-                </p>
-                <p class="flex items-center gap-1 text-gray-600 font-semibold">
-                  <span class="text-sm font-mono"
-                    >ID: {{ userInfo().userId }}</span
-                  >
-                </p>
+            <!-- Información del usuario con mejor formato -->
+            <div class="flex-1">
+              <div class="text-center lg:text-left">
+                <!-- Nombre con tamaño más grande y mejor espaciado -->
+                <h1 class="text-xl font-bold text-gray-800 mb-1">
+                  {{
+                    userInfo().name +
+                      " " +
+                      userInfo().firstLastname +
+                      " " +
+                      userInfo().secondLastname
+                  }}
+                </h1>
+
+                <!-- Información de contacto con iconos -->
+                <div class="flex flex-col gap-2 mt-3">
+                  <p class="flex items-center gap-2 text-gray-600">
+                    <i class="pi pi-envelope text-primary-400"></i>
+                    <span>{{ userInfo().email }}</span>
+                  </p>
+
+                  <!-- ID con estilo de badge -->
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-md font-mono flex items-center"
+                    >
+                      <i class="pi pi-id-card text-orange-600 pr-1"></i>
+                      ID: {{ userInfo().userId }}
+                    </span>
+
+                    <span
+                      class="inline-flex items-center bg-green-100 text-green-500 text-xs px-2 py-1 rounded-md"
+                    >
+                      <span
+                        class="w-2 h-2 bg-green-500 rounded-full pr-1"
+                      ></span>
+                      {{ userInfo().role.roleName }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -191,3 +220,29 @@
   </p-tabs>
 </div>
 <p-toast [life]="5000" [baseZIndex]="10000"></p-toast>
+<app-modal [closeOnBackdrop]="false" [(isOpen)]="photoPreviewModal">
+  <div class="pb-4">
+    <img
+      [src]="previewImageUrl()"
+      class="rounded-md max-h-96 max-w-96 h-full w-full"
+      alt=""
+    />
+  </div>
+  <div class="flex gap-2 justify-end mt-4">
+    <app-button
+      text="Cerrar"
+      bgColor="bg-slate-100"
+      moreClasses="py-2"
+      textColor="text-black"
+      font="font-normal"
+      (click)="photoPreviewModal.set(false)"
+    />
+    <app-button
+      text="Confirmar"
+      bgColor="bg-primary-500"
+      moreClasses="py-2"
+      font="font-normal"
+      (click)="photoPreviewModal.set(false)"
+    />
+  </div>
+</app-modal>

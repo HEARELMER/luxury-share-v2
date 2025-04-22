@@ -15,7 +15,8 @@ import {
 import { UserService } from '../../../core/services/users-services/user.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { ModalComponent } from "../../../shared/components/ui/modal/modal.component";
+import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
+import { InputFileComponent } from '../../../shared/components/forms/input-file/input-file.component';
 @Component({
   selector: 'app-user-profile',
   imports: [
@@ -27,8 +28,9 @@ import { ModalComponent } from "../../../shared/components/ui/modal/modal.compon
     ReactiveFormsModule,
     FormsModule,
     Toast,
-    ModalComponent
-],
+    ModalComponent,
+    InputFileComponent,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
@@ -37,6 +39,8 @@ export class UserProfileComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
+  photoPreviewModal = signal<boolean>(false);
+  previewImageUrl = signal<string | null>(null);
   userInfo = signal<any>(null);
   menuOptions = USER_PROFILE_CONFIG;
 
@@ -76,6 +80,22 @@ export class UserProfileComponent {
             this.localStorageService.setUserAuthorized(response.data);
           },
         });
+    }
+  }
+
+  // Modificar el método onFileSelected
+  onFileSelected(event: File | File[]) {
+    let file: File | null = null;
+
+    if (event instanceof File) {
+      file = event;
+    } else if (Array.isArray(event) && event.length > 0) {
+      file = event[0];
+    }
+
+    if (file) {
+      this.previewImageUrl.set(URL.createObjectURL(file));
+      this.photoPreviewModal.set(true);
     }
   }
 }

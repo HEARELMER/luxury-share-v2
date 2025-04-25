@@ -7,8 +7,8 @@ export const CLIENT_TABLE_COLS = [
   { field: 'typeDocument', header: 'Tipo de Documento', sortable: true },
   { field: 'numberDocument', header: 'Número de Documento', sortable: true },
   { field: 'birthDate', header: 'Fecha de Nacimiento', sortable: true },
-  { field: 'createdAt', header: 'Fecha de Creación', sortable: true },
-  { field: 'updatedAt', header: 'Fecha de Modificación', sortable: true },
+  // { field: 'createdAt', header: 'Fecha de Creación', sortable: true },
+  // { field: 'updatedAt', header: 'Fecha de Modificación', sortable: true },
   { field: 'registeredBy', header: 'Registrado por', sortable: true },
   { field: 'actions', header: 'Acciones', sortable: false },
 ];

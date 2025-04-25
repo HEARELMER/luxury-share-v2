@@ -26,7 +26,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
     CdkDragPreview,
     CdkDropList,
     DatePickerModule,
-    DatePickerComponent,
     ScrollTop,
   ],
   templateUrl: './home.component.html',

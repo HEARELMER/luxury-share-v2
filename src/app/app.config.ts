@@ -18,6 +18,7 @@ import { firebaseConfig } from './environments/environment.development';
 import { pdfConfig } from './config/pdf.config';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { CloudStorageService } from './core/services/cloud-storage/cloud-storage.service';
+import { ThemeService } from './core/ui-services/theme.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -45,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     CapitalizePipe,
     FilterEmptyValuesPipe,
     ConfirmationService,
-    CloudStorageService
+    CloudStorageService,
+    ThemeService
   ],
 };

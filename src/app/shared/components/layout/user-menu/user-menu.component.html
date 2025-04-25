@@ -1,9 +1,9 @@
 <main
-  [ngClass]="{ 'w-full px-1': textHidden }"
+  [ngClass]="{ 'w-full px-1': textHidden() }"
   class="bg-white shadow-xl rounded-2xl p-4 border-2 flex flex-col gap-2 w-64 inset-0 z-[1000000]"
 >
   <app-sidebar-button
-    [textHidden]="textHidden"
+    [textHidden]="textHidden()"
     [bg]="'bg-white'"
     [color]="'text-black'"
     class="icon-h"
@@ -29,7 +29,7 @@
   <app-sidebar-button
     (click)="darkMode()"
     class="icon-h"
-    [textHidden]="textHidden"
+    [textHidden]="textHidden()"
     [bg]="'bg-white'"
     [color]="'text-black'"
     [type]="
@@ -56,7 +56,7 @@
 
   <app-sidebar-button
     class="icon-h"
-    [textHidden]="textHidden"
+    [textHidden]="textHidden()"
     (click)="logOut()"
     [bg]="'bg-white'"
     [color]="'text-black'"

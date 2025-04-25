@@ -1,49 +1,30 @@
-import { Component, Input } from '@angular/core'; 
+import { Component, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { SidebarButtonComponent } from '../../ui/sidebar-button/sidebar-button.component';
 import { AuthService } from '../../../../core/services/auth-services/auth.service';
+import { ThemeService } from '../../../../core/ui-services/theme.service';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [SidebarButtonComponent,  NgClass, RouterLink],
+  imports: [SidebarButtonComponent, NgClass, RouterLink],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
 })
 export class UserMenuComponent {
-  @Input() textHidden: boolean = false;
-  messageLogin: any = {
-    title: '',
-    message: '',
-    type: '',
-  };
+  readonly textHidden = input<boolean>(false);
+  private readonly _themeService = inject(ThemeService);
 
   confirm: boolean = false;
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
   logOut() {
     this.authService.signOut().subscribe({
       next: (res: any) => {
         this.confirm = true;
-        this.messageLogin = {
-          title: 'Cerrar sesión',
-          message: res.message,
-          type: 'success',
-        };
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 3000);
       },
     });
   }
   darkMode() {
-    this.confirm = true;
-    this.messageLogin = {
-      title: 'Modo Oscuro',
-      message: 'Funcionalidad en desarrollo',
-      type: 'info',
-    };
-    setTimeout(() => {
-      this.confirm = false;
-    }, 3000);
+    this._themeService.toggleTheme();
   }
 }

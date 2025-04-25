@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
@@ -17,6 +17,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { InputFileComponent } from '../../../shared/components/forms/input-file/input-file.component';
+import { CloudStorageService } from '../../../core/services/cloud-storage/cloud-storage.service';
 @Component({
   selector: 'app-user-profile',
   imports: [
@@ -39,8 +40,16 @@ export class UserProfileComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
+  private readonly _cloudStorageService = inject(CloudStorageService);
   photoPreviewModal = signal<boolean>(false);
-  previewImageUrl = signal<string | null>(null);
+  fileSelected = signal<File | null>(null);
+  previewImageUrl = computed(() => {
+    const file = this.fileSelected();
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return null;
+  });
   userInfo = signal<any>(null);
   menuOptions = USER_PROFILE_CONFIG;
 
@@ -94,8 +103,46 @@ export class UserProfileComponent {
     }
 
     if (file) {
-      this.previewImageUrl.set(URL.createObjectURL(file));
+      this.fileSelected.set(file);
       this.photoPreviewModal.set(true);
+    }
+  }
+
+  uploadImage() {
+    let uploadedFileUrl: string = '';
+    if (this.fileSelected()) {
+      this.photoPreviewModal.set(false);
+      this._messageService.add({
+        severity: 'info',
+        detail: 'Subiendo imagen...',
+      });
+      this._cloudStorageService
+        .uploadFile('profiles', this.fileSelected() as File)
+        .subscribe({
+          next: (response) => {
+            uploadedFileUrl = response.url;
+          },
+          complete: () => {
+            const userId = this.userInfo().userId;
+            this._userService
+              .updateProfile(
+                { ...this.userProfile.value, photoUrl: uploadedFileUrl },
+                userId
+              )
+              .subscribe({
+                next: (response) => {
+                  this.userInfo.set(response.data);
+                  this._messageService.add({
+                    severity: 'success',
+                    summary: 'Éxito',
+                    detail: response.message,
+                  });
+
+                  this.localStorageService.setUserAuthorized(response.data);
+                },
+              });
+          },
+        });
     }
   }
 }

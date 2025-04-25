@@ -59,12 +59,6 @@ export const MENU_OPTIONS: MenuNode[] = [
     routerLink: '/services_packages',
   },
   {
-    key: 'reports',
-    label: 'Reportes',
-    icon: 'pi pi-chart-line',
-    routerLink: '/reports',
-  },
-  {
     key: 'branches',
     label: 'Sucursales',
     icon: 'pi pi-building',
@@ -75,6 +69,12 @@ export const MENU_OPTIONS: MenuNode[] = [
     label: 'Manifiestos',
     icon: 'pi pi-file',
     routerLink: '/manifests',
+  },
+  {
+    key: 'reports',
+    label: 'Reportes',
+    icon: 'pi pi-chart-line',
+    routerLink: '/reports',
   },
   // {
   //   key: 'configurations',

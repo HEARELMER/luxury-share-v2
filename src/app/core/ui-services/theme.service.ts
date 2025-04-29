@@ -25,7 +25,6 @@ export class ThemeService {
     if (savedTheme) {
       this.isDarkMode.set(savedTheme === 'dark');
     } else {
-      
       const prefersDark = window.matchMedia(
         '(prefers-color-scheme: dark)'
       ).matches;
@@ -41,8 +40,10 @@ export class ThemeService {
   private applyTheme(isDark: boolean): void {
     if (isDark) {
       this.document.documentElement.classList.add('dark-mode');
+      this.document.documentElement.classList.add('dark');
     } else {
       this.document.documentElement.classList.remove('dark-mode');
+      this.document.documentElement.classList.remove('dark');
     }
   }
 }

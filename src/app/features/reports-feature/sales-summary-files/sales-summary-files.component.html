@@ -26,24 +26,27 @@
       borderColor="border-green-200"
       (onExcel)="generateExcelReportOfSales()"
       description="Exporta un reporte con todas las ventas realizadas y los métodos de pago utilizados."
-    ></app-card-report>
-
-    <!-- Reporte detallado de servicios y/o paquetes -->
-    <app-card-report
+      [loading]="loading()"
+      ></app-card-report>
+      
+      <!-- Reporte detallado de servicios y/o paquetes -->
+      <app-card-report
       title="Servicios y Paquetes"
       icon="pi pi-car"
       borderColor="border-blue-200"
       description="Genera un reporte con el desglose de ventas por servicios y paquetes contratados."
+      [loading]="loading()"
       (onExcel)="generateExcelReportOfServicesAndPackages()"
-    ></app-card-report>
-
-    <!-- Reporte de sucursales -->
-    <app-card-report
+      ></app-card-report>
+      
+      <!-- Reporte de sucursales -->
+      <app-card-report
       title="Rendimiento por Sucursal"
       icon="pi pi-building"
       borderColor="border-orange-200"
       description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
       (onExcel)="generateExcelReportOfBranches()"
-    ></app-card-report>
+      [loading]="loading()"
+      ></app-card-report>
   </div>
 </div>

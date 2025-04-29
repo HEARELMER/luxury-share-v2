@@ -57,7 +57,7 @@ export class ManifestsComponent {
 
   // Signals
   manifests = signal<Manifest[]>([]);
-  cargando = signal<boolean>(false);
+  loading = signal<boolean>(false);
   filters = signal<{ key: string; value: string }[]>([]);
   filterByTitle = signal<string>('');
 
@@ -98,7 +98,7 @@ export class ManifestsComponent {
    * Carga manifiestos desde la API
    */
   loadManifests(options: FilterOptions = {}): void {
-    this.cargando.set(true);
+    this.loading.set(true);
 
     // Resetear página si es necesario
     if (options.resetPage) {
@@ -118,10 +118,10 @@ export class ManifestsComponent {
         next: (response) => {
           this.manifests.set(response.data.manifests);
           this.totalRecords = response.data.total;
-          this.cargando.set(false);
+          this.loading.set(false);
         },
         error: (error) => {
-          this.cargando.set(false);
+          this.loading.set(false);
           this._messageService.add({
             severity: 'error',
             summary: 'Error',

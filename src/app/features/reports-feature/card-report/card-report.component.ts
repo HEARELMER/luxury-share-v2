@@ -1,8 +1,9 @@
 import { Component, input, output } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-card-report',
-  imports: [],
+  imports: [ButtonModule],
   templateUrl: './card-report.component.html',
   styleUrl: './card-report.component.scss',
 })
@@ -17,12 +18,10 @@ export class CardReportComponent {
   onExcel = output<void>();
 
   onPdfClick(): void {
-    console.log('PDF button clicked');
     this.onPdf.emit();
   }
 
   onExcelClick(): void {
-    console.log('Excel button clicked');
     this.onExcel.emit();
   }
 }

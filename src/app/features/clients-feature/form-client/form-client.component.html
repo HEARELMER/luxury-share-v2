@@ -18,11 +18,7 @@
     <app-select
       label="Tipo de Documento"
       [required]="true"
-      [options]="[
-        { label: 'Dni', value: 'DNI' },
-        { label: 'Carnet de Extranjeria', value: 'CE' },
-        { label: 'otros', value: 'otros' }
-      ]"
+      [options]="documentTypes"
       class="w-full"
       formControlName="typeDocument"
     />
@@ -68,6 +64,7 @@
       class="w-full"
       formControlName="birthDate"
       type="date"
+      [required]="true"
     />
     <app-input-form
       label="Correo Electrónico"

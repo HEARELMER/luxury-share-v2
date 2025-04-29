@@ -8,11 +8,7 @@
     <app-select
       label="Tipo de Documento"
       [required]="true"
-      [options]="[
-        { label: 'Dni', value: 'dni' },
-        { label: 'Carnet de Extranjeria', value: 'ce' },
-        { label: 'otros', value: 'otros' }
-      ]"
+      [options]="documentTypes"
       class="w-full"
       formControlName="typeDocument"
     />
@@ -56,6 +52,7 @@
       class="w-full"
       formControlName="birthDate"
       type="date"
+      [required]="true"
     />
     <app-input-form
       label="Correo Electrónico"
@@ -84,7 +81,7 @@
       label="Continuar"
       icon="pi pi-arrow-right"
       iconPos="right"
-      [disabled]="clientForm().invalid"
+      [disabled]="clientForm().invalid || loading()"
       [loading]="loading()"
       (onClick)="onSubmit()"
     ></p-button>

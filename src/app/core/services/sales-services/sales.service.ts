@@ -52,4 +52,24 @@ export class SalesService {
         })
       );
   }
+
+  sendSaleToEmail(
+    codeSale: string,
+    email: string,
+    pdfFile: Blob,
+    fileName: string = 'Venta.pdf'
+  ): Observable<any> {
+    const formData = new FormData();
+    const file = new File([pdfFile], fileName, { type: 'application/pdf' });
+
+    formData.append('file', file, fileName);
+    formData.append('email', email);
+    formData.append('codeSale', codeSale);
+
+    return this._httpclient.post(
+      `${this._apiUrl}sales/send-pdf-sale`,
+      formData,
+      { withCredentials: true }
+    );
+  }
 }

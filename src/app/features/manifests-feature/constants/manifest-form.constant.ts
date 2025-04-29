@@ -1,4 +1,5 @@
 export const SERVICE_TABLE_COLS_MANIFESTS = [
+  { field: 'count', header: '#' },
   { field: 'name', header: 'Nombre', sortable: true },
   { field: 'description', header: 'Descripción', sortable: true },
   { field: 'type', header: 'Tipo', sortable: true },

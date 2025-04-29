@@ -52,6 +52,7 @@ export class UserProfileComponent {
   });
   userInfo = signal<any>(null);
   menuOptions = USER_PROFILE_CONFIG;
+  loading = signal<boolean>(false);
 
   userProfile = this._fb.group({
     name: ['', [Validators.minLength(3), Validators.required]],
@@ -74,6 +75,7 @@ export class UserProfileComponent {
   }
 
   onSubmit() {
+    this.loading.set(true);
     if (this.userProfile.valid) {
       const userId = this.userInfo().userId;
       this._userService
@@ -87,7 +89,19 @@ export class UserProfileComponent {
               detail: response.message,
             });
             this.localStorageService.setUserAuthorized(response.data);
+            this.loading.set(false);
           },
+          error: (error) => {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error.message,
+            });
+            this.loading.set(false);
+          },
+          complete: () => {
+            this.loading.set(false);
+          }
         });
     }
   }

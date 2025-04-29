@@ -1,8 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environmentDev } from '../../../environments/environment.development';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
-import { NewAdmin } from '../../../shared/interfaces/user';
+import { map, Observable, throwError } from 'rxjs';
 import { ExportFilesService } from '../files-services/export-files.service';
 
 @Injectable({
@@ -77,7 +76,7 @@ export class UserService {
       withCredentials: true,
     });
   }
- 
+
   findUserById(userId: string): Observable<any> {
     // Validamos que userId sea un valor válido
     if (!userId) {

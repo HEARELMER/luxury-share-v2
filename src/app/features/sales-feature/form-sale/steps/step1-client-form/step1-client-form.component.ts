@@ -4,6 +4,7 @@ import { SelectComponent } from '../../../../../shared/components/forms/select/s
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
 import { ButtonModule } from 'primeng/button';
+import { ADD_CLIENT_DOCUMENT_TYPE } from '../../../constants/add-client.constant';
 
 @Component({
   selector: 'app-step1-client-form',
@@ -11,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
     InputFormComponent,
     SelectComponent,
     FormsModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     ButtonModule,
   ],
   templateUrl: './step1-client-form.component.html',
@@ -22,6 +23,7 @@ export class Step1ClientFormComponent {
   readonly loading = input<boolean>(false);
   readonly submitForm = output<void>();
   readonly searchClient = output<void>();
+  documentTypes = ADD_CLIENT_DOCUMENT_TYPE;
   onSubmit() {
     if (this.clientForm().valid) {
       this.submitForm.emit();

@@ -142,6 +142,8 @@
               text="Guardar Cambios"
               bgColor="bg-primary-500"
               moreClasses="py-2"
+              [icon]="loading() ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+              [disabled]="userProfile.invalid || loading()"
             />
             <app-button
               text="Cancelar"

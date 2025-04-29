@@ -9,8 +9,7 @@ import {
 import { Toast } from 'primeng/toast';
 import { StepperModule } from 'primeng/stepper';
 import { ADD_SALES_STEPS } from '../constants/add-sales.constant';
-import { Button, ButtonModule } from 'primeng/button';
-import { SalesService } from '../../../core/services/sales-services/sales.service';
+import { ButtonModule } from 'primeng/button';
 import { ClientsService } from '../../../core/services/clients-services/clients.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { Step1ClientFormComponent } from './steps/step1-client-form/step1-client-form.component';
@@ -37,7 +36,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
 })
 export class FormSaleComponent {
   // Inyección de dependencias
-  private readonly _fb = inject(FormBuilder)
+  private readonly _fb = inject(FormBuilder);
   private readonly _clientsService = inject(ClientsService);
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
   private readonly _pdfSaleService = inject(SalePdfService);
@@ -67,9 +66,9 @@ export class FormSaleComponent {
     secondLastname: ['', [Validators.required]],
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
-    birthDate: [''],
+    birthDate: ['', [Validators.required]],
     registeredBy: [this._localStorageService.getUserId()],
-    nationality: ['',Validators.minLength(3)],
+    nationality: ['', Validators.minLength(3)],
   });
 
   closeModal() {

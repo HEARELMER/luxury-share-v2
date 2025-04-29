@@ -241,6 +241,7 @@ export class ManifestFormComponent {
           summary: 'Error',
           detail: error.error.message,
         });
+        this.loading.set(false);
       },
     });
 

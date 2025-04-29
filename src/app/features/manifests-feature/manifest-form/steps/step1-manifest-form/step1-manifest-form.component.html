@@ -39,7 +39,7 @@
       <span
         class="bg-green-400 text-white text-xs font-medium py-1 px-2 rounded-full"
       >
-        {{totalRecords}} servicios
+        {{ totalRecords }} servicios
       </span>
     </div>
     <p-table
@@ -69,12 +69,24 @@
       </ng-template>
       <ng-template pTemplate="body" let-service let-columns="columns">
         <tr [pSelectableRow]="service">
-          @for (col of columns; track $index) {
+          @for (col of columns; track $index) { @if ( col.field == 'count') {
+          <td>
+            <p-checkbox
+              inputId="size_large"
+              name="size"
+              value="Large"
+              [binary]="true"
+              size="large"
+              [ngModel]="isSelected(service.serviceId)"
+              [readonly]="true"
+            />
+          </td>
+          }@else {
+
           <td>
             {{ service[col.field] }}
           </td>
-
-          }
+          } }
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">

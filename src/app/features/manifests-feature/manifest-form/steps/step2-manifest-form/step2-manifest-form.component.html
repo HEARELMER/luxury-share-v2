@@ -124,7 +124,7 @@
     <button
       pButton
       label="Generar manifiesto"
-      icon="pi pi-save"
+      [icon]="isLoading() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
       [disabled]="suggestedManifests().length == 0 || isLoading()"
       (click)="generateManifests()"
     ></button>

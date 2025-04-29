@@ -45,7 +45,7 @@ export class AddBranchComponent {
     address: ['', Validators.required],
     description: ['', Validators.required],
     status: [true],
-    registeredBy: [this._localStorageService.getUserId()],
+    registeredBy: [''],
     sucursalId: [''],
   });
 
@@ -68,6 +68,7 @@ export class AddBranchComponent {
     this.branchForm.patchValue({
       status: this.branchForm.value.status === 'true' ? true : false,
       priceUnit: parseFloat(this.branchForm.value.priceUnit),
+      registeredBy: this._localStorageService.getUserId(),
     });
   }
 

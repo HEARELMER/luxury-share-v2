@@ -22,6 +22,7 @@ import { ModalComponent } from '../../../shared/components/ui/modal/modal.compon
 import { ButtonModule } from 'primeng/button';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
+import { ADD_CLIENT_DOCUMENT_TYPE } from '../constants/add-client.constant';
 
 @Component({
   selector: 'app-form-client',
@@ -48,6 +49,7 @@ export class FormClientComponent {
   clientToEdit = input<any>(null);
   refreshData = output<void>();
   loading = signal<boolean>(false);
+  documentTypes = ADD_CLIENT_DOCUMENT_TYPE;
 
   clientForm = this._fb.group({
     typeDocument: ['', [Validators.required]],
@@ -57,7 +59,7 @@ export class FormClientComponent {
     secondLastname: ['', [Validators.required]],
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
-    birthDate: [''],
+    birthDate: ['', [Validators.required]],
     registeredBy: [this._localStorageService.getUserId()],
     clientId: [''],
     nationality: ['', Validators.minLength(3)],

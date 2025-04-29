@@ -16,6 +16,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SalesService } from '../../../core/services/sales-services/sales.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-sale-details-pdf',
   imports: [
@@ -33,6 +34,7 @@ export class SaleDetailsPdfComponent {
   private readonly _salesService = inject(SalesService);
   private readonly _dialogRef = inject(DynamicDialogRef);
   private readonly _destroyRef = inject(DestroyRef);
+  private readonly _messageService = inject(MessageService);
 
   private readonly reportSaleTemplate = inject(ReportSalePdfTemplate);
 
@@ -187,13 +189,46 @@ export class SaleDetailsPdfComponent {
     const pdf = this.reportSaleTemplate.generateReportSalePdf(
       reportData as any
     );
-    this.pdfDoc = pdf; // Usar signal.set() en lugar de asignación directa
+    this.pdfDoc = pdf;
   }
 
   onEmail(event: any): void {
-    console.log('Email event:', event);
-    // Aquí implementarías el envío de email
+    this._messageService.add({
+      severity: 'info',
+      summary: 'Enviando correo...',
+      detail: 'Por favor, espere un momento.',
+    });
+    if (!this.pdfDoc) {
+      return;
+    }
+
+    if (this.saleData().email) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No se ha proporcionado un correo electrónico para el cliente.',
+      });
+      return;
+    }
+    const pdfBlob = this.pdfDoc.output('blob');
+
+    this._salesService
+      .sendSaleToEmail(
+        this.saleData().codeSale,
+        'codeosamashare@gmail.com',
+        pdfBlob
+      )
+      .subscribe({
+        next: (response) => {
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: response.message,
+          });
+        },
+      });
   }
+
   close(): void {
     this._dialogRef.close();
   }

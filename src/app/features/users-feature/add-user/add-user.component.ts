@@ -27,6 +27,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
 import { ButtonModule } from 'primeng/button';
 import { VerifiedRolesService } from '../../../core/services/auth-services/verified-roles.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
+import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
 @Component({
   selector: 'app-add-user',
   imports: [
@@ -38,6 +39,7 @@ import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.
     SelectComponent,
     ToastModule,
     ButtonModule,
+    CapitalizePipe
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss',
@@ -59,7 +61,7 @@ export class AddUserComponent {
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
     address: [''],
-    birthDate: [''],
+    birthDate: ['', Validators.required],
     password: [],
     photoUrl: ['https://github.com/hearelmer.png'],
     roleId: [''],

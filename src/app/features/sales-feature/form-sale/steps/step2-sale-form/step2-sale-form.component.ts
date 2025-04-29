@@ -235,12 +235,11 @@ export class Step2SaleFormComponent {
 
   // createSale
   createSale() {
+    this.loading.set(true);
     const details = this.formatSaleDetails(this.selectedItems());
-    this,
-      this.formSale.patchValue({
-        clientId: this.clientId(),
-      });
-
+    this.formSale.patchValue({
+      clientId: this.clientId(),
+    });
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
     );
@@ -260,6 +259,7 @@ export class Step2SaleFormComponent {
         });
         this.submitForm.emit();
         this.clearSale();
+        this.loading.set(false);
       },
       error: (error) => {
         this.statusOfSaleCreated.emit({
@@ -268,11 +268,13 @@ export class Step2SaleFormComponent {
           error,
           status: 'ERROR',
         });
+        this.loading.set(false);
       },
     });
   }
 
   reservarSale() {
+    this.loading.set(true);
     const details = this.formatSaleDetails(this.selectedItems());
 
     const formFormated = this._filterEmptyValuesPipe.transform(
@@ -282,6 +284,8 @@ export class Step2SaleFormComponent {
       ...formFormated,
       details,
       dateSale: new Date().toISOString(),
+      status: 'PENDIENTE',
+      clientId: this.clientId(),
     };
     this._salesService.createSale(saleData).subscribe({
       next: (response) => {
@@ -294,6 +298,7 @@ export class Step2SaleFormComponent {
         });
         this.submitForm.emit();
         this.clearSale();
+        this.loading.set(false);
       },
       error: (error) => {
         this.statusOfSaleCreated.emit({
@@ -302,6 +307,7 @@ export class Step2SaleFormComponent {
           error,
           status: 'ERROR',
         });
+        this.loading.set(false);
       },
     });
   }

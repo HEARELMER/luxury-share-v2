@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -22,6 +23,7 @@ import {
 import { SERVICE_TABLE_COLS_MANIFESTS } from '../../../constants/manifest-form.constant';
 import { InputFormComponent } from '../../../../../shared/components/forms/input-form/input-form.component';
 import { Badge } from 'primeng/badge';
+import { Checkbox } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-step1-manifest-form',
@@ -35,6 +37,7 @@ import { Badge } from 'primeng/badge';
     SelectComponent,
     PaginatorModule,
     InputFormComponent,
+    Checkbox,
   ],
   templateUrl: './step1-manifest-form.component.html',
   styleUrl: './step1-manifest-form.component.scss',
@@ -56,7 +59,9 @@ export class Step1ManifestFormComponent {
   selectedService = model<any | null>(null);
   loadingBranches = input<boolean>(false);
   search = output<void>();
-
+  isSelected(serviceId: string): boolean {
+    return this.selectedService()?.serviceId === serviceId;
+  }
   constructor() {
     effect(() => {
       this.loadServices();
@@ -95,13 +100,20 @@ export class Step1ManifestFormComponent {
    * Checks if user can advance to next step
    */
   get canAdvance(): boolean {
-    return !!this.selectedDate() && !!this.selectedBranch();
+    return (
+      !!this.selectedDate() &&
+      !!this.selectedBranch() &&
+      !!this.selectedService()
+    );
   }
 
   /**
    * Emits search event to parent component
    */
   searchSales(): void {
+    if (!this.canAdvance) {
+      return;
+    }
     // Just emit the event, the parent will handle the actual search
     this.search.emit();
   }

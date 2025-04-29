@@ -1,10 +1,5 @@
 import { inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth-services/auth.service';
 import { VerifiedRolesService } from '../services/auth-services/verified-roles.service';
 
@@ -32,11 +27,12 @@ export const authGuardAdmin: CanActivateFn = async () => {
   const authService = inject(AuthService);
   const isAuthenticated = authService.isAuthenticated;
   const isAdmin = verifiedRoles.isAdmin;
-  if (!isAuthenticated && !isAdmin) {
+  const isGerent = verifiedRoles.isGerent;
+  if (!isAuthenticated && !(isAdmin || isGerent)) {
     router.navigate(['/auth/login']);
   }
 
-  return !!(isAuthenticated && isAdmin);
+  return !!(isAuthenticated && (isAdmin || isGerent));
 };
 
 export const authGuardSeller: CanActivateFn = () => {

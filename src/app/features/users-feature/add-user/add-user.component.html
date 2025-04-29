@@ -1,7 +1,7 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
   <div class="flex w-full justify-between items-center">
     <h2 class="text-lg font-semibold text-primary-500">
-      {{ isEditing() ? "Editar" : "Agregar" }} Usuario
+      {{ isEditing() ? "Editar" : "Agregar" }} {{ rolePreselected() }}
     </h2>
     <button
       class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
@@ -88,13 +88,6 @@
         formControlName="birthDate"
         label="Fecha de Nacimiento"
       />
-
-      <app-select
-        formControlName="roleId"
-        label="Rol"
-        [options]="rolesOptions()"
-        [required]="true"
-      />
     </div>
 
     <!-- Botón centrado al final -->
@@ -113,7 +106,6 @@
         moreClasses="py-2 px-6"
         text="Guardar Usuario"
         [disabled]="!userForm.valid"
-        (click)="onSubmit()"
       />
     </div>
   </form>

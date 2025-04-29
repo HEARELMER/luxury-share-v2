@@ -102,8 +102,7 @@ export class UsersComponent {
           this.totalRecords = response.data.total;
           this.loading = false;
         },
-        error: (error) => {
-          console.error('Error:', error);
+        error: (error) => { 
           this.loading = false;
         },
       });
@@ -123,12 +122,11 @@ export class UsersComponent {
 
   handleExport(quantity: number) {
     this._userService.exportToExcel(1, quantity).subscribe({
-      next: () => {
-        console.log('Exportación completada');
+      next: () => { 
         this.showModal.set(false);
       },
-      error: (error) => {
-        console.error('Error en la exportación:', error);
+      error: (error) => { 
+        this.showModal.set(false);
       },
     });
   }
@@ -136,8 +134,7 @@ export class UsersComponent {
   editUser(user: any) {
     this.selectedRole.set(user.role.roleName);
     this.showModalUser.set(true);
-    this.selectedRow = user;
-    console.log(this.selectedRow);
+    this.selectedRow = user; 
   }
 
   openModalUser(role: string = '') {

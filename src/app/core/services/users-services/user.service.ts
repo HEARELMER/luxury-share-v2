@@ -48,8 +48,20 @@ export class UserService {
     }
   }
 
-  createUser(user: any): Observable<any> {
-    return this.httpClient.post(`${this.url}users`, user, {
+  createUserAsAdmin(user: any): Observable<any> {
+    return this.httpClient.post(`${this.url}users/admin`, user, {
+      withCredentials: true,
+    });
+  }
+
+  createUserAsSeller(user: any): Observable<any> {
+    return this.httpClient.post(`${this.url}users/seller`, user, {
+      withCredentials: true,
+    });
+  }
+
+  createUserAsGerent(user: any): Observable<any> {
+    return this.httpClient.post(`${this.url}users/gerent`, user, {
       withCredentials: true,
     });
   }
@@ -65,50 +77,7 @@ export class UserService {
       withCredentials: true,
     });
   }
-
-  createAdmin(admin: NewAdmin): Observable<any> {
-    return this.httpClient
-      .post(`${this.url}users/admin/create`, admin, {
-        withCredentials: true,
-      })
-      .pipe(
-        map((response: any) => {
-          if (response.status === 200 || 201) {
-            return {
-              message: {
-                type: 'success',
-                title: '¡Administrador agregado con éxito!',
-                message: 'El administrador se agregó correctamente al sistema.',
-              },
-              data: response.userId,
-            };
-          } else {
-            return {
-              message: {
-                type: 'error',
-                title: '¡Error al agregar el administrador!',
-                message:
-                  'Hubo un error al agregar el administrador al sistema.',
-              },
-            };
-          }
-        }),
-        catchError((error) => {
-          if (error.status === 400) {
-            return of({
-              message: {
-                type: 'error',
-                title: '¡Solicitud incorrecta!',
-                message:
-                  'Hubo un error en la solicitud al agregar el administrador.',
-              },
-            });
-          }
-          return throwError(error);
-        })
-      );
-  }
-
+ 
   findUserById(userId: string): Observable<any> {
     // Validamos que userId sea un valor válido
     if (!userId) {

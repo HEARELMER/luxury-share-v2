@@ -125,8 +125,8 @@ export class HomeComponent {
       id: 'services',
       title: 'Total de Servicios',
       number: 0,
-      bg: 'bg-slate-800',
-      buttonBg: 'bg-slate-950',
+      bg: 'bg-orange-400',
+      buttonBg: 'bg-orange-500',
       routerLink: 'services_packages',
     },
     {

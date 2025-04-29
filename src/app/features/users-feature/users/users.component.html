@@ -1,23 +1,27 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border">
-    <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
+  <!-- Contenedor principal -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
+    <!-- Cabecera -->
     <div
-      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Usuarios</h1>
-        <p class="text-sm text-gray-500">Gestión de Usuarios</p>
+        <h1 class="text-xl font-bold dark:text-gray-100">Usuarios</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Gestión de Usuarios
+        </p>
       </div>
 
-      <!-- Sección de botones - cambia de wrap según el espacio disponible -->
+      <!-- Sección de botones -->
       <div class="flex flex-wrap gap-2 lg:justify-end">
-        <!-- Botones que se adaptan mejor usando min-width -->
         <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <app-button
             icon="pi pi-plus"
             text="Nuevo Administrador"
             moreClasses="py-2 text-xs sm:text-sm whitespace-nowrap"
-            bgColor="bg-primary-500"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             [hidden]="!isGerent"
             (click)="openModalUser('Administrador')"
           />
@@ -26,7 +30,7 @@
             icon="pi pi-plus"
             text="Nuevo Vendedor"
             moreClasses="py-2 text-xs sm:text-sm"
-            bgColor="bg-primary-500"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openModalUser('Vendedor')"
           />
 
@@ -34,7 +38,7 @@
             icon="pi pi-plus"
             text="Nuevo Gerente"
             moreClasses="py-2 text-xs sm:text-sm"
-            bgColor="bg-primary-500"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             [hidden]="!isGerent"
             (click)="openModalUser('Gerente')"
           />
@@ -42,7 +46,7 @@
       </div>
     </div>
     <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
-      <!-- Sección de búsqueda - ocupa todo el ancho en móvil, se adapta en escritorio -->
+      <!-- Búsqueda -->
       <div class="flex flex-1 gap-2 items-end">
         <div class="flex-grow max-w-xs">
           <app-input-form
@@ -59,7 +63,7 @@
 
         <button
           (click)="setFilter()"
-          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+          class="bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-400 dark:hover:bg-primary-dark-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
         >
           <i class="pi pi-search"></i>
         </button>
@@ -67,25 +71,35 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-b-lg border w-full">
-    <div class="w-full py-3 px-4 border-b">
-      <!-- Contenedor flexible que cambia a columna en móvil -->
+  <!-- Tabla de usuarios -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
+    <div class="w-full py-3 px-4 border-b dark:border-gray-700">
       <div
         class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between"
       >
-        <!-- Filtros con scroll horizontal en móvil -->
+        <!-- Filtros -->
         <div class="overflow-x-auto p-2 flex-grow">
           <div class="flex gap-2 min-w-max">
             <app-button
               text="Usuarios"
               [hidden]="!isGerent"
               icon="pi pi-users"
-              [bgColor]="filterRoles === '' ? 'bg-white' : 'bg-primary-500'"
+              [bgColor]="
+                filterRoles === ''
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
+              "
               [textColor]="
-                filterRoles === '' ? 'text-primary-500' : 'text-white'
+                filterRoles === ''
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               [moreClasses]="
-                filterRoles === '' ? 'ring-2 ring-primary-100' : ''
+                filterRoles === ''
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               (click)="setFilterRoles('')"
               moreClasses="text-xs sm:text-sm"
@@ -95,13 +109,19 @@
               text="Administradores"
               icon="pi pi-user"
               [bgColor]="
-                filterRoles === 'admins' ? 'bg-white' : 'bg-primary-500'
+                filterRoles === 'admins'
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
               "
               [textColor]="
-                filterRoles === 'admins' ? 'text-primary-500' : 'text-white'
+                filterRoles === 'admins'
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               [moreClasses]="
-                filterRoles === 'admins' ? 'ring-2 ring-primary-100' : ''
+                filterRoles === 'admins'
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               (click)="setFilterRoles('admins')"
               moreClasses="text-xs sm:text-sm"
@@ -110,13 +130,19 @@
               text="Vendedores"
               icon="pi pi-shop"
               [bgColor]="
-                filterRoles === 'sellers' ? 'bg-white' : 'bg-primary-500'
+                filterRoles === 'sellers'
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
               "
               [textColor]="
-                filterRoles === 'sellers' ? 'text-primary-500' : 'text-white'
+                filterRoles === 'sellers'
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               [moreClasses]="
-                filterRoles === 'sellers' ? 'ring-2 ring-primary-100' : ''
+                filterRoles === 'sellers'
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               (click)="setFilterRoles('sellers')"
               moreClasses="text-xs sm:text-sm"
@@ -126,24 +152,30 @@
               icon="pi pi-user"
               [hidden]="!isGerent"
               [bgColor]="
-                filterRoles === 'managers' ? 'bg-white' : 'bg-primary-500'
+                filterRoles === 'managers'
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
               "
               [textColor]="
-                filterRoles === 'managers' ? 'text-primary-500' : 'text-white'
+                filterRoles === 'managers'
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               [moreClasses]="
-                filterRoles === 'managers' ? 'ring-2 ring-primary-100' : ''
+                filterRoles === 'managers'
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               (click)="setFilterRoles('managers')"
               moreClasses="text-xs sm:text-sm"
             />
 
-            <!-- Etiquetas de filtros aplicados -->
+            <!-- Etiquetas de filtros -->
             @for (item of filters(); track $index) {
             <div
-              class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+              class="flex items-center gap-1 bg-primary-100 dark:bg-gray-700 px-2 py-1 rounded-lg"
             >
-              <p-tag [value]="item.key"></p-tag>
+              <p-tag [value]="item.key" [severity]="'success'"></p-tag>
               <button
                 (click)="clearFilters()"
                 class="hover:text-red-500 text-sm text-red-300"
@@ -155,18 +187,20 @@
           </div>
         </div>
 
-        <!-- Botón de exportar en su propio contenedor -->
+        <!-- Botón exportar -->
         <div class="mt-3 sm:mt-0">
           <app-button
             text="Descargar Excel"
             icon="pi pi-file-excel"
-            bgColor="bg-green-500"
+            bgColor="bg-green-500 dark:bg-green-600"
             (click)="exportData()"
             moreClasses="w-full sm:w-auto text-sm"
           />
         </div>
       </div>
     </div>
+
+    <!-- Tabla -->
     <p-table
       [columns]="cols"
       [value]="virtualUsers"
@@ -177,7 +211,7 @@
       scrollHeight="500px"
       (onLazyLoad)="loadUsersLazy()"
       [resizableColumns]="true"
-      styleClass="p-datatable-gridlines"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
       [(selection)]="selectedRow"
@@ -189,27 +223,30 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
-
           }
         </tr>
       </ng-template>
+
       <ng-template pTemplate="body" let-user let-columns="columns">
         @if (loading) {
         <tr style="height: 40px">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:bg-gray-800">
             <p-skeleton />
           </td>
           }
         </tr>
         }@else {
-        <tr [pSelectableRow]="user">
+        <tr
+          [pSelectableRow]="user"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             @if (col.field=="photoUrl") {
             <img
               [src]="user[col.field]"
@@ -227,7 +264,7 @@
             } } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
-                class="button-table-actions"
+                class="button-table-actions dark:text-primary-dark-400 dark:hover:text-primary-dark-300"
                 [pTooltip]="'Editar Usuario'"
                 tooltipPosition="left"
                 [showDelay]="300"
@@ -236,27 +273,30 @@
                 <i class="pi pi-user-edit"></i>
               </button>
             </div>
-
             } @else {
-            {{ user[col.field] }}
-
+            <span class="dark:text-gray-300">{{ user[col.field] }}</span>
             }
           </td>
           }
         </tr>
         }
       </ng-template>
+
       <ng-template pTemplate="emptymessage" let-columns="columns">
         <tr>
-          <td colspan="100%">
+          <td colspan="100%" class="dark:bg-gray-800">
             <div class="flex flex-col items-center justify-center py-8 px-4">
-              <div class="text-primary-300 mb-3">
+              <div class="text-primary-300 dark:text-primary-dark-300 mb-3">
                 <i class="pi pi-search-minus text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
                 No se encontraron usuarios
               </h3>
-              <p class="text-gray-500 text-center max-w-md mb-4">
+              <p
+                class="text-gray-500 dark:text-gray-400 text-center max-w-md mb-4"
+              >
                 No hay resultados que coincidan con los criterios de búsqueda
                 actuales.
               </p>
@@ -265,7 +305,9 @@
         </tr>
       </ng-template>
     </p-table>
-    <div class="card flex flex-col gap-4">
+
+    <!-- Paginador -->
+    <div class="card flex flex-col gap-4  ">
       <div class="flex items-center justify-center">
         <div class="flex-1">
           <p-paginator
@@ -275,6 +317,7 @@
             [totalRecords]="totalRecords"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700 dark:text-white"
           />
         </div>
       </div>

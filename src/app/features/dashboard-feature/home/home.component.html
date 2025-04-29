@@ -1,6 +1,8 @@
-<main class="flex w-full gap-3 sm:gap-4 justify-center flex-col lg:p-2 sm:p-4">
+<main
+  class="flex w-full gap-3 sm:gap-4 justify-center flex-col lg:p-2 sm:p-4 dark:bg-gray-900"
+>
   <section
-    class="flex flex-col gap-2 bg-white rounded-lg sm:rounded-xl shadow-sm border p-3 sm:p-4"
+    class="flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 p-3 sm:p-4"
   >
     <!-- header dashboard -->
     <div
@@ -8,31 +10,23 @@
     >
       <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
         <div
-          class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 flex items-center justify-center"
+          class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary-50 dark:bg-gray-700 flex items-center justify-center"
         >
-          <i class="pi pi-chart-line text-lg md:text-xl text-primary-500"></i>
+          <i
+            class="pi pi-chart-line text-lg md:text-xl text-primary-500 dark:text-primary-dark-400"
+          ></i>
         </div>
         <div class="flex-1">
           <h1
-            class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900"
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100"
           >
             Dashboard
           </h1>
-          <p class="text-xs md:text-sm text-gray-500">
+          <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400">
             Resumen general del negocio
           </p>
         </div>
       </div>
-
-      <!-- Podría añadirse un selector de período aquí para pantallas pequeñas -->
-      <!-- <div class="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-        <select class="text-xs sm:text-sm p-2 border rounded-md sm:hidden w-full">
-          <option>Hoy</option>
-          <option>Esta semana</option>
-          <option selected>Este mes</option>
-          <option>Este año</option>
-        </select>
-      </div> -->
     </div>
 
     <!-- cards info-->
@@ -86,36 +80,40 @@
   >
     <!-- Ventas por Sucursal -->
     <div
-      class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-2 p-3 sm:p-4 min-h-[250px] sm:min-h-[300px]"
+      class="col-span-1 md:col-span-2 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow order-2 p-3 sm:p-4 min-h-[250px] sm:min-h-[300px]"
     >
       @defer {
       <app-chart-bar
         [labels]="totalSalesByBranch"
         title="Ventas por Sucursal"
         icon="pi pi-map-marker text-red-500"
-        iconBg="bg-red-50"
+        iconBg="bg-red-50 dark:bg-red-900"
       ></app-chart-bar>
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
         <div class="animate-pulse flex flex-col items-center gap-2">
-          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-          <div class="h-32 w-full bg-gray-100 rounded"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 dark:bg-gray-700 rounded"></div>
         </div>
       </div>
       }
     </div>
-    <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow order-5 min-h-[250px] sm:min-h-[300px]">
+
+    <div
+      class="col-span-1 md:col-span-2 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow order-5 min-h-[250px] sm:min-h-[300px]"
+    >
       <app-chart-line
         class="w-full"
         [title]="'Total de ventas realizadas'"
         [subtitle]="'Evolución mensual'"
         icon="pi pi-chart-line text-green-500"
-        iconBg="bg-green-50"
+        iconBg="bg-green-50 dark:bg-green-900"
       ></app-chart-line>
     </div>
+
     <!-- Top Paquetes -->
     <div
-      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-3 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
+      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow order-3 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
     >
       @defer {
       <app-chart-bar
@@ -124,14 +122,14 @@
         title="Top Paquetes"
         subtitle="Más Vendidos"
         icon="pi pi-box text-orange-500"
-        iconBg="bg-orange-50"
+        iconBg="bg-orange-50 dark:bg-orange-900"
         class="h-full"
       />
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
         <div class="animate-pulse flex flex-col items-center gap-2">
-          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-          <div class="h-32 w-full bg-gray-100 rounded"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 dark:bg-gray-700 rounded"></div>
         </div>
       </div>
       }
@@ -139,22 +137,22 @@
 
     <!-- Top Servicios -->
     <div
-      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-lg sm:rounded-xl shadow-sm border hover:shadow-md transition-shadow order-4 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
+      class="col-span-1 md:col-span-1 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow order-4 p-3 sm:p-4 min-h-[220px] sm:min-h-[250px]"
     >
       @defer {
       <app-chart-bar
         title="Top Servicios"
         subtitle="Más solicitados"
         icon="pi pi-cog text-blue-500"
-        iconBg="bg-blue-50"
+        iconBg="bg-blue-50 dark:bg-blue-900"
         [orientation]="'y'"
         [labels]="topServices"
       />
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
         <div class="animate-pulse flex flex-col items-center gap-2">
-          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-          <div class="h-32 w-full bg-gray-100 rounded"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div class="h-32 w-full bg-gray-100 dark:bg-gray-700 rounded"></div>
         </div>
       </div>
       }

@@ -1,7 +1,4 @@
 <main class="border-b shadow-sm">
-  <!-- <div class="px-1">
-    <app-select [options]="branches()" [required]="true" errorType=" " />
-  </div> -->
   <div class="user">
     <button class="flex items-center gap-2 ml-3">
       <div class="user" [routerLink]="'profile'">
@@ -11,7 +8,7 @@
           alt="perfil de usuario"
         />
         <h3
-          class="text-primary-l-500 text-md font-semibold hidden md:flex items-center hover:text-primary-l-300 duration-300 ease-in-out ml-3"
+          class="dark:text-primary-dark-500 text-primary-500 text-md font-semibold hidden md:flex items-center hover:text-primary-l-300 duration-300 ease-in-out ml-3"
         >
           {{ admin.name || "Admin" }}
         </h3>

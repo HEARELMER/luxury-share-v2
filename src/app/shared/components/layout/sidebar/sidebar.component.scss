@@ -1,21 +1,24 @@
 main {
-  @apply bg-white h-[100vh] absolute top-0 w-[300px] flex flex-col gap-2 items-center;
+  @apply bg-white dark:bg-gray-800 h-[100vh] absolute top-0 w-[300px] flex flex-col gap-2 items-center transition-colors duration-300;
 }
 
 .logo {
   @apply flex items-center gap-4 m-4;
+  h1 {
+    @apply dark:text-gray-100;
+  }
 }
 
-
 .menu {
-  @apply w-full absolute left-16  flex mt-3 justify-end px-2;
+  @apply w-full absolute left-16 flex mt-3 justify-end px-2;
+  button {
+    @apply dark:hover:bg-gray-700;
+  }
 }
 
 main.show-menu {
   @apply items-center relative;
-
- 
-
+  
   ul {
     @apply px-3;
   }
@@ -28,21 +31,22 @@ main.show-menu {
     @apply justify-center;
   }
 
-
   .logo h1 {
     display: none;
   }
 
-  @apply w-full;
+  @apply w-full dark:bg-gray-800;
 }
 
 app-button.selected,
 app-button:hover {
-  @apply text-primary-100;
+  @apply text-primary-100 dark:text-primary-dark-100;
   i {
-    @apply font-semibold fill-primary-l-500 stroke-primary-l-500 duration-300 ease-in-out;
+    @apply font-semibold fill-primary-l-500 stroke-primary-l-500 dark:fill-primary-dark-500 dark:stroke-primary-dark-500 duration-300 ease-in-out;
   }
 }
+
+ 
 
 @media (max-width: 800px) {
   .logo,
@@ -80,11 +84,11 @@ app-button:hover {
   0% {
     transform: rotate(0deg);
   }
-
+  
   50% {
     transform: rotate(10deg);
   }
-
+  
   100% {
     transform: rotate(0deg);
   }

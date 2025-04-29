@@ -26,12 +26,14 @@
           <!-- Botón actualizar -->
           <button
             pButton
+            [loading]="loading()"
             icon="pi pi-refresh"
             size="small"
             class="border-2 shadow-sm rounded-lg border-slate-100 hover:bg-primary-400 hover:shadow-md transition-all duration-200"
             [label]="'Actualizar Reporte'"
             pTooltip="Actualizar datos"
             tooltipPosition="bottom"
+            [disabled]="loading()"
             (click)="updateReport(true)"
           ></button>
         </div>

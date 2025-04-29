@@ -17,6 +17,7 @@ import { ExportExcelComponent } from '../../../shared/components/layout/export-e
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { TagModule } from 'primeng/tag';
 import { AddUserComponent } from '../add-user/add-user.component';
+import { VerifiedRolesService } from '../../../core/services/auth-services/verified-roles.service';
 @Component({
   selector: 'app-users',
   imports: [
@@ -42,17 +43,18 @@ import { AddUserComponent } from '../add-user/add-user.component';
 })
 export class UsersComponent {
   private readonly _userService = inject(UserService);
+  private readonly _verifiedRolesService = inject(VerifiedRolesService);
   @ViewChild('op') op!: Popover;
   USERS_DATA = [];
   users: User[] = [];
   cols = USER_TABLE_COLS;
   items: any[] | undefined;
   currentPage: number = 1;
-  pageSize: number = 5; // Inicializado para coincidir con el valor inicial de rows
+  pageSize: number = 10; // Inicializado para coincidir con el valor inicial de rows
   totalRecords: number = 0;
-  rowsPerPageOptions = [5, 10, 20, 50];
+  rowsPerPageOptions = [10, 20, 50];
   first: number = 0;
-  rows: number = 5;
+  rows: number = 10;
   virtualUsers: User[] = [];
   loading: boolean = false;
   selectedRow: any;
@@ -62,6 +64,7 @@ export class UsersComponent {
   filterNumDni = '';
   filterRoles = '';
   selectedRole = signal<string>('');
+  isGerent = this._verifiedRolesService.isGerent;
   onPageChange(event: any) {
     this.currentPage = event.page + 1; // Usa el índice de página del evento directamente
     this.rows = event.rows; // Actualiza el tamaño de página
@@ -102,7 +105,7 @@ export class UsersComponent {
           this.totalRecords = response.data.total;
           this.loading = false;
         },
-        error: (error) => { 
+        error: (error) => {
           this.loading = false;
         },
       });
@@ -122,10 +125,10 @@ export class UsersComponent {
 
   handleExport(quantity: number) {
     this._userService.exportToExcel(1, quantity).subscribe({
-      next: () => { 
+      next: () => {
         this.showModal.set(false);
       },
-      error: (error) => { 
+      error: (error) => {
         this.showModal.set(false);
       },
     });
@@ -134,7 +137,7 @@ export class UsersComponent {
   editUser(user: any) {
     this.selectedRole.set(user.role.roleName);
     this.showModalUser.set(true);
-    this.selectedRow = user; 
+    this.selectedRow = user;
   }
 
   openModalUser(role: string = '') {

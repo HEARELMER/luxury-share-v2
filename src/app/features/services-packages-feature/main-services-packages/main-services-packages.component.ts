@@ -39,9 +39,9 @@ export class MainServicesPackagesComponent {
   packageCols = PACKAGE_TABLE_COLS;
   currentPage: number = 1;
   totalRecords: number = 0;
-  rowsPerPageOptions = [5, 10, 20, 50];
+  rowsPerPageOptions = [10, 20, 50];
   first: number = 0;
-  rows: number = 5;
+  rows: number = 10;
   loading: boolean = false;
 
   // Vista y datos

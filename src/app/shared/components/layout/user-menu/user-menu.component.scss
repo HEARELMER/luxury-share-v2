@@ -1,11 +1,14 @@
 app-button:hover{
     svg path {
-     @apply fill-primary-500 stroke-primary-500 duration-300 ease-in-out
+     @apply dark:fill-primary-dark-500 dark:stroke-primary-dark-500 fill-primary-500 stroke-primary-500 duration-300 ease-in-out
     }
  
  }
  .icon-h:hover{
     svg path {
-        @apply fill-none stroke-primary-500 duration-300 ease-in-out
+        @apply fill-none dark:stroke-primary-dark-500 stroke-primary-500 duration-300 ease-in-out
     }
+}
+svg path {
+    @apply   dark:stroke-primary-dark-500   ;
 }

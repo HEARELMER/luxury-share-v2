@@ -66,11 +66,11 @@ export class SalesComponent {
   // Configuración de tabla
   salesTableColumns = SALES_TABLE_COLUMNS;
   currentPage = 1;
-  pageSize = 5;
+  pageSize =10;
   totalRecords = 0;
-  rowsPerPageOptions = [5, 10, 20, 50];
+  rowsPerPageOptions = [ 10, 20, 50];
   first = 0;
-  rows = 5;
+  rows = 10;
   openAddSaleModal() {
     this.showModalAddSale.set(true);
   }

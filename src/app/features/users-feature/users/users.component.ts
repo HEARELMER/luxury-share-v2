@@ -91,6 +91,9 @@ export class UsersComponent {
   }
 
   loadUsersLazy(): void {
+    if (!this.isGerent) {
+      this.filterRoles = 'sellers';
+    }
     this.loading = true;
     this._userService
       .paginateUsers(

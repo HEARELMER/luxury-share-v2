@@ -73,11 +73,11 @@ export class ClientsComponent {
   // Configuración de tabla
   cols = CLIENT_TABLE_COLS;
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalRecords = 0;
-  rowsPerPageOptions = [5, 10, 20, 50];
+  rowsPerPageOptions = [10, 20, 50];
   first = 0;
-  rows = 5;
+  rows = 10;
 
   /**
    * Maneja el cambio de página

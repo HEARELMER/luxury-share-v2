@@ -4,36 +4,26 @@
       <div class="user" [routerLink]="'profile'">
         <img
           class="border-2 border-green-500"
-          src="{{ admin.photoUrl || 'null' }}"
+          src="{{ admin().photoUrl || 'null' }}"
           alt="perfil de usuario"
         />
         <h3
           class="dark:text-primary-dark-500 text-primary-500 text-md font-semibold hidden md:flex items-center hover:text-primary-l-300 duration-300 ease-in-out ml-3"
         >
-          {{ admin.name || "Admin" }}
+          {{ admin().name || "Admin" }}
         </h3>
       </div>
 
       <button (click)="viewMoreInfo($event)">
-        <svg
+        <i
           [class.rotate-180]="viewMenu()"
-          xmlns="http://www.w3.org/2000/svg"
-          width="40"
-          height="40"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="#FF6363"
-            d="M12 14.95q-.2 0-.375-.062t-.325-.213l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213T12 14.95"
-          />
-        </svg>
+          class="pi pi-angle-up text-primary-500 font-semibold text-lg dark:text-primary-dark-500"
+        ></i>
       </button>
     </button>
 
     @if (viewMenu()) {
-
     <app-user-menu class="more" />
-
     }
   </div>
 </main>

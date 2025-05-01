@@ -54,15 +54,30 @@ export class FormClientComponent {
   clientForm = this._fb.group({
     typeDocument: ['', [Validators.required]],
     numberDocument: ['', [Validators.minLength(8), Validators.maxLength(20)]],
-    name: ['', [Validators.required]],
-    firstLastname: ['', [Validators.required]],
-    secondLastname: ['', [Validators.required]],
+    name: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    firstLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    secondLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: ['', [Validators.required]],
     registeredBy: [this._localStorageService.getUserId()],
     clientId: [''],
-    nationality: ['', Validators.minLength(3)],
+    nationality: [
+      '',
+      [
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/),
+      ],
+    ],
   });
 
   constructor() {
@@ -131,6 +146,7 @@ export class FormClientComponent {
         });
         this.loading.set(false);
       },
+      
     });
   }
 

@@ -35,7 +35,8 @@ export class InputFormComponent implements ControlValueAccessor {
   disabled = signal(false);
   onChange: any = () => {};
   onTouch: any = () => {};
-
+  maxDate = input<Date | null>(null);
+  minDate = input<Date | null>(null);
   inputClasses = signal(`
     ${this.showError() ? 'border-red-500' : 'border-gray-300'}
   `);

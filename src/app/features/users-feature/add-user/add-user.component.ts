@@ -39,7 +39,7 @@ import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
     SelectComponent,
     ToastModule,
     ButtonModule,
-    CapitalizePipe
+    CapitalizePipe,
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss',
@@ -55,9 +55,18 @@ export class AddUserComponent {
   rolesOptions = signal<any[]>([]);
   userForm: FormGroup = this._fb.group({
     numDni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-    name: ['', Validators.required],
-    firstLastname: ['', Validators.required],
-    secondLastname: ['', Validators.required],
+    name: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    firstLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    secondLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
     address: [''],

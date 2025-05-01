@@ -24,12 +24,14 @@
         </p>
         <p-tag
           [value]="saleCreationResult()?.status"
-          class="bg-green-100 shadow-sm text-green-500  "
+          class="bg-green-100 shadow-sm text-green-500"
         ></p-tag>
       </div>
       <p class="text-sm text-gray-600">
         ID:
-        <span class="font-medium">{{ saleCreationResult()?.codeSale | uppercase }}</span>
+        <span class="font-medium">{{
+          saleCreationResult()?.codeSale | uppercase
+        }}</span>
       </p>
       <p class="text-sm text-gray-600">
         Fecha:
@@ -38,7 +40,7 @@
         }}</span>
       </p>
     </div>
-    
+
     <!-- Añadir acciones de comprobante -->
     <div class="flex flex-wrap justify-center gap-3 pt-4">
       <button
@@ -94,25 +96,7 @@
   }
 
   <div class="flex flex-wrap justify-between gap-2 pt-6">
-    <button
-      pButton
-      label="Nueva venta"
-      icon="pi pi-plus"
-      class="p-button-outlined"
-      (click)="restartProcess()"
-    ></button>
-
     <div class="flex flex-wrap gap-2">
-      @if (saleCreationResult()?.success) {
-      <button
-        pButton
-        label="Ver detalles de venta"
-        icon="pi pi-eye"
-        class="p-button-outlined p-button-success"
-        (click)="viewSaleDetails()"
-      ></button>
-      }
-
       <button
         pButton
         [label]="saleCreationResult()?.success ? 'Finalizar' : 'Cerrar'"

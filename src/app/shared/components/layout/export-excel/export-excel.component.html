@@ -2,36 +2,34 @@
   <!-- Header -->
   <div class="flex items-center justify-between pb-6">
     <div class="flex items-center gap-4">
-      <i class="pi pi-file-excel text-xl text-green-600"></i>
+      <i class="pi pi-file-excel text-xl text-green-600 dark:text-green-500"></i>
 
       <div>
-        <h2 class="text-xl font-semibold text-gray-900">{{ title() }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ title() }}</h2>
       </div>
     </div>
 
     <button
       (click)="showModal.set(false)"
-      class="p-2 rounded-full flex justify-center items-center w-10 h-10 hover:bg-gray-100 transition-colors duration-200 group"
+      class="p-2 rounded-full flex justify-center items-center w-10 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 group"
     >
       <i
-        class="pi pi-times text-gray-400 group-hover:text-gray-600 text-xl"
+        class="pi pi-times text-gray-400 group-hover:text-gray-600 dark:text-gray-400 dark:group-hover:text-gray-300 text-xl"
       ></i>
     </button>
   </div>
 
   <!-- Content -->
   <div class="space-y-6">
-    <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
-      <div class="flex items-center gap-2 text-gray-600 pb-2">
+    <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300 pb-2">
         <i class="pi pi-info-circle"></i>
-        <span class="text-sm"
-          >Total de registros disponibles: {{ total() }}</span
-        >
+        <span class="text-sm">Total de registros disponibles: {{ total() }}</span>
       </div>
     </div>
 
     <div class="space-y-2">
-      <label class="text-sm font-medium text-gray-700">
+      <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
         Seleccionar cantidad de registros a exportar
       </label>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -40,8 +38,8 @@
           (click)="selectOption(option)"
           [class]="
             selectedQuantity === option
-              ? 'bg-green-50 border-green-500 text-green-700'
-              : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600 hover:border-green-500'
+              ? 'bg-green-50 dark:bg-green-900/20 border-green-500 dark:border-green-600 text-green-700 dark:text-green-400'
+              : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-green-500 dark:hover:border-green-600'
           "
           class="p-3 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-1"
         >
@@ -53,24 +51,25 @@
           </span>
         </button>
         }
-
-        
       </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <div class="flex justify-end gap-3 pt-8  border-t">
+  <div class="flex justify-end gap-3 pt-8 dark:border-gray-700">
     <app-button
       text="Cancelar"
-      bgColor="bg-gray-100"
-      textColor="text-gray-700"
+      bgColor="bg-gray-100 dark:bg-gray-800"
+      textColor="text-gray-700 dark:text-gray-300"
+      hoverBgColor="hover:bg-gray-200 dark:hover:bg-gray-700"
       (click)="showModal.set(false)"
     />
     <app-button
       text="Exportar Excel"
       icon="pi pi-file-excel"
-      bgColor="bg-green-500 hover:bg-green-600"
+      bgColor="bg-green-500 dark:bg-green-600"
+      hoverBgColor="hover:bg-green-600 dark:hover:bg-green-500"
+      textColor="text-white dark:text-white"
       (click)="exportData.emit(selectedQuantity)"
     />
   </div>

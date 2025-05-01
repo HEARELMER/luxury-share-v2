@@ -24,6 +24,7 @@ import { SALE_STATUS_FILTERS } from '../constants/sales-filters.constant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
 import { Toast } from 'primeng/toast';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -45,7 +46,7 @@ import { Toast } from 'primeng/toast';
     Tag,
     InputFormComponent,
     SelectComponent,
-    Toast
+    Toast,
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -55,6 +56,7 @@ export class SalesComponent {
   public readonly dialogService = inject(DialogService);
   private readonly _salesService = inject(SalesService);
   private readonly _messageService = inject(MessageService);
+  private readonly _localStorage = inject(LocalstorageService);
   constructor() {
     this.loadSales();
   }
@@ -179,7 +181,7 @@ export class SalesComponent {
       if (confirmed) {
         const data = {
           codeSale: sale.codeSale,
-          updatedBy: '73464945',
+          updatedBy: this._localStorage.getUserId(),
         };
         this._salesService.cancelSale(data).subscribe({
           next: (response) => {

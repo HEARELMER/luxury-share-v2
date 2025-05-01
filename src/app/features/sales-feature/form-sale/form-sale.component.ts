@@ -18,6 +18,7 @@ import { SaleCreationResult } from '../interfaces/sale-creation-result.interface
 import { Step3SummarySaleComponent } from './steps/step3-summary-sale/step3-summary-sale.component';
 import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.service';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-form-sale',
   imports: [
@@ -41,6 +42,7 @@ export class FormSaleComponent {
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
   private readonly _pdfSaleService = inject(SalePdfService);
   private readonly _localStorageService = inject(LocalstorageService);
+  private readonly _messageService = inject(MessageService);
   // Signals,variables constantes y outputs
   saleCreationResult = signal<SaleCreationResult | null>(null);
   currentClient = signal<any>(null);
@@ -61,14 +63,29 @@ export class FormSaleComponent {
   clientForm = this._fb.group({
     typeDocument: ['', [Validators.required]],
     numberDocument: ['', [Validators.minLength(8), Validators.maxLength(20)]],
-    name: ['', [Validators.required]],
-    firstLastname: ['', [Validators.required]],
-    secondLastname: ['', [Validators.required]],
+    name: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    firstLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
+    secondLastname: [
+      '',
+      [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/)],
+    ],
     email: ['', [Validators.email]],
     phone: ['', [Validators.required, Validators.minLength(9)]],
     birthDate: ['', [Validators.required]],
     registeredBy: [this._localStorageService.getUserId()],
-    nationality: ['', Validators.minLength(3)],
+    nationality: [
+      '',
+      [
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/),
+      ],
+    ],
   });
 
   closeModal() {
@@ -96,6 +113,15 @@ export class FormSaleComponent {
           this.currentStep.set(2);
           this.currentClient.set(response.data);
           activateCallback(2);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.loading.set(false);
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error.message,
+          });
         },
       });
     }

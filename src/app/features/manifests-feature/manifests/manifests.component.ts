@@ -24,6 +24,7 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -43,7 +44,8 @@ import { SelectComponent } from '../../../shared/components/forms/select/select.
     SelectButtonModule,
     InputFormComponent,
     SelectComponent,
-  ],
+    ButtonComponent
+],
   templateUrl: './manifests.component.html',
   styleUrl: './manifests.component.scss',
   providers: [MessageService, DialogService],

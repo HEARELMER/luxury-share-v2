@@ -1,17 +1,19 @@
-<div class="p-4 bg-white border-b">
+<div class="p-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
   <!-- Encabezado -->
   <div class="flex items-center gap-3 pb-4">
     <div
-      class="w-10 h-10 bg-gradient-to-br from-orange-400 to-primary-600 rounded-lg shadow-md flex items-center justify-center"
+      class="w-10 h-10 bg-gradient-to-br from-orange-400 to-primary-600 dark:from-orange-500 dark:to-primary-dark-500 rounded-lg shadow-md flex items-center justify-center"
     >
       <i class="pi pi-file-export text-white text-lg"></i>
     </div>
 
     <div class="flex flex-col">
-      <h2 class="text-lg font-semibold text-gray-800 m-0 leading-tight">
-        Exportar Reporte de Ventas
+      <h2
+        class="text-lg font-semibold text-gray-800 dark:text-gray-100 m-0 leading-tight"
+      >
+        {{ title() }}
       </h2>
-      <p class="text-xs text-gray-500 pt-1">
+      <p class="text-xs text-gray-500 dark:text-gray-400 pt-1">
         Genera archivos para cuadre de caja en diferentes formatos
       </p>
     </div>
@@ -24,29 +26,32 @@
       title="Ventas y Pagos"
       icon="pi pi-shopping-cart"
       borderColor="border-green-200"
+      darkBorderColor="dark:border-green-800"
       (onExcel)="generateExcelReportOfSales()"
       description="Exporta un reporte con todas las ventas realizadas y los métodos de pago utilizados."
       [loading]="loading()"
-      ></app-card-report>
-      
-      <!-- Reporte detallado de servicios y/o paquetes -->
-      <app-card-report
+    ></app-card-report>
+
+    <!-- Reporte detallado de servicios y/o paquetes -->
+    <app-card-report
       title="Servicios y Paquetes"
       icon="pi pi-car"
       borderColor="border-blue-200"
+      darkBorderColor="dark:border-blue-800"
       description="Genera un reporte con el desglose de ventas por servicios y paquetes contratados."
       [loading]="loading()"
       (onExcel)="generateExcelReportOfServicesAndPackages()"
-      ></app-card-report>
-      
-      <!-- Reporte de sucursales -->
-      <app-card-report
+    ></app-card-report>
+
+    <!-- Reporte de sucursales -->
+    <app-card-report
       title="Rendimiento por Sucursal"
       icon="pi pi-building"
       borderColor="border-orange-200"
+      darkBorderColor="dark:border-orange-800"
       description="Obtén un análisis detallado y comparativo del desempeño de cada sucursal."
       (onExcel)="generateExcelReportOfBranches()"
       [loading]="loading()"
-      ></app-card-report>
+    ></app-card-report>
   </div>
 </div>

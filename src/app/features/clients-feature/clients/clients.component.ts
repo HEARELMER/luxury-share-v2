@@ -220,9 +220,7 @@ export class ClientsComponent {
         '960px': '65vw',
         '640px': '80vw',
       },
-      data: {
-        userId: userId,
-      },
+      data: userId,
     });
   }
 

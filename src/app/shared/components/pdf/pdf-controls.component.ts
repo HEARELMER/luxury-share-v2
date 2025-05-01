@@ -4,55 +4,64 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import jsPDF from 'jspdf';
 import { PdfService } from '../../../core/services/pdf-services/pdf.service';
+import { ButtonComponent } from '../ui/button/button.component';
 
 @Component({
-  selector: 'app-pdf-controls', 
-  imports: [CommonModule, ButtonModule, TooltipModule],
+  selector: 'app-pdf-controls',
+  imports: [CommonModule, ButtonModule, TooltipModule, ButtonComponent],
   template: `
-    <div class="flex gap-2 justify-content-{{ position() }}">
-      <p-button
+    <div class="grid lg:grid-cols-3  gap-2">
+      <app-button
         *ngIf="showPreview()"
         icon="pi pi-eye"
-        [label]="showLabels() ? 'Ver PDF' : ''"
-        [outlined]="outlined()"
-        [size]="size()"
+        text="Ver PDF"
         pTooltip="Previsualizar PDF"
         tooltipPosition="top"
-        (onClick)="onPreview()"
-      ></p-button>
+        (click)="onPreview()"
+        bgColor="bg-primary-500 dark:bg-primary-700"
+        textColor="text-white dark:text-white"
+        font=" font-normal text-sm"
+        moreClasses="py-2"
+      />
 
-      <p-button
+      <app-button
         *ngIf="showDownload()"
         icon="pi pi-download"
-        [label]="showLabels() ? 'Descargar' : ''"
-        [outlined]="outlined()"
-        [size]="size()"
+        text="Descargar PDF"
         pTooltip="Descargar PDF"
         tooltipPosition="top"
-        (onClick)="onDownload()"
-      ></p-button>
+        (click)="onDownload()"
+        bgColor="bg-primary-500 dark:bg-primary-dark-500"
+        textColor="text-white dark:text-white"
+        font=" font-normal text-sm"
+        moreClasses="py-2"
+      />
 
-      <p-button
-        *ngIf="showPrint()"
+      <app-button
+        *ngIf="showPrint"
         icon="pi pi-print"
-        [label]="showLabels() ? 'Imprimir' : ''"
-        [outlined]="outlined()"
-        [size]="size()"
         pTooltip="Imprimir PDF"
         tooltipPosition="top"
-        (onClick)="onPrint()"
-      ></p-button>
+        bgColor="bg-primary-500 dark:bg-primary-dark-500"
+        textColor="text-white dark:text-white"
+        font=" font-normal text-sm"
+        text="Imprimir"
+        moreClasses="py-2"
+        (click)="onPrint()"
+      />
 
-      <p-button
+      <app-button
         *ngIf="showEmail()"
         icon="pi pi-envelope"
-        [label]="showLabels() ? 'Enviar' : ''"
-        [outlined]="outlined()"
-        [size]="size()"
         pTooltip="Enviar por correo"
         tooltipPosition="top"
-        (onClick)="onEmail()"
-      ></p-button>
+        text="Enviar por correo"
+        bgColor="bg-primary-500 dark:bg-primary-dark-500"
+        textColor="text-white dark:text-white"
+        font=" font-normal text-sm"
+        moreClasses="py-2"
+        (click)="onEmail()"
+      />
     </div>
   `,
 })

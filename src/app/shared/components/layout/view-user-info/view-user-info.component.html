@@ -1,85 +1,246 @@
-<div class="bg-white p-4">
-  <!-- Header con foto y datos -->
-  <div class="px-4 py-3 bg-indigo-50 rounded-xl flex items-center gap-4">
-    <div class="relative">
+<div class="bg-white dark:bg-transparent p-4">
+  @if(loading()) {
+  <!-- Skeleton Loading State -->
+  <div
+    class="px-4 py-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center gap-4"
+  >
+    <p-skeleton
+      shape="circle"
+      size="3.5rem"
+      styleClass="flex-shrink-0"
+    ></p-skeleton>
+    <div class="flex-1">
+      <p-skeleton width="70%" height="1.25rem" styleClass="mb-2"></p-skeleton>
+      <p-skeleton width="50%" height="0.875rem"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="pt-4 flex justify-center">
+    <p-skeleton width="8rem" height="1.5rem" borderRadius="16px"></p-skeleton>
+  </div>
+
+  <div class="grid grid-cols-2 gap-6 pt-6">
+    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <p-skeleton
+        width="30%"
+        height="0.75rem"
+        styleClass="mb-2 mx-auto"
+      ></p-skeleton>
+      <p-skeleton width="50%" height="1rem" styleClass="mx-auto"></p-skeleton>
+    </div>
+    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <p-skeleton
+        width="30%"
+        height="0.75rem"
+        styleClass="mb-2 mx-auto"
+      ></p-skeleton>
+      <p-skeleton width="50%" height="1rem" styleClass="mx-auto"></p-skeleton>
+    </div>
+    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <p-skeleton
+        width="30%"
+        height="0.75rem"
+        styleClass="mb-2 mx-auto"
+      ></p-skeleton>
+      <p-skeleton width="50%" height="1rem" styleClass="mx-auto"></p-skeleton>
+    </div>
+    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <p-skeleton
+        width="30%"
+        height="0.75rem"
+        styleClass="mb-2 mx-auto"
+      ></p-skeleton>
+      <p-skeleton width="50%" height="1rem" styleClass="mx-auto"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="pt-6">
+    <p-skeleton height="2.5rem" borderRadius="8px"></p-skeleton>
+  </div>
+  } @else {
+  <!-- Header con foto y datos - Rediseñado -->
+  <div
+    class="px-5 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/20 rounded-2xl flex items-center gap-5"
+  >
+    <div class="relative group">
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-green-400 to-cyan-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-300"
+      ></div>
       <img
-        src="https://github.com/hearelmer.png"
+        [src]="userInfo().photoUrl || 'assets/images/default-avatar.png'"
         alt="Profile"
-        class="w-14 h-14 rounded-full object-cover ring-4 ring-green-400"
+        class="relative w-16 h-16 rounded-full object-cover border-4 border-white dark:border-gray-800"
+        loading="lazy"
       />
       <span
-        class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
-      ></span>
-    </div>
-    <div class="flex-1">
-      <p class="font-semibold text-gray-800">
-        {{
-          userInfo().name + userInfo().firstLastname + userInfo().secondLastname
-        }}
-      </p>
-      <p class="text-gray-500 text-xs">{{ userInfo().email }}</p>
-    </div>
-  </div>
-
-  <!-- Badge de rol -->
-  <div class="pt-4 flex justify-center">
-    <span
-      class="px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-full flex items-center gap-1"
-    >
-      <i class="pi pi-shield text-[10px]"></i>
-      ADMINISTRADOR
-    </span>
-  </div>
-
-  <!-- Datos de contacto -->
-  <div class="grid grid-cols-2 gap-6 pt-6">
-    <div class="text-center p-3 bg-gray-50 rounded-lg">
-      <p class="text-xs font-medium text-gray-500 pb-1">DNI</p>
-      <p class="text-sm font-semibold text-gray-700">{{ userInfo().numDni }}</p>
-    </div>
-    <div class="text-center p-3 bg-gray-50 rounded-lg">
-      <p class="text-xs font-medium text-gray-500 pb-1">Teléfono</p>
-      <p class="text-sm font-semibold text-gray-700">{{ userInfo().phone }}</p>
-    </div>
-    <div class="text-center p-3 bg-gray-50 rounded-lg">
-      <p class="text-xs font-medium text-gray-500 pb-1">Email</p>
-      <p class="text-sm font-semibold text-gray-700">{{ userInfo().email }}</p>
-    </div>
-    <div class="text-center p-3 bg-gray-50 rounded-lg">
-      <p class="text-xs font-medium text-gray-500 pb-1">Nacimiento</p>
-      <p class="text-sm font-semibold text-gray-700">
-        {{ userInfo().birthDate }}
-      </p>
-    </div>
-  </div>
-
-  <!-- Estado de verificación -->
-  <div class="pt-6">
-    <div
-      [class]="
-        userInfo().emailVerified
-          ? 'py-2.5 px-4 bg-green-50 rounded-lg flex items-center justify-center gap-2'
-          : 'py-2.5 px-4 bg-yellow-50 rounded-lg flex items-center justify-center gap-2'
-      "
-    >
-      <i
-        [class]="
-          userInfo().emailVerified
-            ? 'pi pi-check-circle text-green-500 text-xs'
-            : 'pi pi-exclamation-circle text-yellow-600 text-xs'
-        "
-      ></i>
-      <span
-        [class]="
-          userInfo().emailVerified
-            ? 'text-xs font-medium text-green-500'
-            : 'text-xs font-medium text-yellow-600'
-        "
+        class="absolute bottom-0 right-0 w-5 h-5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full flex items-center justify-center"
       >
-        {{
-          userInfo().emailVerified ? "Email verificado" : "Email no verificado"
-        }}
+        <i class="pi pi-check text-[8px] text-white"></i>
       </span>
     </div>
+    <div class="flex-1">
+      <p class="font-semibold text-lg text-gray-800 dark:text-gray-100">
+        {{ userInfo().name || "" }} {{ userInfo().firstLastname || "" }}
+        {{ userInfo().secondLastname || "" }}
+      </p>
+      <div class="flex items-center gap-2 mt-1">
+        <i class="pi pi-envelope text-xs text-gray-400 dark:text-gray-500"></i>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">
+          {{ userInfo().email || "Sin correo" }}
+        </p>
+      </div>
+    </div>
   </div>
+
+  <!-- Badge de rol - Rediseñado -->
+  <div class="pt-5 flex justify-center">
+    <p-tag
+      [severity]="'success'"
+      [value]="userInfo().role?.roleName | capitalize"
+      icon="pi pi-user"
+      [rounded]="true"
+    />
+  </div>
+
+  <!-- Datos de contacto - Tarjetas mejoradas -->
+  <div class="grid lg:grid-cols-2 gap-4 pt-6">
+    <div
+      class="text-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow transition-all duration-200"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center mb-2"
+        >
+          <i class="pi pi-id-card text-blue-500 dark:text-blue-400 text-sm"></i>
+        </div>
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          DNI
+        </p>
+        <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {{ userInfo().numDni || "--" }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="text-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow transition-all duration-200"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mb-2"
+        >
+          <i
+            class="pi pi-phone text-indigo-500 dark:text-indigo-400 text-sm"
+          ></i>
+        </div>
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Teléfono
+        </p>
+        <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {{ userInfo().phone || "--" }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="text-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow transition-all duration-200"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center mb-2"
+        >
+          <i
+            class="pi pi-envelope text-purple-500 dark:text-purple-400 text-sm"
+          ></i>
+        </div>
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Email
+        </p>
+        <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {{ userInfo().email || "--" }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="text-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow transition-all duration-200"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center mb-2"
+        >
+          <i
+            class="pi pi-calendar text-amber-500 dark:text-amber-400 text-sm"
+          ></i>
+        </div>
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Nacimiento
+        </p>
+        <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {{ userInfo().birthDate || "--" }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de verificación - Rediseñado -->
+  <div class="pt-6">
+    <div
+      [ngClass]="
+        userInfo().emailVerified
+          ? 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/10'
+          : 'bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/20 dark:to-orange-900/10'
+      "
+      class="py-3 px-5 rounded-xl flex items-center justify-center gap-3"
+    >
+      <div
+        [ngClass]="
+          userInfo().emailVerified
+            ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300'
+            : 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300'
+        "
+        class="h-9 w-9 rounded-full flex items-center justify-center"
+      >
+        <i
+          [class]="
+            userInfo().emailVerified
+              ? 'pi pi-check-circle'
+              : 'pi pi-exclamation-circle'
+          "
+        ></i>
+      </div>
+
+      <div class="flex-1">
+        <p
+          [ngClass]="
+            userInfo().emailVerified
+              ? 'text-green-800 dark:text-green-300'
+              : 'text-amber-800 dark:text-amber-300'
+          "
+          class="font-medium text-sm"
+        >
+          {{
+            userInfo().emailVerified
+              ? "Correo verificado"
+              : "Correo no verificado"
+          }}
+        </p>
+        <p
+          [ngClass]="
+            userInfo().emailVerified
+              ? 'text-green-600/70 dark:text-green-400/70'
+              : 'text-amber-600/70 dark:text-amber-400/70'
+          "
+          class="text-xs mt-0.5"
+        >
+          {{
+            userInfo().emailVerified
+              ? "La cuenta está completamente activada"
+              : "Se recomienda verificar el correo."
+          }}
+        </p>
+      </div>
+    </div>
+  </div>
+  }
 </div>

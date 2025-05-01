@@ -1,12 +1,16 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
-      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Servicios y Paquetes</h1>
-        <p class="text-sm text-gray-500">
+        <h1 class="text-xl font-bold dark:text-gray-100">
+          Servicios y Paquetes
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
           Gestión de servicios y paquetes turísticos
         </p>
       </div>
@@ -17,15 +21,15 @@
           <app-button
             icon="pi pi-plus"
             text="Nuevo Servicio"
-            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
-            bgColor="bg-primary-500"
+            moreClasses="py-2 w-full sm:w-auto"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openModalService()"
           />
           <app-button
             icon="pi pi-plus"
             text="Nuevo Paquete"
-            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
-            bgColor="bg-primary-500"
+            moreClasses="py-2 w-full sm:w-auto"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openmodalPackage()"
           />
         </div>
@@ -47,7 +51,7 @@
 
         <button
           (click)="setFilter()"
-          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+          class="bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-400 dark:hover:bg-primary-dark-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
         >
           <i class="pi pi-search"></i>
         </button>
@@ -72,8 +76,10 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-b-lg border w-full">
-    <div class="w-full py-3 px-4 border-b">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
+    <div class="w-full py-3 px-4 border-b dark:border-gray-700">
       <!-- Contenedor flexible que cambia a columna en móvil -->
       <div
         class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between"
@@ -85,14 +91,20 @@
               text="Servicios"
               icon="pi pi-car"
               [bgColor]="
-                currentView() === 'services' ? 'bg-white' : 'bg-primary-500'
+                currentView() === 'services'
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
               "
               [textColor]="
-                currentView() === 'services' ? 'text-primary-500' : 'text-white'
+                currentView() === 'services'
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               (click)="changeView('services')"
               [moreClasses]="
-                currentView() === 'services' ? 'ring-2 ring-primary-100' : ''
+                currentView() === 'services'
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               moreClasses="text-xs sm:text-sm"
             />
@@ -100,25 +112,31 @@
               text="Paquetes Turísticos"
               icon="pi pi-box"
               [bgColor]="
-                currentView() === 'packages' ? 'bg-white' : 'bg-primary-500'
+                currentView() === 'packages'
+                  ? 'bg-white dark:bg-gray-700'
+                  : 'bg-primary-500 dark:bg-primary-dark-500'
               "
               [textColor]="
-                currentView() === 'packages' ? 'text-primary-500' : 'text-white'
+                currentView() === 'packages'
+                  ? 'text-primary-500 dark:text-primary-dark-500'
+                  : 'text-white'
               "
               (click)="changeView('packages')"
               [moreClasses]="
-                currentView() === 'packages' ? 'ring-2 ring-primary-100' : ''
+                currentView() === 'packages'
+                  ? 'ring-2 ring-primary-100 dark:ring-primary-dark-300'
+                  : ''
               "
               moreClasses="text-xs sm:text-sm"
             />
             @for (item of filters(); track $index) {
             <div
-              class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+              class="flex items-center gap-1 bg-primary-100 dark:bg-primary-dark-900/30 px-2 py-1 rounded-lg"
             >
-              <p-tag [value]="item.key"></p-tag>
+              <p-tag [value]="item.key" styleClass="dark:tag-dark"></p-tag>
               <button
                 (click)="clearFilters()"
-                class="hover:text-red-500 text-sm text-red-300"
+                class="hover:text-red-500 text-sm text-red-300 dark:text-red-400"
               >
                 <i class="pi pi-times"></i>
               </button>
@@ -132,7 +150,7 @@
           <app-button
             text="Descargar Excel"
             icon="pi pi-file-excel"
-            bgColor="bg-green-500"
+            bgColor="bg-green-500 dark:bg-green-600"
             (click)="exportData()"
             moreClasses="w-full sm:w-auto text-sm"
           />
@@ -145,13 +163,13 @@
       [value]="virtualServices()"
       [lazy]="true"
       [scrollable]="true"
-      [virtualScroll]="true" 
+      [virtualScroll]="true"
       [rows]="rows"
       [loading]="loading"
       [totalRecords]="totalRecords"
       scrollHeight="500px"
       [resizableColumns]="true"
-      styleClass="p-datatable-gridlines"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
       [(selection)]="selectedService"
@@ -163,11 +181,10 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
-
           }
         </tr>
       </ng-template>
@@ -175,19 +192,25 @@
         @if (loading) {
         <tr style="height: 40px">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             <p-skeleton />
           </td>
           }
         </tr>
         }
-        <tr [pSelectableRow]="item">
+        <tr
+          [pSelectableRow]="item"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             @if (col.field == "status") { @if (item[col.field] === true ) {
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (item[col.field] === false) {
-            <p-tag class="bg-primary-500" value="No Disponible"></p-tag>
+            <p-tag
+              styleClass="bg-primary-500 dark:bg-primary-dark-500"
+              value="No Disponible"
+            ></p-tag>
             } } @else if (col.field=="registeredBy") {
 
             <div class="flex items-center gap-2">
@@ -197,15 +220,19 @@
                 tooltipPosition="top"
                 [rounded]="true"
                 (click)="viewUserDetails(item[col.field])"
-                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white dark:bg-blue-700 dark:hover:bg-blue-600"
                 class="cursor-pointer hover:shadow-sm hover:underline transition-all"
               />
             </div>
 
             } @else if (col.field == "createdAt") {
-            {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              item[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field == "updatedAt") {
-            {{ item[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              item[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field=="actions") {
             <div class="flex gap-1">
               <button
@@ -246,8 +273,7 @@
             </div>
 
             } @else {
-            {{ item[col.field] }}
-
+            <span class="dark:text-gray-300">{{ item[col.field] }}</span>
             }
           </td>
           }
@@ -258,10 +284,12 @@
         <tr>
           <td colspan="100%">
             <div class="flex flex-col items-center justify-center py-8 px-4">
-              <div class="text-primary-300 mb-3">
+              <div class="text-primary-300 dark:text-primary-dark-400 mb-3">
                 <i class="pi pi-search-minus text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
                 No se encontraron resultados
               </h3>
             </div>
@@ -279,6 +307,7 @@
             [totalRecords]="totalRecords"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
       </div>
@@ -305,4 +334,4 @@
   (refreshData)="handleRefreshData()"
 />
 
-<p-toast [baseZIndex]="10000" [life]="2000" />
+<p-toast [baseZIndex]="10000" [life]="2000" styleClass="dark:toast-dark" />

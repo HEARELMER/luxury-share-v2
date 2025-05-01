@@ -1,24 +1,32 @@
-<div class="p-4">
+<div class="p-4 bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700">
   <div class="flex items-center gap-3 pb-5">
     <div
-      class="w-10 h-10 bg-gradient-to-br from-orange-400 to-primary-600 rounded-lg shadow-md flex items-center justify-center transform transition-transform hover:scale-105"
+      class="w-10 h-10 bg-gradient-to-br from-orange-400 to-primary-600 dark:from-orange-500 dark:to-primary-dark-500 rounded-lg shadow-md flex items-center justify-center transform transition-transform hover:scale-105"
     >
       <i class="pi pi-chart-line text-white text-lg"></i>
     </div>
     <div class="flex flex-col">
-      <h2 class="text-lg font-semibold text-gray-800 m-0 leading-tight">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 m-0 leading-tight">
         Análisis gráfico
       </h2>
-      <p class="text-xs text-gray-500 mt-1">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
         Visualización detallada de métricas clave
       </p>
     </div>
   </div>
+  
   @defer () {
   <app-chart-line
     title="Tendencia de ventas"
     subtitle="Últimos 12 meses"
-    [chartData]="data()"
+    [chartData]="data()" 
   ></app-chart-line>
+  } @loading {
+    <div class="flex justify-center items-center h-64">
+      <div class="animate-pulse flex flex-col items-center">
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2.5"></div>
+        <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+    </div>
   }
 </div>

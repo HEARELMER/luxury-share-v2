@@ -187,7 +187,6 @@ export class BranchesComponent {
    * @returns void
    */
   viewUserDetails(userId: string) {
-    console.log('User ID:', userId);
     const ref = this.dialogService.open(ViewUserInfoComponent, {
       header: 'Información del usuario',
       modal: true,
@@ -197,9 +196,7 @@ export class BranchesComponent {
         '960px': '65vw',
         '640px': '80vw',
       },
-      data: {
-        userId: userId,
-      },
+      data: userId,
     });
   }
 

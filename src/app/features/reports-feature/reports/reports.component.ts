@@ -107,28 +107,33 @@ export class ReportsComponent {
   updateReport(forceRefresh: boolean = false) {
     this.loading.set(true);
     const payload = this.buildReportPayload();
-
-    this._reportsService.loadReports(payload, forceRefresh).subscribe({
-      next: ({ response, lastUpdate }) => { 
-        this.kpisData.set(response?.data?.keyMetrics || []);
-        this.chartsData.set(response?.data?.chartData || []);
-        this.lastUpdate.set(lastUpdate);
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Reporte actualizado',
-          detail: 'Los datos del reporte han sido actualizados correctamente',
-        });
-      },
-      error: (error) => {
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail:
-            'No se pudieron cargar los datos del reporte. Intente nuevamente.',
-        });
-      },
-      complete: () => this.loading.set(false),
-    });
+    try {
+      this._reportsService.loadReports(payload, forceRefresh).subscribe({
+        next: ({ response, lastUpdate }) => {
+          this.kpisData.set(response?.data?.keyMetrics || []);
+          this.chartsData.set(response?.data?.chartData || []);
+          this.lastUpdate.set(lastUpdate);
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Reporte actualizado',
+            detail: 'Los datos del reporte han sido actualizados correctamente',
+          });
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail:
+              'No se pudieron cargar los datos del reporte. Intente nuevamente.',
+          });
+          this.loading.set(false);
+        },
+        complete: () => this.loading.set(false),
+      });
+    } catch (error) {
+      this.loading.set(false);
+    }
   }
 
   // Construir el payload para la API

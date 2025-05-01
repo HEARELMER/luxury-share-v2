@@ -1,12 +1,16 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
-      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Sucursales</h1>
-        <p class="text-sm text-gray-500">Gestión de sucursales y oficinas</p>
+        <h1 class="text-xl font-bold dark:text-gray-100">Sucursales</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Gestión de sucursales y oficinas
+        </p>
       </div>
 
       <!-- Botón de nueva sucursal - responsivo -->
@@ -16,7 +20,7 @@
             icon="pi pi-plus"
             text="Nueva Sucursal"
             moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
-            bgColor="bg-primary-500"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openBranchModal()"
           />
         </div>
@@ -39,7 +43,7 @@
 
         <button
           (click)="searchBranch()"
-          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+          class="bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-400 dark:hover:bg-primary-dark-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
         >
           <i class="pi pi-search"></i>
         </button>
@@ -49,7 +53,7 @@
         <button
           (click)="clearFilters()"
           tooltipPosition="left"
-          class="w-full sm:w-auto p-button-outlined border py-2 px-4 rounded-lg p-button-secondary flex items-center justify-center gap-2"
+          class="w-full sm:w-auto p-button-outlined border dark:border-gray-600 py-2 px-4 rounded-lg p-button-secondary flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
         >
           <i class="pi pi-filter-slash"></i>
           <span>Limpiar filtros</span>
@@ -58,14 +62,16 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-b-lg border w-full">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
     <div class="w-full py-5 flex px-4 justify-between">
       <div class="flex gap-2">
         @for (item of filters(); track $index) {
         <div
-          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+          class="flex items-center gap-1 bg-primary-100 dark:bg-gray-700 px-2 py-1 rounded-lg"
         >
-          <p-tag [value]="item.value"></p-tag>
+          <p-tag [value]="item.value" [severity]="'success'"></p-tag>
           <button
             (click)="clearFilters()"
             class="hover:text-red-500 text-sm text-red-300"
@@ -83,11 +89,11 @@
       [lazy]="true"
       [scrollable]="true"
       [virtualScroll]="true"
-      [virtualScrollItemSize]="5"
+      [rows]="rows"
       [totalRecords]="totalRecords"
       scrollHeight="500px"
       [resizableColumns]="true"
-      styleClass="p-datatable-gridlines"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
       [loading]="loading()"
@@ -97,11 +103,10 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
-
           }
         </tr>
       </ng-template>
@@ -109,23 +114,30 @@
         @if (loading()) {
         <tr style="height: 40px">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             <p-skeleton />
           </td>
           }
         </tr>
         }
-        <tr [pSelectableRow]="branch">
+        <tr
+          [pSelectableRow]="branch"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             @if (col.field == "status") { @if (branch[col.field] === true ) {
             <p-tag severity="success" value="Activo"></p-tag>
             } @else if (branch[col.field] === false) {
             <p-tag severity="danger" value="No Disponible"></p-tag>
             } } @else if (col.field == "createdAt") {
-            {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              branch[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field == "updatedAt") {
-            {{ branch[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              branch[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field=="registeredBy") {
 
             <div class="flex items-center gap-2">
@@ -153,7 +165,6 @@
               </button>
               <button
                 class="button-table-actions"
-                class="button-table-actions"
                 [pTooltip]="'Eliminar Sucursal'"
                 tooltipPosition="left"
                 [showDelay]="300"
@@ -164,8 +175,7 @@
             </div>
 
             } @else {
-            {{ branch[col.field] }}
-
+            <span class="dark:text-gray-300">{{ branch[col.field] }}</span>
             }
           </td>
           }
@@ -174,20 +184,25 @@
 
       <ng-template pTemplate="emptymessage" let-columns="columns">
         <tr>
-          <td colspan="100%">
+          <td colspan="100%" class="dark:bg-gray-800">
             <div class="flex flex-col items-center justify-center py-8 px-4">
-              <div class="text-primary-300 mb-3">
+              <div class="text-primary-300 dark:text-primary-dark-300 mb-3">
                 <i class="pi pi-search-minus text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
                 No se encontraron resultados
               </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">
+                No hay sucursales que coincidan con los criterios de búsqueda.
+              </p>
             </div>
           </td>
         </tr>
       </ng-template>
     </p-table>
-    <div class="card flex flex-col gap-4">
+    <div class="card flex flex-col gap-4 dark:bg-gray-800 dark:border-gray-700">
       <div class="flex items-center justify-center">
         <div class="flex-1">
           <p-paginator
@@ -197,19 +212,13 @@
             [totalRecords]="totalRecords"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
       </div>
     </div>
   </div>
 </main>
-<!-- 
-<app-export-excel
-  title="Sucursales"
-  [(showModal)]="showModal"
-  (exportData)="handleExport($event)"
-  [total]="totalRecords"
-/> -->
 
 <app-add-branch
   [(showModal)]="showBranchModal"

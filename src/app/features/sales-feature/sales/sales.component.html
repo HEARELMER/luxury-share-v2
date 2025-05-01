@@ -1,12 +1,16 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
-      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Ventas</h1>
-        <p class="text-sm text-gray-500">Gestión de ventas y reservas</p>
+        <h1 class="text-xl font-bold dark:text-gray-100">Ventas</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Gestión de ventas y reservas
+        </p>
       </div>
 
       <!-- Botón de nueva venta - responsivo -->
@@ -15,8 +19,8 @@
           <app-button
             icon="pi pi-plus"
             text="Nueva Venta"
-            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
-            bgColor="bg-primary-500"
+            moreClasses="py-2 w-full sm:w-auto"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openAddSaleModal()"
           />
         </div>
@@ -39,7 +43,7 @@
 
         <button
           (click)="searchSale()"
-          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+          class="bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-400 dark:hover:bg-primary-dark-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
         >
           <i class="pi pi-search"></i>
         </button>
@@ -56,7 +60,7 @@
           pButton
           icon="pi pi-filter-slash"
           label="Limpiar filtros"
-          class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+          class="bg-white dark:bg-gray-700 border-2 shadow-sm rounded-lg text-black dark:text-gray-100 border-slate-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200"
           [disabled]="filters().length === 0"
           (click)="clearFilters()"
         ></button>
@@ -65,23 +69,25 @@
   </div>
 
   <!-- table section -->
-  <div class="bg-white rounded-b-lg border w-full">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
     <div class="w-full py-5 flex px-4 justify-between">
-      <!-- <div class="flex gap-2">
+      <div class="flex gap-2">
         @for (item of filters(); track $index) {
         <div
-          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+          class="flex items-center gap-1 bg-primary-100 dark:bg-primary-dark-900/30 px-2 py-1 rounded-lg"
         >
-          <p-tag [value]="item.value"></p-tag>
+          <p-tag [value]="item.value" styleClass="dark:tag-dark"></p-tag>
           <button
             (click)="clearFilters()"
-            class="hover:text-red-500 text-sm text-red-300"
+            class="hover:text-red-500 text-sm text-red-300 dark:text-red-400"
           >
             <i class="pi pi-times"></i>
           </button>
         </div>
         }
-      </div> -->
+      </div>
     </div>
 
     <p-table
@@ -92,7 +98,8 @@
       [totalRecords]="totalRecords"
       scrollHeight="500px"
       [resizableColumns]="true"
-      styleClass="p-datatable-gridlines"
+      [rows]="rows"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
       [loading]="loading()"
@@ -102,11 +109,10 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
-
           }
         </tr>
       </ng-template>
@@ -114,49 +120,66 @@
         @if (loading()) {
         <tr style="height: 40px">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             <p-skeleton />
           </td>
           }
         </tr>
         }
-        <tr [pSelectableRow]="sale">
+        <tr
+          [pSelectableRow]="sale"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             @if (col.field == "status") { @switch (sale[col.field]) { @case
             ('PENDIENTE') {
             <p-tag
-              styleClass="bg-orange-100 text-orange-500"
+              styleClass="bg-orange-100 text-orange-500 dark:bg-orange-900/30 dark:text-orange-400"
               value="Reservado"
             ></p-tag>
             } @case ('CANCELADO') {
-            <p-tag bg="bg-primary-500" value="Cancelada"></p-tag>
+            <p-tag
+              styleClass="bg-primary-500 dark:bg-primary-dark-500 text-white"
+              value="Cancelada"
+            ></p-tag>
             } @case ('COMPLETADO') {
             <p-tag
-              styleClass="bg-green-100 text-green-500"
+              styleClass="bg-green-100 text-green-500 dark:bg-green-900/30 dark:text-green-400"
               value="Completada"
             ></p-tag>
             } @default {
             <p-tag
               severity="secondary"
+              styleClass="dark:bg-gray-700 dark:text-gray-300"
               [value]="sale[col.field] || 'Desconocido'"
             ></p-tag>
             } } } @else if (col.field == "codeSale") {
-            {{ sale[col.field] | uppercase }}
+            <span class="dark:text-gray-300">{{
+              sale[col.field] | uppercase
+            }}</span>
             } @else if (col.field == "dateSale") {
-            {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              sale[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field == "departureDate") {
-            {{ sale[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{
+              sale[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             }@else if (col.field == "client") {
-            {{
-              sale[col.field].name +
-                " " +
-                sale[col.field].firstLastname +
-                " " +
-                sale[col.field].secondLastname
-            }}
+            <span class="dark:text-gray-300">
+              {{
+                sale[col.field].name +
+                  " " +
+                  sale[col.field].firstLastname +
+                  " " +
+                  sale[col.field].secondLastname
+              }}
+            </span>
             } @else if (col.field == "branch") {
-            {{ sale[col.field].address }}
+            <span class="dark:text-gray-300">{{
+              sale[col.field].address
+            }}</span>
             } @else if (col.field=="registeredBy" ) {
 
             <div class="flex items-center gap-2">
@@ -165,7 +188,8 @@
                 [pTooltip]="'Click para ver + '"
                 tooltipPosition="top"
                 [rounded]="true"
-                styleClass="bg-blue-500 hover:bg-blue-400 text-white"
+                (click)="viewUserDetails(sale[col.field])"
+                styleClass="bg-blue-500 hover:bg-blue-400 text-white dark:bg-blue-700 dark:hover:bg-blue-600"
                 class="cursor-pointer hover:shadow-sm hover:underline transition-all"
               />
             </div>
@@ -183,7 +207,6 @@
               </button>
               <button
                 class="button-table-actions"
-                class="button-table-actions"
                 [pTooltip]="'Cancelar Venta'"
                 tooltipPosition="left"
                 [showDelay]="300"
@@ -191,18 +214,7 @@
               >
                 <i class="pi pi-times"></i>
               </button>
-              <!-- <button
-                class="button-table-actions"
-                class="button-table-actions"
-                [pTooltip]="'Ver Detalles'"
-                tooltipPosition="left"
-                [showDelay]="300"
-                (click)="viewSaleDetails(sale)"
-              >
-                <i class="pi pi-eye"></i>
-              </button> -->
               <button
-                class="button-table-actions"
                 class="button-table-actions"
                 [pTooltip]="'Ver PDF'"
                 tooltipPosition="left"
@@ -214,8 +226,7 @@
             </div>
 
             } @else {
-            {{ sale[col.field] }}
-
+            <span class="dark:text-gray-300">{{ sale[col.field] }}</span>
             }
           </td>
           }
@@ -225,13 +236,17 @@
         <tr>
           <td colspan="100%">
             <div class="flex flex-col items-center justify-center py-8 px-4">
-              <div class="text-primary-300 mb-3">
+              <div class="text-primary-300 dark:text-primary-dark-400 mb-3">
                 <i class="pi pi-shopping-cart text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
                 No se encontraron ventas
               </h3>
-              <p class="text-gray-500 text-center max-w-md mb-4">
+              <p
+                class="text-gray-500 dark:text-gray-400 text-center max-w-md mb-4"
+              >
                 No hay resultados que coincidan con los filtros de ventas
                 aplicados.
               </p>
@@ -250,6 +265,7 @@
             [totalRecords]="totalRecords"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
       </div>
@@ -257,14 +273,10 @@
   </div>
 </main>
 
-<!-- <app-export-excel
-  title="Usuarios"
-  [(showModal)]="showModal"
-  (exportData)="handleExport($event)"
-  [total]="totalRecords"
-/> -->
-
+<!-- Modal de venta -->
 <app-form-sale
   [(showModal)]="showModalAddSale"
   (refreshData)="handleRefreshData()"
 />
+
+<p-toast [baseZIndex]="10000" [life]="2000" />

@@ -1,11 +1,11 @@
 <main
   [ngClass]="{ 'w-full px-1': textHidden() }"
-  class="bg-white shadow-xl rounded-2xl p-4 border-2 flex flex-col gap-2 w-64 inset-0 z-[1000000]"
+  class="bg-white dark:bg-slate-900 shadow-xl rounded-2xl p-4 border-2 flex flex-col gap-2 w-64 inset-0 z-[1000000]"
 >
   <app-sidebar-button
     [textHidden]="textHidden()"
-    [bg]="'bg-white'"
-    [color]="'text-black'"
+    bg='bg-white dark:bg-slate-700'
+    color="text-black dark:text-white"
     class="icon-h"
     [type]="
       ' flex gap-4 items-center justify-center border py-1 hover:bg-primary-100 hover:text-primary-500'
@@ -30,8 +30,8 @@
     (click)="darkMode()"
     class="icon-h"
     [textHidden]="textHidden()"
-    [bg]="'bg-white'"
-    [color]="'text-black'"
+    bg='bg-white dark:bg-slate-700'
+    color="text-black dark:text-white"
     [type]="
       ' flex gap-4 items-center justify-center border py-1 hover:bg-primary-100 hover:text-primary-500'
     "
@@ -58,8 +58,8 @@
     class="icon-h"
     [textHidden]="textHidden()"
     (click)="logOut()"
-    [bg]="'bg-white'"
-    [color]="'text-black'"
+    bg='bg-white dark:bg-slate-700'
+    color="text-black dark:text-white"
     [type]="
       ' flex gap-4 items-center justify-center border py-1 hover:bg-primary-100 hover:text-primary-500'
     "

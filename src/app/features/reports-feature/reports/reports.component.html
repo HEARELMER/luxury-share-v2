@@ -1,13 +1,13 @@
-<main class="flex flex-col bg-white lg:rounded-xl gap-4">
+<main class="flex flex-col bg-white dark:bg-gray-800 lg:rounded-xl gap-4">
   <!-- HEADER: Título, exportar y botones de acción -->
-  <header class="border-b py-3 px-4">
+  <header class="border-b dark:border-gray-700 py-3 px-4">
     <!-- Sección superior: título y botones principales -->
     <div
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Reportes</h1>
-        <p class="text-sm text-gray-500">
+        <h1 class="text-xl font-bold dark:text-gray-100">Reportes</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
           Aquí podrás ver los reportes de los usuarios.
         </p>
       </div>
@@ -15,8 +15,10 @@
       <div class="flex flex-wrap items-center gap-2">
         <!-- Info de actualización - visible solo en tablets/desktop -->
         <div class="hidden md:flex flex-col text-sm mr-2">
-          <span class="text-gray-500">Última actualización</span>
-          <span class="font-medium text-gray-700">
+          <span class="text-gray-500 dark:text-gray-400"
+            >Última actualización</span
+          >
+          <span class="font-medium text-gray-700 dark:text-gray-300">
             {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
           </span>
         </div>
@@ -29,7 +31,7 @@
             [loading]="loading()"
             icon="pi pi-refresh"
             size="small"
-            class="border-2 shadow-sm rounded-lg border-slate-100 hover:bg-primary-400 hover:shadow-md transition-all duration-200"
+            class="border-2 shadow-sm rounded-lg border-slate-100 dark:border-gray-700 hover:bg-primary-400 dark:hover:bg-primary-dark-400 hover:shadow-md transition-all duration-200"
             [label]="'Actualizar Reporte'"
             pTooltip="Actualizar datos"
             tooltipPosition="bottom"
@@ -41,19 +43,23 @@
     </div>
 
     <!-- Info de actualización - visible solo en móvil -->
-    <div class="flex md:hidden items-center text-xs text-gray-500 mt-2">
+    <div
+      class="flex md:hidden items-center text-xs text-gray-500 dark:text-gray-400 mt-2"
+    >
       <i class="pi pi-clock mr-1"></i>
       Actualizado: {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
     </div>
   </header>
 
   <!-- SECCIÓN DE FILTROS -->
-  <section class="px-6 py-4 border-b">
+  <section class="px-6 py-4 border-b dark:border-gray-700">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
-        <h2 class="text-sm font-medium text-gray-700">Filtros activos</h2>
+        <h2 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Filtros activos
+        </h2>
         <span
-          class="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full"
+          class="text-xs bg-primary-50 dark:bg-primary-dark-900/30 text-primary-700 dark:text-primary-dark-300 px-2 py-0.5 rounded-full"
         >
           {{ activeFiltersCount() }} aplicados
         </span>
@@ -62,7 +68,7 @@
         pButton
         icon="pi pi-filter-slash"
         label="Limpiar filtros"
-        class="bg-white border-2 shadow-sm rounded-lg text-black border-slate-100 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+        class="bg-white dark:bg-gray-700 border-2 shadow-sm rounded-lg text-black dark:text-gray-100 border-slate-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200"
         [disabled]="activeFiltersCount() === 0"
         (click)="filtersForm.reset()"
         size="small"
@@ -76,9 +82,11 @@
       <!-- Selector de período -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
         >
-          <i class="pi pi-calendar text-primary-500"></i>
+          <i
+            class="pi pi-calendar text-primary-500 dark:text-primary-dark-400"
+          ></i>
           Período
         </label>
         <app-select
@@ -91,24 +99,33 @@
         @if(filtersForm.get('dateRange')?.value === 'custom'){
         <div class="grid grid-cols-2 gap-2">
           <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-gray-700">Desde</label>
-            <p-datepicker formControlName="customDateStart"></p-datepicker>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Desde</label
+            >
+            <p-datepicker
+              formControlName="customDateStart"
+              styleClass="dark:datepicker-dark"
+            ></p-datepicker>
           </div>
           <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-gray-700">Hasta</label>
-            <p-datepicker formControlName="customDateEnd"></p-datepicker>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Hasta</label
+            >
+            <p-datepicker
+              formControlName="customDateEnd"
+              styleClass="dark:datepicker-dark"
+            ></p-datepicker>
           </div>
         </div>
-
         }
       </div>
 
       <!-- Tipo de servicio -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
         >
-          <i class="pi pi-tag text-primary-500"></i>
+          <i class="pi pi-tag text-primary-500 dark:text-primary-dark-400"></i>
           Tipo de servicio
         </label>
         <app-select
@@ -123,9 +140,9 @@
       <!-- Paquetes -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
         >
-          <i class="pi pi-box text-primary-500"></i>
+          <i class="pi pi-box text-primary-500 dark:text-primary-dark-400"></i>
           Paquetes
         </label>
         <app-select
@@ -140,9 +157,9 @@
       <!-- Vendedor -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
         >
-          <i class="pi pi-user text-primary-500"></i>
+          <i class="pi pi-user text-primary-500 dark:text-primary-dark-400"></i>
           Vendedor
         </label>
         <app-select
@@ -155,23 +172,24 @@
       </div>
     </form>
   </section>
+
   <!-- SECCIÓN DE RESUMEN DE VENTAS -->
-  <section>
+  <section class="dark:bg-gray-800">
     <app-sales-summary-files
       title="Resumen de ventas para exportar"
     ></app-sales-summary-files>
   </section>
 
   <!-- SECCIÓN DE KPI CARDS -->
-  <section class="px-4 py-4 pb-6 border-b">
+  <section class="px-4 py-4 pb-6 border-b dark:border-gray-700">
     <app-kpi-cards [data]="kpisData()"></app-kpi-cards>
   </section>
 
   <!-- SECCIÓN DE GRÁFICOS -->
-  <section class="px-4 py-4 pb-6 border-b">
+  <section class="px-4 py-4 pb-6 border-b dark:border-gray-700">
     <app-charts-panel [data]="chartsData()"></app-charts-panel>
   </section>
 
   <!-- Toast para notificaciones -->
-  <p-toast position="bottom-right"></p-toast>
+  <p-toast position="bottom-right" styleClass="dark:toast-dark"></p-toast>
 </main>

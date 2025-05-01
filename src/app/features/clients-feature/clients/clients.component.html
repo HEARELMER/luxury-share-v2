@@ -1,12 +1,12 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white rounded-t-lg border">
+  <div class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700">
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
-      class="flex flex-col border-b pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
-        <h1 class="text-xl font-bold">Clientes</h1>
-        <p class="text-sm text-gray-500">Gestión de Clientes</p>
+        <h1 class="text-xl font-bold dark:text-gray-100">Clientes</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Gestión de Clientes</p>
       </div>
 
       <!-- Botón de nuevo cliente - responsivo -->
@@ -15,8 +15,8 @@
           <app-button
             icon="pi pi-plus"
             text="Nuevo Cliente"
-            moreClasses="py-2 text-xs sm:text-sm w-full sm:w-auto"
-            bgColor="bg-primary-500"
+            moreClasses="py-2 w-full sm:w-auto"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openClientModal()"
           />
         </div>
@@ -38,7 +38,7 @@
 
         <button
           (click)="searchClient()"
-          class="bg-primary-500 hover:bg-primary-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
+          class="bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-400 dark:hover:bg-primary-dark-400 duration-300 ease-in-out text-white w-10 h-10 rounded-full flex items-center justify-center"
         >
           <i class="pi pi-search"></i>
         </button>
@@ -71,14 +71,14 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-b-lg border w-full">
+  <div class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full">
     <div class="w-full py-5 flex px-4 justify-between">
       <div class="flex gap-2">
         @for (item of filters(); track $index) {
         <div
-          class="flex items-center gap-1 bg-primary-100 px-2 py-1 rounded-lg"
+          class="flex items-center gap-1 bg-primary-100 dark:bg-gray-700 px-2 py-1 rounded-lg"
         >
-          <p-tag [value]="item.value"></p-tag>
+          <p-tag [value]="item.value" [severity]="'success'"></p-tag>
           <button
             (click)="clearFilters()"
             class="hover:text-red-500 text-sm text-red-300"
@@ -94,11 +94,12 @@
       [columns]="cols"
       [value]="clients()"
       [lazy]="true"
+      [rows]="rows"
       [scrollable]="true"
       [totalRecords]="totalRecords"
       scrollHeight="500px"
       [resizableColumns]="true"
-      styleClass="p-datatable-gridlines"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
       [tableStyle]="{ 'min-width': '50rem' }"
       selectionMode="single"
       [loading]="loading()"
@@ -108,33 +109,33 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
-
           }
         </tr>
       </ng-template>
+      
       <ng-template pTemplate="body" let-client let-columns="columns">
         @if (loading()) {
         <tr style="height: 40px">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             <p-skeleton />
           </td>
           }
         </tr>
         }@else {
-        <tr [pSelectableRow]="client">
+        <tr [pSelectableRow]="client" class="dark:bg-gray-800 dark:hover:bg-gray-700">
           @for (col of columns; track $index) {
-          <td>
+          <td class="dark:border-gray-700">
             @if (col.field == "typeDocument") {
-            {{ client[col.field] | uppercase }}
+            <span class="dark:text-gray-300">{{ client[col.field] | uppercase }}</span>
             } @else if (col.field == "createdAt") {
-            {{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}</span>
             } @else if (col.field == "updatedAt") {
-            {{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}
+            <span class="dark:text-gray-300">{{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}</span>
             } @else if (col.field=="registeredBy") {
 
             <div class="flex items-center gap-2">
@@ -153,57 +154,44 @@
             <div class="flex gap-1">
               <button
                 class="button-table-actions"
-                [pTooltip]="'Editar Sucursal'"
+                [pTooltip]="'Editar Cliente'"
                 tooltipPosition="left"
                 [showDelay]="300"
                 (click)="editClient(client)"
               >
                 <i class="pi pi-file-edit"></i>
               </button>
-              <!-- <button
-                class="button-table-actions"
-                class="button-table-actions"
-                [pTooltip]="'Eliminar Cliente'"
-                tooltipPosition="left"
-                [showDelay]="300"
-                (click)="deleteClient(client)"
-              >
-                <i class="pi pi-trash"></i>
-              </button> -->
             </div>
 
             } @else {
-            {{ client[col.field] }}
-
+            <span class="dark:text-gray-300">{{ client[col.field] }}</span>
             }
           </td>
           }
         </tr>
         }
       </ng-template>
+
       <ng-template pTemplate="emptymessage" let-columns="columns">
         <tr>
-          <td colspan="100%" class="text-center py-4 text-gray-500">
-            No se encontraron resultados
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage" let-columns="columns">
-        <tr>
-          <td colspan="100%">
+          <td colspan="100%" class="dark:bg-gray-800">
             <div class="flex flex-col items-center justify-center py-8 px-4">
-              <div class="text-primary-300 mb-3">
+              <div class="text-primary-300 dark:text-primary-dark-300 mb-3">
                 <i class="pi pi-search-minus text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 No hay resultados
               </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">
+                No se encontraron clientes con los criterios de búsqueda actuales.
+              </p>
             </div>
           </td>
         </tr>
       </ng-template>
     </p-table>
-    <div class="card flex flex-col gap-4">
+
+    <div class="card flex flex-col gap-4 dark:bg-gray-800 dark:border-gray-700">
       <div class="flex items-center justify-center">
         <div class="flex-1">
           <p-paginator
@@ -213,19 +201,13 @@
             [totalRecords]="totalRecords"
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
       </div>
     </div>
   </div>
 </main>
-<!-- 
-  <app-export-excel
-    title="Sucursales"
-    [(showModal)]="showModal"
-    (exportData)="handleExport($event)"
-    [total]="totalRecords"
-  /> -->
 
 <app-form-client
   [(showModal)]="showClientModal"

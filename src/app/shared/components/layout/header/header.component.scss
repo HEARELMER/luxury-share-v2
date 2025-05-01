@@ -13,6 +13,4 @@ main{
         @apply fixed z-[1000000] top-14    right-2 rounded-[20px] shadow-lg;
     }
 }
-button svg path:hover{
-    @apply dark:fill-primary-dark-500 fill-primary-500 duration-300 ease-in-out;
-}
+ 

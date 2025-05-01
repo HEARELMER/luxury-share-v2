@@ -22,6 +22,8 @@ import { MessageService } from 'primeng/api';
 import { SaleDetailsPdfComponent } from '../sale-details-pdf/sale-details-pdf.component';
 import { SALE_STATUS_FILTERS } from '../constants/sales-filters.constant';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
+import { Toast } from 'primeng/toast';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -43,6 +45,7 @@ import { SelectComponent } from '../../../shared/components/forms/select/select.
     Tag,
     InputFormComponent,
     SelectComponent,
+    Toast
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -66,11 +69,11 @@ export class SalesComponent {
   // Configuración de tabla
   salesTableColumns = SALES_TABLE_COLUMNS;
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalRecords = 0;
-  rowsPerPageOptions = [5, 10, 20, 50];
+  rowsPerPageOptions = [10, 20, 50];
   first = 0;
-  rows = 5;
+  rows = 10;
   openAddSaleModal() {
     this.showModalAddSale.set(true);
   }
@@ -234,6 +237,25 @@ export class SalesComponent {
         '960px': '75vw',
         '640px': '90vw',
       },
+    });
+  }
+
+  /**
+   * Ver la info de un user
+   * @param user
+   * @returns void
+   */
+  viewUserDetails(userId: string) {
+    const ref = this.dialogService.open(ViewUserInfoComponent, {
+      header: 'Información del usuario',
+      modal: true,
+      closable: true,
+      dismissableMask: true,
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '80vw',
+      },
+      data: userId,
     });
   }
 }

@@ -1,44 +1,45 @@
-<div class="min-h-screen bg-white flex flex-col shadow-sm border rounded-xl">
+<div
+  class="min-h-screen bg-white dark:bg-gray-800 flex flex-col shadow-sm border dark:border-gray-700 rounded-xl"
+>
   <!-- Header with background image -->
   <div class="relative">
     <div>
       <img
         src="/images/header-profile.svg"
         alt="Header"
-        class="w-full h-48 object-cover"
+        class="w-full h-48 object-cover dark:opacity-90"
       />
     </div>
   </div>
   <p-tabs [value]="0" scrollable>
-    <p-tablist>
+    <p-tablist >
       @for (item of menuOptions; track $index) {
       <p-tab [value]="item.value">
         <i class="{{ item.icon }}"></i>{{ item.label }}
       </p-tab>
-
       }
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel [value]="0">
-        <div class="bg-white rounded-lg p-2">
+        <div class="bg-white dark:bg-transparent rounded-lg p-2">
           <div
             class="flex flex-col lg:flex-row items-center lg:items-start gap-8"
           >
             <!-- Columna de foto de perfil con efectos mejorados -->
             <div class="relative group">
-              <!-- Foto de perfil con borde y sombra mejorada -->
+              <!-- Foto de perfil con borde y sopbra mejorada -->
               <div class="rounded-full overflow-hidden shadow-lg">
                 <app-photo-profile [photo]="userInfo().photoUrl" />
               </div>
 
-              <!-- Botón para cambiar la foto -->
+              <!-- Botón para Cambiar la foto -->
               <app-input-file
                 class="absolute -bottom-2 -right-1"
                 [accept]="'.png, .jpg, .jpeg'"
                 (onChange)="onFileSelected($event)"
               >
                 <div
-                  class="cursor-pointer bg-primary-500 hover:bg-primary-600 flex items-center justify-center text-white p-3 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"
+                  class="cursor-pointer bg-primary-500 dark:bg-primary-dark-500 hover:bg-primary-600 dark:hover:bg-primary-dark-600 flex items-center justify-center text-white p-3 rounded-full shadow-md transition-all duration-300 transform hover:scale-105"
                 >
                   <i class="pi pi-camera"></i>
                 </div>
@@ -49,7 +50,9 @@
             <div class="flex-1">
               <div class="text-center lg:text-left">
                 <!-- Nombre con tamaño más grande y mejor espaciado -->
-                <h1 class="text-xl font-bold text-gray-800 mb-1">
+                <h1
+                  class="text-xl font-bold text-gray-800 dark:text-gray-100 pb-1"
+                >
                   {{
                     userInfo().name +
                       " " +
@@ -60,26 +63,32 @@
                 </h1>
 
                 <!-- Información de contacto con iconos -->
-                <div class="flex flex-col gap-2 mt-3">
-                  <p class="flex items-center gap-2 text-gray-600">
-                    <i class="pi pi-envelope text-primary-400"></i>
+                <div class="flex flex-col gap-2 pt-3">
+                  <p
+                    class="flex items-center gap-2 text-gray-600 dark:text-gray-300"
+                  >
+                    <i
+                      class="pi pi-envelope text-primary-400 dark:text-primary-dark-400"
+                    ></i>
                     <span>{{ userInfo().email }}</span>
                   </p>
 
                   <!-- ID con estilo de badge -->
                   <div class="flex items-center gap-2">
                     <span
-                      class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-md font-mono flex items-center"
+                      class="bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300 text-xs px-2 py-1 rounded-md font-mono flex items-center"
                     >
-                      <i class="pi pi-id-card text-orange-600 pr-1"></i>
+                      <i
+                        class="pi pi-id-card text-orange-600 dark:text-orange-300 pr-1"
+                      ></i>
                       ID: {{ userInfo().userId }}
                     </span>
 
                     <span
-                      class="inline-flex items-center bg-green-100 text-green-500 text-xs px-2 py-1 rounded-md"
+                      class="inline-flex items-center bg-green-100 dark:bg-green-900/40 text-green-500 dark:text-green-300 text-xs px-2 py-1 rounded-md"
                     >
                       <span
-                        class="w-2 h-2 bg-green-500 rounded-full pr-1"
+                        class="w-2 h-2 bg-green-500 dark:bg-green-300 rounded-full pr-1"
                       ></span>
                       {{ userInfo().role.roleName }}
                     </span>
@@ -89,7 +98,7 @@
             </div>
           </div>
         </div>
-        <form [formGroup]="userProfile" (ngSubmit)="onSubmit()">
+        <form [formGroup]="userProfile" class="pt-4" (ngSubmit)="onSubmit()">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <app-input-form
               label="Nombres"
@@ -140,15 +149,15 @@
           <div class="w-full pt-4 gap-2 flex justify-end">
             <app-button
               text="Guardar Cambios"
-              bgColor="bg-primary-500"
+              bgColor="bg-primary-500 dark:bg-primary-dark-500"
               moreClasses="py-2"
               [icon]="loading() ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
               [disabled]="userProfile.invalid || loading()"
             />
             <app-button
               text="Cancelar"
-              bgColor="bg-primary-50"
-              textColor="text-black"
+              bgColor="bg-primary-50 dark:bg-gray-700"
+              textColor="text-black dark:text-gray-200"
               moreClasses="py-2"
             />
           </div>
@@ -159,18 +168,26 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 h-auto gap-6">
           <!-- Columna de información de seguridad -->
           <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl border shadow-sm h-full">
+            <div
+              class="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 shadow-sm h-full"
+            >
               <!-- Cabecera -->
-              <div class="p-6 border-b">
-                <div class="flex items-center gap-4 mb-4">
+              <div class="p-6 border-b dark:border-gray-700">
+                <div class="flex items-center gap-4 pb-4">
                   <div
-                    class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center"
+                    class="w-10 h-10 rounded-full bg-primary-50 dark:bg-gray-700 flex items-center justify-center"
                   >
-                    <i class="pi pi-shield text-lg text-primary-500"></i>
+                    <i
+                      class="pi pi-shield text-lg text-primary-500 dark:text-primary-dark-500"
+                    ></i>
                   </div>
-                  <h3 class="text-base font-medium text-gray-900">Seguridad</h3>
+                  <h3
+                    class="text-base font-medium text-gray-900 dark:text-gray-100"
+                  >
+                    Seguridad
+                  </h3>
                 </div>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
                   Mantén tu cuenta segura actualizando tu contraseña
                   regularmente
                 </p>
@@ -178,11 +195,11 @@
 
               <!-- Estado actual -->
               <div class="p-6">
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between pb-6">
                   <div class="flex justify-center gap-3 w-full">
                     <app-button
                       text="Cambiar Contraseña"
-                      bgColor="bg-primary-500"
+                      bgColor="bg-primary-500 dark:bg-primary-dark-500"
                       moreClasses="py-2"
                       icon="pi pi-lock"
                       (click)="OpenpasswordRecovery()"
@@ -191,11 +208,11 @@
                 </div>
 
                 <!-- Imagen decorativa -->
-                <div class="mt-8 flex justify-center">
+                <div class="pt-8 flex justify-center">
                   <img
-                    src=" ./images/security.webp"
+                    src="./images/security.webp"
                     alt="Seguridad"
-                    class="h-64 w-auto opacity-75"
+                    class="h-64 w-auto opacity-75 dark:opacity-60"
                   />
                 </div>
               </div>
@@ -203,15 +220,17 @@
           </div>
 
           <!-- Columna para el formulario (por ahora vacía) -->
-          <div class="lg:col-span-2 bg-white rounded-xl border shadow-sm p-6">
+          <div
+            class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 shadow-sm p-6"
+          >
             @if(viewPasswordRecoveryForm()){
             <app-password-recovery></app-password-recovery> }@else {
 
             <div class="w-full h-full flex justify-center items-center">
               <img
-                src=" ./images/password-empty.webp"
+                src="./images/password-empty.webp"
                 alt="Seguridad"
-                class="h-64 w-auto opacity-75 m-auto"
+                class="h-64 w-auto opacity-75 dark:opacity-60 m-auto"
               />
             </div>
             }
@@ -221,7 +240,9 @@
     </p-tabpanels>
   </p-tabs>
 </div>
+
 <p-toast [life]="5000" [baseZIndex]="10000"></p-toast>
+
 <app-modal [closeOnBackdrop]="false" [(isOpen)]="photoPreviewModal">
   <div class="pb-4">
     <img
@@ -230,18 +251,18 @@
       alt=""
     />
   </div>
-  <div class="flex gap-2 justify-end mt-4">
+  <div class="flex gap-2 justify-end pt-4">
     <app-button
       text="Cerrar"
-      bgColor="bg-slate-100"
+      bgColor="bg-slate-100 dark:bg-gray-700"
       moreClasses="py-2"
-      textColor="text-black"
+      textColor="text-black dark:text-gray-100"
       font="font-normal"
       (click)="photoPreviewModal.set(false)"
     />
     <app-button
       text="Confirmar"
-      bgColor="bg-primary-500"
+      bgColor="bg-primary-500 dark:bg-primary-dark-500"
       moreClasses="py-2"
       font="font-normal"
       (click)="uploadImage()"

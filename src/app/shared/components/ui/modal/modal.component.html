@@ -3,15 +3,15 @@
   (click)="onBackdropClick($event)"
   class="fixed inset-0 flex items-{{ position() }} justify-{{
     position()
-  }} bg-black/50 backdrop-blur-sm z-[9999]"
+  }} bg-black/50 dark:bg-black/70 backdrop-blur-sm z-[9999]"
   @fadeAnimation
 >
   <section
     [class]="customClass()"
-    class="bg-white rounded-lg shadow-xl pointer-events-auto"
+    class="bg-white dark:bg-gray-800 lg:rounded-lg shadow-xl pointer-events-auto w-full sm:w-auto max-h-full sm:max-h-screen sm:rounded-lg m-0 sm:m-4 overflow-auto"
     @slideAnimation
   >
-    <div class="p-4">
+    <div class="p-4 sm:p-5 dark:text-gray-100">
       <ng-content></ng-content>
     </div>
   </section>

@@ -1,7 +1,12 @@
 .button-table-actions {
-  @apply hover:bg-primary-50 p-2 rounded-lg border duration-300 ease-in-out w-10 h-10 flex items-center justify-center;
+  @apply hover:bg-primary-50 dark:hover:bg-gray-700 
+         p-2 rounded-lg 
+         border dark:border-gray-600
+         text-gray-600 dark:text-gray-400
+         hover:text-primary-500 dark:hover:text-primary-dark-400
+         duration-300 ease-in-out 
+         w-10 h-10 flex items-center justify-center;
 }
-
 .search-bar {
   @apply bg-primary-50/50 border border-primary-200 transition-all duration-200;
 }

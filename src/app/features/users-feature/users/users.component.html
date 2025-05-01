@@ -20,7 +20,7 @@
           <app-button
             icon="pi pi-plus"
             text="Nuevo Administrador"
-            moreClasses="py-2 text-xs sm:text-sm whitespace-nowrap"
+            moreClasses="py-2   whitespace-nowrap"
             bgColor="bg-primary-500 dark:bg-primary-dark-500"
             [hidden]="!isGerent"
             (click)="openModalUser('Administrador')"
@@ -29,7 +29,7 @@
           <app-button
             icon="pi pi-plus"
             text="Nuevo Vendedor"
-            moreClasses="py-2 text-xs sm:text-sm"
+            moreClasses="py-2  "
             bgColor="bg-primary-500 dark:bg-primary-dark-500"
             (click)="openModalUser('Vendedor')"
           />
@@ -37,7 +37,7 @@
           <app-button
             icon="pi pi-plus"
             text="Nuevo Gerente"
-            moreClasses="py-2 text-xs sm:text-sm"
+            moreClasses="py-2  "
             bgColor="bg-primary-500 dark:bg-primary-dark-500"
             [hidden]="!isGerent"
             (click)="openModalUser('Gerente')"
@@ -223,7 +223,7 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-100 dark:bg-gray-700"
           >
             {{ col.header }}
           </th>
@@ -307,7 +307,7 @@
     </p-table>
 
     <!-- Paginador -->
-    <div class="card flex flex-col gap-4  ">
+    <div class="card flex flex-col gap-4">
       <div class="flex items-center justify-center">
         <div class="flex-1">
           <p-paginator

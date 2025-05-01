@@ -16,7 +16,7 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, UserMenuComponent ],
+  imports: [RouterLink, UserMenuComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -35,9 +35,9 @@ export class HeaderComponent {
       )
     )
   );
-  admin: UserAuthorized;
+  admin = signal<UserAuthorized>({} as UserAuthorized);
   constructor() {
-    this.admin = this.localStorageService.getUserAuthorized();
+    this.admin.set(this.localStorageService.getUserAuthorized());
   }
 
   @HostListener('document:click', ['$event']) //escucha el evento click en el documento, dentro y fuera del componente

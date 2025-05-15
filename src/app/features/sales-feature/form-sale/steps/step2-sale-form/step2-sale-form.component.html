@@ -11,6 +11,7 @@
         type="datetime-local"
         [required]="true"
         class="col-span-1"
+        (valueChange)="onDateChange($event)"
       />
       <app-input-form
         class="col-span-1"

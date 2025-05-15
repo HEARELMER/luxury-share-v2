@@ -41,6 +41,10 @@ import {
   Client,
   SaleCreationResult,
 } from '../../../interfaces/sale-creation-result.interface';
+import {
+  PACKAGE_COLUMNS,
+  SERVICE_COLUMNS,
+} from '../../../constants/sale-form.constant';
 
 @Component({
   selector: 'app-step2-sale-form',
@@ -128,22 +132,8 @@ export class Step2SaleFormComponent {
     status: ['COMPLETADO'],
   });
 
-  serviceColumns: ColumnDef[] = [
-    { field: 'name', header: 'Nombre' },
-    { field: 'type', header: 'Tipo' },
-    { field: 'description', header: 'Descripción' },
-    { field: 'priceUnit', header: 'Precio' },
-    { field: 'status', header: 'Estado' },
-    { field: 'actions', header: 'Acciones' },
-  ];
-
-  packageColumns: ColumnDef[] = [
-    { field: 'name', header: 'Nombre' },
-    { field: 'description', header: 'Descripción' },
-    { field: 'priceUnit', header: 'Precio' },
-    { field: 'status', header: 'Estado' },
-    { field: 'actions', header: 'Acciones' },
-  ];
+  serviceColumns: ColumnDef[] = SERVICE_COLUMNS;
+  packageColumns: ColumnDef[] = PACKAGE_COLUMNS;
 
   // metodo para agregar un item a la venta
   addToSale(newItem: Partial<SaleItem>): void {
@@ -199,19 +189,44 @@ export class Step2SaleFormComponent {
   // Metodo para cargar los items
   private loadData = computed(() => {
     return {
-      services: (page: number, size: number, filters?: any) =>
-        this._servicesService.getServices(page, size, filters),
-      packages: (page: number, size: number, filters?: any) =>
-        this._packagesService.getPackages(page, size, filters),
+      services: (
+        page: number,
+        size: number,
+        departureDate: Date,
+        filters?: any
+      ) =>
+        this._servicesService.getServicesWithSoldCount(
+          page,
+          size,
+          departureDate,
+          filters
+        ),
+      packages: (
+        page: number,
+        size: number,
+        departureDate: Date,
+        filters?: any
+      ) =>
+        this._packagesService.getPackagesWithSoldCount(
+          page,
+          size,
+          departureDate,
+          filters
+        ),
     }[this.currentView()];
   });
 
   // Metodo para cargar los items
-  loadItems(): void {
+  loadItems(departureDate: Date = new Date()): void {
     this.loading.set(true);
     const { first, rows } = this.tableState();
     const updatedFilters = [{ key: 'status', value: 'true' }];
-    this.loadData()(first / rows + 1, rows, updatedFilters).subscribe({
+    this.loadData()(
+      first / rows + 1,
+      rows,
+      departureDate,
+      updatedFilters
+    ).subscribe({
       next: (response) => {
         this.items.set(response.data[this.currentView()]);
         this.totalRecords.set(response.data.total);
@@ -221,6 +236,12 @@ export class Step2SaleFormComponent {
         this.loading.set(false);
       },
     });
+  }
+
+   onDateChange(event: any): void {
+    const value = event
+    const departureDate = value ? new Date(value) : undefined;
+    this.loadItems(departureDate);
   }
 
   // Metodo para cambiar de página

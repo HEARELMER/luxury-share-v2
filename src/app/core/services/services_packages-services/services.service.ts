@@ -14,7 +14,6 @@ export class ServicesService {
   private readonly _exportFilesService = inject(ExportFilesService);
 
   getServices(page: number, size: number, filters?: Filter[]): Observable<any> {
- 
     let url = `${this._api}services`;
     let params = new HttpParams()
       .set('page', page.toString())
@@ -27,15 +26,19 @@ export class ServicesService {
       url = `${url}?${filtersFormat}`;
     }
 
-    return this._httpclient.get(url, { params , withCredentials: true});
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 
   createService(data: any): Observable<any> {
-    return this._httpclient.post(`${this._api}services`, data, {withCredentials: true});
+    return this._httpclient.post(`${this._api}services`, data, {
+      withCredentials: true,
+    });
   }
 
   updateService(serviceId: string, data: any): Observable<any> {
-    return this._httpclient.put(`${this._api}services/${serviceId}`, data, {withCredentials: true});
+    return this._httpclient.put(`${this._api}services/${serviceId}`, data, {
+      withCredentials: true,
+    });
   }
 
   exportToExcel(page: number, size: number): Observable<any> {
@@ -79,5 +82,26 @@ export class ServicesService {
         return response;
       })
     );
+  }
+
+  getServicesWithSoldCount(
+    page: number,
+    size: number,
+    departureDate: Date,
+    filters?: Filter[]
+  ): Observable<any> {
+    let url = `${this._api}services/with-sold-count`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', size.toString());
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}departureDate=${departureDate.toISOString()}`;
+    }
+
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 }

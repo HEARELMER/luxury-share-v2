@@ -19,7 +19,6 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button.com
 import { ModalComponent } from '../../../shared/components/ui/modal/modal.component';
 import { UserService } from '../../../core/services/users-services/user.service';
 
-import { SelectComponent } from '../../../shared/components/forms/select/select.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { RolesService } from '../../../core/services/roles-services/roles.service';
@@ -36,7 +35,6 @@ import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
     InputFormComponent,
     ButtonComponent,
     ModalComponent,
-    SelectComponent,
     ToastModule,
     ButtonModule,
     CapitalizePipe,

@@ -95,4 +95,25 @@ export class PackagesService {
       { withCredentials: true }
     );
   }
+
+  getPackagesWithSoldCount(
+    page: number,
+    size: number,
+    departureDate: Date,
+    filters?: Filter[]
+  ): Observable<any> {
+    let url = `${this._api}packages/with-sold-count`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', size.toString());
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}&departureDate=${departureDate.toISOString()}`;
+    }
+
+    return this._httpclient.get(url, { params, withCredentials: true });
+  }
 }

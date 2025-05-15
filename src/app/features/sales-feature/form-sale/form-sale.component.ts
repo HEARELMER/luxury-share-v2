@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Toast } from 'primeng/toast';
 import { StepperModule } from 'primeng/stepper';
 import { ADD_SALES_STEPS } from '../constants/add-sales.constant';
 import { ButtonModule } from 'primeng/button';
@@ -21,8 +20,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
 import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-form-sale',
-  imports: [
-    Toast,
+  imports: [ 
     StepperModule,
     FormsModule,
     ReactiveFormsModule,

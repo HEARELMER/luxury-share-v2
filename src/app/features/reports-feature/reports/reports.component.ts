@@ -19,8 +19,15 @@ import { ToastModule } from 'primeng/toast';
 import { ReportsService } from '../../../core/services/reports-services/reports.service';
 import { SalesSummaryFilesComponent } from '../sales-summary-files/sales-summary-files.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
-import { DATE_RANGE_OPTIONS } from '../constants/reports.constant';
+import {
+  DATE_RANGE_OPTIONS,
+  filtersByServiceType,
+} from '../constants/reports.constant';
 import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
+import { PackagesService } from '../../../core/services/services_packages-services/packages.service';
+import { UserService } from '../../../core/services/users-services/user.service';
+import { SelectModule } from 'primeng/select';
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-reports',
   imports: [
@@ -44,6 +51,7 @@ import { ChartsPanelComponent } from '../charts-panel/charts-panel.component';
     InputTextModule,
     SalesSummaryFilesComponent,
     ChartsPanelComponent,
+    SelectModule,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
@@ -53,6 +61,8 @@ export class ReportsComponent {
   private readonly _messageService = inject(MessageService);
   private readonly _reportsService = inject(ReportsService);
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
+  private readonly _packagesService = inject(PackagesService);
+  private readonly _usersService = inject(UserService);
 
   // Signals
   kpisData = signal<any[]>([]);
@@ -71,11 +81,7 @@ export class ReportsComponent {
     seller: [''],
   });
 
-  serviceTypeOptions = [
-    { label: 'Todos los servicios', value: '' },
-    { label: 'Servicio A', value: 'service-a' },
-    { label: 'Servicio B', value: 'service-b' },
-  ];
+  serviceTypeOptions = filtersByServiceType;
 
   packageOptions = [
     { label: 'Todos los paquetes', value: '' },
@@ -89,6 +95,131 @@ export class ReportsComponent {
     { label: 'Vendedor B', value: 'seller-b' },
   ];
 
+  // Signals para el manejo de paquetes
+  displayedPackages = signal<any[]>([
+    { label: 'Todos los paquetes', value: '' },
+  ]);
+  packagesLoading = signal<boolean>(false);
+  packagesPage = signal<number>(1);
+  packagesHasMore = signal<boolean>(true);
+  packagesPageSize = 20; // Número de elementos por página
+
+  // Método para cargar paquetes desde la API
+  loadPackages(page: number, reset: boolean = false): void {
+    if (!this.packagesHasMore() && !reset) return;
+
+    this.packagesLoading.set(true);
+
+    this._packagesService
+      .getPackages(page, this.packagesPageSize)
+      .pipe(finalize(() => this.packagesLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          // Transformar los datos al formato esperado por p-select
+          const formattedPackages = response.data.packages.map((pkg: any) => ({
+            label: pkg.name,
+            value: pkg.oackageId,
+          }));
+
+          if (reset) {
+            // Si es un reset, reemplazar todo excepto la opción "Todos los paquetes"
+            this.displayedPackages.set([
+              { label: 'Todos los paquetes', value: '' },
+              ...formattedPackages,
+            ]);
+          } else {
+            // Añadir a los existentes
+            this.displayedPackages.update((current) => [
+              ...current,
+              ...formattedPackages,
+            ]);
+          }
+
+          // Actualizar página y verificar si hay más datos
+          this.packagesPage.set(page);
+          this.packagesHasMore.set(
+            formattedPackages.length === this.packagesPageSize
+          );
+        },
+        error: (error) => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los paquetes',
+          });
+        },
+      });
+  }
+
+  // Método que se llama cuando el usuario hace scroll
+  onPackagesLazyLoad(event: any): void {
+    // Calcular la página basada en el primer índice visible
+    const page = Math.floor(event.first / this.packagesPageSize) + 1;
+
+    // Cargar si es una nueva página
+    if (page > this.packagesPage()) {
+      this.loadPackages(page);
+    }
+  }
+
+  // Signals para el manejo de vendedores
+  displayedSellers = signal<any[]>([
+    { label: 'Todos los vendedores', value: '' },
+  ]);
+  sellersLoading = signal<boolean>(false);
+  sellersPage = signal<number>(1);
+  sellersHasMore = signal<boolean>(true);
+  sellersPageSize = 20;
+
+  loadSellers(page: number, reset: boolean = false): void {
+    if (!this.sellersHasMore() && !reset) return;
+
+    this.sellersLoading.set(true);
+
+    this._usersService
+      .paginateUsers(page, this.sellersPageSize)
+      .pipe(finalize(() => this.sellersLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          const formattedSellers = response.data.users.map((user: any) => ({
+            label: `${user.name} ${user.firstLastname}`,
+            value: user.id,
+          }));
+
+          if (reset) {
+            this.displayedSellers.set([
+              { label: 'Todos los vendedores', value: '' },
+              ...formattedSellers,
+            ]);
+          } else {
+            this.displayedSellers.update((current) => [
+              ...current,
+              ...formattedSellers,
+            ]);
+          }
+
+          this.sellersPage.set(page);
+          this.sellersHasMore.set(
+            formattedSellers.length === this.sellersPageSize
+          );
+        },
+        error: (error) => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los vendedores',
+          });
+        },
+      });
+  }
+
+  onSellersLazyLoad(event: any): void {
+    const page = Math.floor(event.first / this.sellersPageSize) + 1;
+    if (page > this.sellersPage()) {
+      this.loadSellers(page);
+    }
+  }
+
   // Opciones de filtros
   dateRangeOptions = DATE_RANGE_OPTIONS;
   activeFiltersCount(): number {
@@ -101,6 +232,9 @@ export class ReportsComponent {
   }
   ngOnInit() {
     this.updateReport();
+    this.updateReport();
+    this.loadPackages(1, true); // Cargar la primera página de paquetes
+    this.loadSellers(1, true); // Cargar la primera página de vendedores
   }
 
   // Método principal para actualizar el reporte

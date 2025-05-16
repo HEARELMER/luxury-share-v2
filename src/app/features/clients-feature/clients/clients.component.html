@@ -1,12 +1,16 @@
 <main class="flex flex-col gap-4">
-  <div class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
     <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
     <div
       class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
     >
       <div>
         <h1 class="text-xl font-bold dark:text-gray-100">Clientes</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Gestión de Clientes</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Gestión de Clientes
+        </p>
       </div>
 
       <!-- Botón de nuevo cliente - responsivo -->
@@ -43,35 +47,22 @@
           <i class="pi pi-search"></i>
         </button>
       </div>
-
-      <app-select
-        placeholder="Todos los servicios"
-        [required]="true"
-        label="Tipo de servicio"
-        errorType=" "
-        class="w-full lg:w-1/4"
-      ></app-select>
-
-      <app-input-form
-        placeholder="Buscar por fecha"
-        [required]="true"
-        errorType=" "
-        type="date"
-        class="w-full lg:w-1/4"
-        label="Fecha"
-      ></app-input-form>
-
-      <app-select
-        label="Estado"
-        [required]="true"
-        errorType=" "
-        placeholder="Todos los estados"
-        class="w-full lg:w-1/4"
-      />
+ 
+        <app-input-form
+          type="text"
+          label="Buscar por nombre"
+          placeholder="Buscar por nombre"
+          [required]="true"
+          errorType=" "
+          (valueChange)="searchClientByName($event)"
+        />
+        
     </div>
   </div>
 
-  <div class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
     <div class="w-full py-5 flex px-4 justify-between">
       <div class="flex gap-2">
         @for (item of filters(); track $index) {
@@ -116,7 +107,7 @@
           }
         </tr>
       </ng-template>
-      
+
       <ng-template pTemplate="body" let-client let-columns="columns">
         @if (loading()) {
         <tr style="height: 40px">
@@ -127,15 +118,24 @@
           }
         </tr>
         }@else {
-        <tr [pSelectableRow]="client" class="dark:bg-gray-800 dark:hover:bg-gray-700">
+        <tr
+          [pSelectableRow]="client"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
           @for (col of columns; track $index) {
           <td class="dark:border-gray-700">
             @if (col.field == "typeDocument") {
-            <span class="dark:text-gray-300">{{ client[col.field] | uppercase }}</span>
+            <span class="dark:text-gray-300">{{
+              client[col.field] | uppercase
+            }}</span>
             } @else if (col.field == "createdAt") {
-            <span class="dark:text-gray-300">{{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}</span>
+            <span class="dark:text-gray-300">{{
+              client[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field == "updatedAt") {
-            <span class="dark:text-gray-300">{{ client[col.field] | date : "dd-MM-yyyy hh:mm a" }}</span>
+            <span class="dark:text-gray-300">{{
+              client[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
             } @else if (col.field=="registeredBy") {
 
             <div class="flex items-center gap-2">
@@ -179,11 +179,14 @@
               <div class="text-primary-300 dark:text-primary-dark-300 mb-3">
                 <i class="pi pi-search-minus text-5xl"></i>
               </div>
-              <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
                 No hay resultados
               </h3>
               <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">
-                No se encontraron clientes con los criterios de búsqueda actuales.
+                No se encontraron clientes con los criterios de búsqueda
+                actuales.
               </p>
             </div>
           </td>

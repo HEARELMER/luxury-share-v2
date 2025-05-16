@@ -140,35 +140,53 @@
       <!-- Paquetes -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex pb-3 items-center gap-2"
         >
           <i class="pi pi-box text-primary-500 dark:text-primary-dark-400"></i>
           Paquetes
         </label>
-        <app-select
-          [options]="packageOptions"
+        <p-select
+          [options]="displayedPackages()"
+          [(ngModel)]="filtersForm.value.package"
           formControlName="package"
-          placeholder="Todos los paquetes"
-          [required]="true"
-          errorType=" "
-        ></app-select>
+          placeholder="Seleccionar paquete"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="38"
+          [lazy]="true"
+          (onLazyLoad)="onPackagesLazyLoad($event)"
+          [loading]="packagesLoading()"
+          class="w-full"
+        >
+          <ng-template pTemplate="loader">
+            <div class="p-2 text-center">Cargando paquetes...</div>
+          </ng-template>
+        </p-select>
       </div>
 
       <!-- Vendedor -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center pb-3 gap-2"
         >
           <i class="pi pi-user text-primary-500 dark:text-primary-dark-400"></i>
           Vendedor
         </label>
-        <app-select
-          [options]="sellersOptions"
-          formControlName="seller"
-          placeholder="Todos los vendedores"
-          [required]="true"
-          errorType=" "
-        ></app-select>
+        <p-select
+          [options]="displayedSellers()"
+          [(ngModel)]="filtersForm.value.seller"
+          formControlName="package"
+          placeholder="Seleccionar paquete"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="38"
+          [lazy]="true"
+          (onLazyLoad)="onSellersLazyLoad($event)"
+          [loading]="sellersLoading()"
+          class="w-full"
+        >
+          <ng-template pTemplate="loader">
+            <div class="p-2 text-center">Cargando vendedores...</div>
+          </ng-template>
+        </p-select>
       </div>
     </form>
   </section>

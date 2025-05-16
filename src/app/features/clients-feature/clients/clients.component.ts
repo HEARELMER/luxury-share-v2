@@ -78,7 +78,6 @@ export class ClientsComponent {
   rowsPerPageOptions = [10, 20, 50];
   first = 0;
   rows = 10;
-
   /**
    * Maneja el cambio de página
    */
@@ -222,6 +221,18 @@ export class ClientsComponent {
       },
       data: userId,
     });
+  }
+
+  searchClientByName(event: any) {
+    if (event.length > 3) {
+      setTimeout(() => {
+        this.filters.set([{ key: 'name', value: event }]);
+        this.loadClients({ resetPage: true });
+      }, 3000);
+    } else {
+      this.filters.set([]);
+      this.loadClients({ resetPage: true });
+    }
   }
 
   /**

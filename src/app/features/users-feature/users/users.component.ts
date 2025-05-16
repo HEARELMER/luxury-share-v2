@@ -152,4 +152,16 @@ export class UsersComponent {
   handleRefreshData() {
     this.loadUsersLazy();
   }
+
+  searchUserByName(event: any) {
+    if (event.length > 3) {
+      setTimeout(() => {
+        this.filters.set([{ key: 'name', value: event }]);
+        this.loadUsersLazy();
+      }, 3000);
+    } else {
+      this.filters.set([]);
+      this.loadUsersLazy();
+    }
+  }
 }

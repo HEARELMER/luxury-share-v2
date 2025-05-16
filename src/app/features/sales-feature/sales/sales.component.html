@@ -48,10 +48,26 @@
           <i class="pi pi-search"></i>
         </button>
       </div>
+
+      <app-input-form
+        type="date"
+        label="Fecha de Venta"
+        [required]="true"
+        errorType=" "
+        (valueChange)="onFilterChange('startDate', $event)"
+      />
+        <app-input-form
+        type="date"
+        label="Límite fecha de Venta"
+        [required]="true"
+        errorType=" "
+        (valueChange)="onFilterChange('endDate', $event)"
+      />
       <app-select
         [required]="true"
         label="Estado de Venta"
         errorType=" "
+        class="w-full max-w-xs"
         [options]="salesStatusFilters"
         (valueChange)="onFilterChange('status', $event)"
       />

@@ -20,7 +20,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
 import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-form-sale',
-  imports: [ 
+  imports: [
     StepperModule,
     FormsModule,
     ReactiveFormsModule,
@@ -161,6 +161,13 @@ export class FormSaleComponent {
     this.saleCreationResult.set(result);
     if (result.status === 'COMPLETED') {
       this.isCompleted.set(true);
+    } else {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Revisa los campos ingresados',
+      });
+      this.isCompleted.set(false);
     }
     this.currentStep.set(3);
   }

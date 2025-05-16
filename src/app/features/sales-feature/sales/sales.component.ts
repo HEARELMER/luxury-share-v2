@@ -25,6 +25,7 @@ import { SelectComponent } from '../../../shared/components/forms/select/select.
 import { ViewUserInfoComponent } from '../../../shared/components/layout/view-user-info/view-user-info.component';
 import { Toast } from 'primeng/toast';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-sales',
   imports: [
@@ -46,7 +47,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
     Tag,
     InputFormComponent,
     SelectComponent,
-    Toast,
+    Toast,ButtonModule
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',

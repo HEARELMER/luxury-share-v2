@@ -58,8 +58,26 @@ export class LocalstorageService {
     return of(null);
   }
 
+  getBranch(): Observable<any> {
+    const branchStr = localStorage.getItem('branch');
+
+    if (branchStr) {
+      try {
+        const branch = JSON.parse(branchStr);
+        return of(branch);
+      } catch (e) {
+        return of(null);
+      }
+    }
+    return of(null);
+  }
+
   setBranch(value: any) {
     localStorage.setItem('branch', JSON.stringify(value));
+  }
+
+  deleteBranch() {
+    localStorage.removeItem('branch');
   }
 
   setBranches(value: any) {

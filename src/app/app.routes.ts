@@ -18,6 +18,7 @@ import {
   authGuardSeller,
   publicGuard,
 } from './core/guards/auth.guard';
+import { MyBranchComponent } from './features/branches-feature/my-branch/my-branch.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
@@ -77,6 +78,11 @@ export const routes: Routes = [
       {
         path: 'manifests',
         component: ManifestsComponent,
+        canActivate: [authGuardSeller],
+      },
+      {
+        path: 'my-branch',
+        component: MyBranchComponent,
         canActivate: [authGuardSeller],
       },
       // {

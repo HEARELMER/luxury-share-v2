@@ -1,10 +1,24 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { CardReportComponent } from '../card-report/card-report.component';
-import { ReportsComponent } from '../reports/reports.component';
-import { ReportsService } from '../../../core/services/reports-services/reports.service';
-import { ExportFilesService } from '../../../core/services/files-services/export-files.service';
+import { Component, inject, signal } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ReportsService } from '../../../core/services/reports-services/reports.service';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Tooltip } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
+import { ButtonModule } from 'primeng/button';
+import { PaginatorModule } from 'primeng/paginator';
+import { PopoverModule } from 'primeng/popover';
+import { Skeleton } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import { TagModule, Tag } from 'primeng/tag';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
+import { Filter, FilterOptions } from '../../../core/interfaces/api/filters';
+import { SALE_STATUS_FILTERS } from '../../sales-feature/constants/sales-filters.constant';
+import { HISTORY_TABLE_COLUMNS } from '../constants/history-reports.constant';
+import { HitoryDetailComponent } from '../hitory-detail/hitory-detail.component';
 import {
   HEADERS_FOR_REPORT_OF_BRANCHES,
   HEADERS_FOR_REPORT_OF_SALES,
@@ -13,33 +27,151 @@ import {
   SELECTED_COLUMNS_FOR_REPORT_OF_SALES,
   SELECTED_COLUMNS_FOR_REPORT_OF_SERVICES,
 } from '../constants/export-files.constant';
-import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
-import { RouterLink } from '@angular/router';
+import { ExportFilesService } from '../../../core/services/files-services/export-files.service';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import { last } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-sales-summary-files',
-  imports: [CardReportComponent, ButtonComponent, RouterLink],
-  templateUrl: './sales-summary-files.component.html',
-  styleUrl: './sales-summary-files.component.scss',
-  providers: [DialogService],
+  selector: 'app-history-reports',
+  imports: [
+    ButtonComponent,
+    TieredMenuModule,
+    CommonModule,
+    BadgeModule,
+    ButtonComponent,
+    TableModule,
+    CommonModule,
+    Skeleton,
+    Tooltip,
+    PaginatorModule,
+    FormsModule,
+    ButtonComponent,
+    PopoverModule,
+    TagModule,
+    Tag,
+    InputFormComponent,
+    ButtonModule,
+    DatePipe,
+    RouterLink
+  ],
+  templateUrl: './history-reports.component.html',
+  styleUrl: './history-reports.component.scss',
+  providers: [DialogService, MessageService],
 })
-export class SalesSummaryFilesComponent {
-  title = input.required<string>();
+export class HistoryReportsComponent {
   public readonly dialogService = inject(DialogService);
   private readonly _reportsService = inject(ReportsService);
-  private readonly _reportsComponent = inject(ReportsComponent);
-  private readonly _exportFilesService = inject(ExportFilesService);
   private readonly _messageService = inject(MessageService);
-  ref: DynamicDialogRef | undefined;
+  private readonly _exportFilesService = inject(ExportFilesService);
+  constructor() {
+    this.loadHistory();
+  }
+
   loading = signal<boolean>(false);
+  reports = signal<any[]>([]);
+  filters = signal<{ key: string; value: string }[]>([]);
 
+  reportsStatusFilters = SALE_STATUS_FILTERS;
+  // Configuración de tabla
+  reportsTableColumns = HISTORY_TABLE_COLUMNS;
+  currentPage = 1;
+  pageSize = 10;
+  totalRecords = 0;
+  rowsPerPageOptions = [10, 20, 50];
+  first = 0;
+  rows = 10;
 
-  // Métodos para generar reportes
-  generateExcelReportOfSales(): void {
+  onFilterChange(key: string, event: any) {
+    const filter = {
+      key: key,
+      value: event,
+    };
+
+    this.filters.update((prevFilters: Filter[]) => {
+      // Verificar si ya existe un filtro con esta clave
+      const existingFilterIndex = prevFilters.findIndex((f) => f.key === key);
+
+      if (existingFilterIndex >= 0) {
+        // Si existe, crear un nuevo array con el filtro actualizado
+        const updatedFilters = [...prevFilters];
+        updatedFilters[existingFilterIndex] = filter;
+        return updatedFilters;
+      } else {
+        // Si no existe, agregar el nuevo filtro
+        return [...prevFilters, filter];
+      }
+    });
+
+    this.loadHistory({ resetPage: true });
+  }
+
+  clearFilters() {
+    this.filters.set([]);
+    this.loadHistory({ resetPage: true });
+  }
+
+  loadHistory(options: FilterOptions = {}) {
     this.loading.set(true);
-    const payload = this._reportsComponent.getReportPayload();
+    if (options.resetPage) {
+      this.currentPage = 1;
+      this.first = 0;
+    }
 
+    this._reportsService
+      .getReportsHistory(this.currentPage, this.pageSize, this.filters())
+      .subscribe({
+        next: (response) => {
+          this.reports.set(response.data.reports);
+          this.totalRecords = response.data.total;
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.loading.set(false);
+        },
+      });
+  }
+
+  /**
+   * Maneja el cambio de página
+   */
+  onPageChange(event: any) {
+    this.currentPage = event.page + 1;
+    this.rows = event.rows;
+    this.first = event.first;
+    this.loadHistory();
+  }
+
+  opendReportDetail(report: any) {
+    const ref = this.dialogService.open(HitoryDetailComponent, {
+      header: 'Detalle del Reporte',
+      modal: true,
+      closable: true,
+      dismissableMask: true,
+      breakpoints: {
+        '960px': '65vw',
+        '640px': '80vw',
+      },
+      data: report,
+    });
+  }
+
+  downloadReport(report: any) {
+    const payload = {
+      lastDownload: report.lastDownload,
+      reportId: report.id,
+      ...report.filters,
+    };
+    if (report.reportType == 'VENTA') {
+      this.sales(payload);
+    } else if (report.reportType == 'SERVICIO_PAQUETE') {
+      this.servicesPackages(payload);
+    } else if (report.reportType == 'SUCURSAL') {
+      this.branches(payload);
+    }
+  }
+
+  sales(payload: any) {
     this._reportsService.getDataOfSales(payload).subscribe({
       next: (response) => {
         if (response?.status === 'success' && response?.data?.data?.items) {
@@ -90,10 +222,7 @@ export class SalesSummaryFilesComponent {
     });
   }
 
-  generateExcelReportOfServicesAndPackages(): void {
-    this.loading.set(true);
-    const payload = this._reportsComponent.getReportPayload();
-
+  servicesPackages(payload: any) {
     this._reportsService.getDataOfServicesAndPackages(payload).subscribe({
       next: (response) => {
         if (response?.status === 'success' && response?.data?.data) {
@@ -163,10 +292,7 @@ export class SalesSummaryFilesComponent {
     });
   }
 
-  generateExcelReportOfBranches(): void {
-    this.loading.set(true);
-    const payload = this._reportsComponent.getReportPayload();
-
+  branches(payload: any) {
     this._reportsService.getDataOfBranches(payload).subscribe({
       next: (response) => {
         // La ruta correcta a los datos de sucursales
@@ -244,27 +370,5 @@ export class SalesSummaryFilesComponent {
         this.loading.set(false);
       },
     });
-  }
-  generatePdfReport(): void {
-    const payload = this._reportsComponent.getReportPayload(); // Reutilizar el filtro
-    this._reportsService.getDataOfSales(payload).subscribe({
-      next: (response) => {
-        console.log('Excel Report Response:', response);
-      },
-      error: (error) => {
-        console.error('Error generating Excel report:', error);
-      },
-    });
-  }
-
-  // Métodos para descargar reportes
-  downloadSalesReport(format: 'excel' | 'pdf'): void {}
-
-  downloadPackagesReport(format: 'excel' | 'pdf'): void {
-    // Implementación similar para reportes de paquetes/servicios
-  }
-
-  downloadBranchesReport(format: 'excel' | 'pdf'): void {
-    // Implementación similar para reportes de sucursales
   }
 }

@@ -19,6 +19,7 @@ import {
   publicGuard,
 } from './core/guards/auth.guard';
 import { MyBranchComponent } from './features/branches-feature/my-branch/my-branch.component';
+import { HistoryReportsComponent } from './features/reports-feature/history-reports/history-reports.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
@@ -73,6 +74,11 @@ export const routes: Routes = [
       {
         path: 'reports',
         component: ReportsComponent,
+        canActivate: [authGuardAdmin],
+      },
+      {
+        path: 'reports/history',
+        component: HistoryReportsComponent,
         canActivate: [authGuardAdmin],
       },
       {

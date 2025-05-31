@@ -28,6 +28,7 @@ import { PackagesService } from '../../../core/services/services_packages-servic
 import { UserService } from '../../../core/services/users-services/user.service';
 import { SelectModule } from 'primeng/select';
 import { finalize } from 'rxjs';
+import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 @Component({
   selector: 'app-reports',
   imports: [
@@ -64,6 +65,7 @@ export class ReportsComponent {
   private readonly _packagesService = inject(PackagesService);
   private readonly _usersService = inject(UserService);
 
+  private readonly _localStorageService = inject(LocalstorageService);
   // Signals
   kpisData = signal<any[]>([]);
   chartsData = signal<any[]>([]);
@@ -279,6 +281,7 @@ export class ReportsComponent {
       serviceType: formValues.serviceType,
       packageType: formValues.package,
       sellerId: formValues.seller,
+      userId: this._localStorageService.getUserId(),
     });
   }
 

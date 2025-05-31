@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of, tap } from 'rxjs';
 import { environmentDev } from '../../../environments/environment.development';
 import { LocalstorageService } from '../localstorage-services/localstorage.service';
+import { Filter } from '../../interfaces/api/filters';
 
 @Injectable({
   providedIn: 'root',
@@ -67,5 +68,25 @@ export class ReportsService {
     return this._httpclient.get<any>(`${this._api}reports/totals`, {
       withCredentials: true,
     });
+  }
+
+  getReportsHistory(
+    page: number,
+    size: number,
+    filters?: Filter[]
+  ): Observable<any> {
+    let url = `${this._api}reports/history`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', size.toString());
+    let filtersFormat = '';
+    if (filters) {
+      filters.forEach((filter) => {
+        filtersFormat += `filters[${filter.key}]=${filter.value}&`;
+      });
+      url = `${url}?${filtersFormat}`;
+    }
+
+    return this._httpclient.get(url, { params, withCredentials: true });
   }
 }

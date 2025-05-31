@@ -1,0 +1,137 @@
+<div>
+  <!-- Información del reporte en tarjeta principal -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg px-4 pb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-rose-50 dark:bg-rose-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-user text-rose-500 dark:text-rose-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Usuario</p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.user?.name }} {{ data()?.user?.firstLastname }}
+            {{ data()?.user?.secondLastname }}
+          </p>
+          <div class="flex gap-3 pt-1">
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              ID: {{ data()?.user?.userId }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              DNI: {{ data()?.user?.numDni }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-indigo-50 dark:bg-indigo-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-tag text-indigo-500 dark:text-indigo-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Tipo</p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.reportType }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información de fechas -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 pb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-green-50 dark:bg-green-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-calendar text-green-500 dark:text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Generado</p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.generatedAt | date : "medium" }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-apber-50 dark:bg-apber-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-download text-apber-500 dark:text-apber-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Última descarga
+          </p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.lastDownload | date : "medium" }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-clock text-blue-500 dark:text-blue-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Creado</p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.createdAt | date : "medium" }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+        >
+          <i class="pi pi-refresh text-purple-500 dark:text-purple-400"></i>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Actualizado</p>
+          <p class="font-medium text-sm dark:text-gray-200">
+            {{ data()?.updatedAt | date : "medium" }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información de filtros -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+    <div class="flex items-center gap-3 pb-3">
+      <div
+        class="bg-cyan-50 dark:bg-cyan-900/30 p-2 rounded-full w-10 flex justify-center items-center h-10"
+      >
+        <i class="pi pi-filter text-cyan-500 dark:text-cyan-400"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Periodo</p>
+        <p class="font-medium text-sm dark:text-gray-200">
+          {{ data()?.filters?.period?.label }}
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 pl-11">
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Desde</p>
+        <p class="font-medium text-sm dark:text-gray-200">
+          {{ data()?.filters?.period?.from | date : "medium" }}
+        </p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Hasta</p>
+        <p class="font-medium text-sm dark:text-gray-200">
+          {{ data()?.filters?.period?.to | date : "medium" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

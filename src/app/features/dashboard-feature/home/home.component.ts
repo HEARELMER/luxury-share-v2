@@ -53,7 +53,7 @@ export class HomeComponent {
   totalSales = 0;
 
   topServices: any[] = [];
-  topPackages: any[] = [];
+  topPackages: any[] = []
   totalSalesByBranch: any[] = [];
 
   ngOnInit(): void {}

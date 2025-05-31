@@ -1,6 +1,7 @@
 <div class="p-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
   <!-- Encabezado -->
-  <div class="flex items-center gap-3 pb-4">
+ <div class="flex justify-between flex-wrap items-center ">
+   <div class="flex items-center gap-3 pb-4">
     <div
       class="w-10 h-10 bg-gradient-to-br from-orange-400 to-primary-600 dark:from-orange-500 dark:to-primary-dark-500 rounded-lg shadow-md flex items-center justify-center"
     >
@@ -18,7 +19,15 @@
       </p>
     </div>
   </div>
-
+  <app-button 
+    text="Historial de Reportes"
+    icon="pi pi-history"
+    moreClasses="py-2"
+    font="font-medium text-sm"
+    bgColor="bg-primary-500 hover:bg-primary-600 dark:bg-primary-dark-500 dark:hover:bg-primary-dark-600 text-white"
+    [routerLink]="['./history']"
+  ></app-button>
+ </div>
   <!-- Opciones de exportación -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
     <!-- Reporte detallado de ventas -->

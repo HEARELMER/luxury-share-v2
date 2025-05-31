@@ -1,0 +1,239 @@
+<main class="flex flex-col gap-4">
+  <div
+    class="bg-white dark:bg-gray-800 rounded-t-lg border dark:border-gray-700"
+  >
+    <!-- Contenedor principal que cambia de dirección en pantallas pequeñas -->
+    <div
+      class="flex flex-col border-b dark:border-gray-700 pb-2 p-4 md:flex-row md:items-center md:justify-between gap-3"
+    >
+      <div>
+        <h1 class="text-xl font-bold dark:text-gray-100">
+          Historial de reportes
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Historial de Reportes descargados de ventas realizadas
+        </p>
+      </div>
+
+      <!-- Botón de nueva venta - responsivo -->
+      <div class="flex flex-wrap gap-2 lg:justify-end">
+        <div class="w-full sm:w-auto">
+          <app-button
+            icon="pi pi-plus"
+            text="Nuevo Reporte"
+            [routerLink]="['../']"
+            moreClasses="py-2 w-full sm:w-auto"
+            bgColor="bg-primary-500 dark:bg-primary-dark-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row pt-2 p-4 gap-4">
+      <app-input-form
+        type="date"
+        label="Inicio"
+        [required]="true"
+        errorType=" "
+        (valueChange)="onFilterChange('startDate', $event)"
+      />
+      <app-input-form
+        type="date"
+        label="Límite"
+        [required]="true"
+        errorType=" "
+        (valueChange)="onFilterChange('endDate', $event)"
+      />
+
+      <div class="flex items-end">
+        <button
+          pButton
+          icon="pi pi-filter-slash"
+          label="Limpiar filtros"
+          class="bg-white dark:bg-gray-700 border-2 shadow-sm rounded-lg text-black dark:text-gray-100 border-slate-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200"
+          [disabled]="filters().length === 0"
+          (click)="clearFilters()"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <!-- table section -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-b-lg border dark:border-gray-700 w-full"
+  >
+    <div class="w-full py-5 flex px-4 justify-between">
+      <div class="flex gap-2">
+        @for (item of filters(); track $index) {
+        <div
+          class="flex items-center gap-1 bg-primary-100 dark:bg-primary-dark-900/30 px-2 py-1 rounded-lg"
+        >
+          <p-tag [value]="item.value" styleClass="dark:tag-dark"></p-tag>
+          <button
+            (click)="clearFilters()"
+            class="hover:text-red-500 text-sm text-red-300 dark:text-red-400"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <p-table
+      [columns]="reportsTableColumns"
+      [value]="reports()"
+      [lazy]="true"
+      [scrollable]="true"
+      [totalRecords]="totalRecords"
+      scrollHeight="500px"
+      [resizableColumns]="true"
+      [rows]="rows"
+      styleClass="p-datatable-gridlines dark:p-datatable-dark"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      selectionMode="single"
+      [loading]="loading()"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          @for (col of columns; track $index) {
+          <th
+            pResizableColumn
+            class="text-primary-l-500 dark:text-primary-dark-300 cursor-pointer border-y py-2 font-semibold border border-primary-100 dark:border-gray-700 bg-primary-l-100 dark:bg-gray-700"
+          >
+            {{ col.header }}
+          </th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-columns="columns">
+        @if (loading()) {
+        <tr style="height: 40px">
+          @for (col of columns; track $index) {
+          <td class="dark:border-gray-700">
+            <p-skeleton />
+          </td>
+          }
+        </tr>
+        }
+        <tr
+          [pSelectableRow]="item"
+          class="dark:bg-gray-800 dark:hover:bg-gray-700"
+        >
+          @for (col of columns; track $index) {
+          <td class="dark:border-gray-700">
+            @if (col.field == "generatedAt") {
+            <span class="dark:text-gray-300">{{
+              item[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
+            } @else if (col.field == "lastDownload") {
+            <span class="dark:text-gray-300">{{
+              item[col.field] | date : "dd-MM-yyyy hh:mm a"
+            }}</span>
+            } @else if (col.field == "filters") {
+            <span class="dark:text-gray-300">{{
+              item[col.field].period.label
+            }}</span>
+            } @else if (col.field == "format") { @switch (item[col.field]) {
+            @case ("EXCEL") {
+            <p-tag
+              value="Excel"
+              severity="success"
+              icon="pi pi-file-excel"
+              styleClass="bg-green-100 text-green-500 dark:bg-green-900/30 dark:text-green-400"
+            >
+            </p-tag>
+            } @case ("PDF") {
+            <p-tag
+              value="PDF"
+              severity="danger"
+              icon="pi pi-file-pdf"
+              styleClass="bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-400"
+            >
+            </p-tag>
+            } @default {
+            <p-tag
+              [value]="item[col.field]"
+              severity="warn"
+              icon="pi pi-file"
+              styleClass="bg-blue-100 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400"
+            >
+            </p-tag>
+            } } } @else if (col.field == "user") {
+            <span class="dark:text-gray-300">
+              {{
+                item[col.field].name +
+                  " " +
+                  item[col.field].firstLastname +
+                  " " +
+                  item[col.field].secondLastname
+              }}
+            </span>
+            } @else if (col.field=="actions") {
+
+            <div class="flex w-full justify-center gap-1">
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Ver Detalles'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="opendReportDetail(item)"
+              >
+                <i class="pi pi-eye"></i>
+              </button>
+              <button
+                (click)="downloadReport(item)"
+                class="button-table-actions"
+                [pTooltip]="'Descargar'"
+                tooltipPosition="left"
+                [showDelay]="300"
+              >
+                <i class="pi pi-download"></i>
+              </button>
+            </div>
+
+            } @else {
+            <span class="dark:text-gray-300">{{ item[col.field] }}</span>
+            }
+          </td>
+          }
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns="columns">
+        <tr>
+          <td colspan="100%">
+            <div class="flex flex-col items-center justify-center py-8 px-4">
+              <div class="text-primary-300 dark:text-primary-dark-400 mb-3">
+                <i class="pi pi-shopping-cart text-5xl"></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
+                No se encontraron reportes
+              </h3>
+              <p
+                class="text-gray-500 dark:text-gray-400 text-center max-w-md mb-4"
+              >
+                No hay resultados que coincidan con los filtros aplicados.
+              </p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex flex-col gap-4">
+      <div class="flex items-center justify-center">
+        <div class="flex-1">
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showFirstLastIcon]="false"
+            styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

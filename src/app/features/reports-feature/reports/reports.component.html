@@ -13,16 +13,6 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <!-- Info de actualización - visible solo en tablets/desktop -->
-        <div class="hidden md:flex flex-col text-sm mr-2">
-          <span class="text-gray-500 dark:text-gray-400"
-            >Última actualización</span
-          >
-          <span class="font-medium text-gray-700 dark:text-gray-300">
-            {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
-          </span>
-        </div>
-
         <!-- Sección de botones con diseño responsive -->
         <div class="flex items-center gap-2">
           <!-- Botón actualizar -->
@@ -38,6 +28,15 @@
             [disabled]="loading()"
             (click)="updateReport(true)"
           ></button>
+        </div>
+        <!-- Info de actualización - visible solo en tablets/desktop -->
+        <div class="hidden md:flex flex-col text-sm mr-2">
+          <span class="text-gray-500 dark:text-gray-400"
+            >Última actualización</span
+          >
+          <span class="font-medium text-gray-700 dark:text-gray-300">
+            {{ lastUpdate() | date : "dd/MM/yyyy HH:mm" }}
+          </span>
         </div>
       </div>
     </div>

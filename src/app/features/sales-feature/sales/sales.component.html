@@ -56,7 +56,7 @@
         errorType=" "
         (valueChange)="onFilterChange('startDate', $event)"
       />
-        <app-input-form
+      <app-input-form
         type="date"
         label="Límite fecha de Venta"
         [required]="true"
@@ -218,6 +218,7 @@
                 [pTooltip]="'Modificar Venta'"
                 tooltipPosition="left"
                 [showDelay]="300"
+                (click)="editSale(sale)"
               >
                 <i class="pi pi-file-edit"></i>
               </button>
@@ -288,11 +289,12 @@
     </div>
   </div>
 </main>
-
+@if(showModalAddSale()) {
 <!-- Modal de venta -->
 <app-form-sale
   [(showModal)]="showModalAddSale"
   (refreshData)="handleRefreshData()"
+  [(codeSale)]="codeSaleSelected" 
 />
-
+}
 <p-toast [baseZIndex]="10000" [life]="2000" />

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { FormSaleComponent } from '../form-sale/form-sale.component';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -47,7 +47,8 @@ import { ButtonModule } from 'primeng/button';
     Tag,
     InputFormComponent,
     SelectComponent,
-    Toast,ButtonModule
+    Toast,
+    ButtonModule,
   ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -58,6 +59,7 @@ export class SalesComponent {
   private readonly _salesService = inject(SalesService);
   private readonly _messageService = inject(MessageService);
   private readonly _localStorage = inject(LocalstorageService);
+
   constructor() {
     this.loadSales();
   }
@@ -67,6 +69,7 @@ export class SalesComponent {
   filterSaleByCodeSale = signal<string>('');
   sales = signal<any[]>([]);
   filters = signal<{ key: string; value: string }[]>([]);
+  codeSaleSelected = signal<any>(null);
 
   salesStatusFilters = SALE_STATUS_FILTERS;
   // Configuración de tabla
@@ -260,5 +263,18 @@ export class SalesComponent {
       },
       data: userId,
     });
+  }
+
+  editSale(sale: any): void {
+    if (!sale) {
+      this._messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No se ha seleccionado ninguna venta para editar.',
+      });
+      return;
+    }
+    this.codeSaleSelected.set(sale.codeSale);
+    this.showModalAddSale.set(true);
   }
 }

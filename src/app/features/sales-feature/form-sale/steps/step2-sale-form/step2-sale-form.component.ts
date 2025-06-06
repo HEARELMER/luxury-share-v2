@@ -81,6 +81,22 @@ export class Step2SaleFormComponent {
     });
   }
   // Estados
+  readonly salesDataOfEdit = model<any>(null);
+  ngOnInit() {
+    if (this.salesDataOfEdit()) {
+      this.formSale.patchValue({
+        clientId: this.salesDataOfEdit().client.clientId,
+        dateSale: this.formatDateForForm(this.salesDataOfEdit().dateSale),
+        departureDate: this.formatDateForForm(
+          this.salesDataOfEdit().departureDate
+        ),
+        registeredBy: this._localstorageService.getUserId(),
+        discount: this.salesDataOfEdit().discount || 0,
+        observations: this.salesDataOfEdit().observations || '',
+        paymentMethod: this.salesDataOfEdit().paymentMethod || '',
+      });
+    }
+  }
   readonly statusOfSaleCreated = output<SaleCreationResult>();
   readonly submitForm = output<void>();
   currentClientModel = model.required<Client | null>();
@@ -238,8 +254,8 @@ export class Step2SaleFormComponent {
     });
   }
 
-   onDateChange(event: any): void {
-    const value = event
+  onDateChange(event: any): void {
+    const value = event;
     const departureDate = value ? new Date(value) : undefined;
     this.loadItems(departureDate);
   }
@@ -296,6 +312,24 @@ export class Step2SaleFormComponent {
 
   reservarSale() {
     this.loading.set(true);
+    const departureDate = this.formSale.value.departureDate || '';
+    const today = new Date();
+    const departureDateObj = new Date(departureDate);
+    const timeDiff = departureDateObj.getTime() - today.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    // Verificar si hay al menos 2 días de anticipación
+    if (daysDiff < 2) {
+      console.log(departureDate);
+      console.log(daysDiff);
+      this.statusOfSaleCreated.emit({
+        success: false,
+        message:
+          'Las reservas deben realizarse con al menos 2 días de anticipación',
+        status: 'ERROR',
+      });
+      this.loading.set(false);
+      return;
+    }
     const details = this.formatSaleDetails(this.selectedItems());
 
     const formFormated = this._filterEmptyValuesPipe.transform(
@@ -346,5 +380,25 @@ export class Step2SaleFormComponent {
       // Luego filtrar propiedades vacías
       return this._filterEmptyValuesPipe.transform(itemDetail);
     });
+  }
+
+  // Utility function to format dates without timezone info
+  private formatDateForForm(date: string | Date): string {
+    if (!date) return '';
+
+    const d = new Date(date);
+
+    // Format as YYYY-MM-DDTHH:MM
+    return (
+      d.getFullYear() +
+      '-' +
+      ('0' + (d.getMonth() + 1)).slice(-2) +
+      '-' +
+      ('0' + d.getDate()).slice(-2) +
+      'T' +
+      ('0' + d.getHours()).slice(-2) +
+      ':' +
+      ('0' + d.getMinutes()).slice(-2)
+    );
   }
 }

@@ -18,6 +18,7 @@ import { Step3SummarySaleComponent } from './steps/step3-summary-sale/step3-summ
 import { SalePdfService } from '../../../core/services/sales-services/sale-pdf.service';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { MessageService } from 'primeng/api';
+import { SalesService } from '../../../core/services/sales-services/sales.service';
 @Component({
   selector: 'app-form-sale',
   imports: [
@@ -41,6 +42,34 @@ export class FormSaleComponent {
   private readonly _pdfSaleService = inject(SalePdfService);
   private readonly _localStorageService = inject(LocalstorageService);
   private readonly _messageService = inject(MessageService);
+  private readonly _salesService = inject(SalesService);
+  dataOfSale = signal<any>(null);
+  codeSale = model<string | null>(null);
+  ngOnInit() {
+    if (this.codeSale()) {
+      this._salesService
+        .getSaleByCodeSale(this.codeSale() as string)
+        .subscribe({
+          next: (sale) => { 
+            this.dataOfSale.set(sale);
+            this.clientForm.patchValue(this.dataOfSale().client);
+            this.currentClient.set(this.dataOfSale().client);
+            this.stepsCompleted.update((steps) => ({
+              ...steps,
+              1: true,
+              2: true,
+            }));  
+          },
+          error: (error) => {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error.message,
+            });
+          },
+        });
+    }
+  }
   // Signals,variables constantes y outputs
   saleCreationResult = signal<SaleCreationResult | null>(null);
   currentClient = signal<any>(null);
@@ -165,7 +194,7 @@ export class FormSaleComponent {
       this._messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'Revisa los campos ingresados',
+        detail: result.message || 'Error al crear la venta',
       });
       this.isCompleted.set(false);
     }

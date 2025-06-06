@@ -1,6 +1,6 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
   <main
-    class="flex flex-col h-auto max-h-[90vh] overflow-auto w-[90vw] max-w-7xl mx-auto"
+    class="flex flex-col h-auto max-h-[90vh] overflow-y-auto overflow-x-hidden w-[90vw] max-w-7xl mx-auto"
   >
     <header class="flex w-full justify-between items-center">
       <h2 class="text-lg font-semibold text-primary-500">Nueva Ventas</h2>
@@ -11,7 +11,7 @@
         <i class="pi pi-times"></i>
       </button>
     </header>
-    <section class="h-full">
+    <section class="h-full px-3">
       <p-stepper [value]="1" styleClass="flex-grow bg-gray-500 flex flex-col">
         <p-step-list>
           @for (step of addSaleSteps; track $index) {
@@ -43,6 +43,7 @@
                 (submitForm)="confirmSale(activateCallback)"
                 (statusOfSaleCreated)="handleSaleCreationResult($event)"
                 [(currentClientModel)]="currentClient"
+                [(salesDataOfEdit)]="dataOfSale"
               />
             </ng-template>
           </p-step-panel>

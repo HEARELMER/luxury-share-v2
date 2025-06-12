@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
-import { ChartLineComponent } from '../charts/chart-line/chart-line.component';
+import { ChartLineComponent } from '../../../shared/components/charts/chart-line/chart-line.component';
 @Component({
   selector: 'app-charts-panel',
   imports: [

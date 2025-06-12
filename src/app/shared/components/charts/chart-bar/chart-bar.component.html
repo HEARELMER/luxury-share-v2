@@ -1,4 +1,4 @@
-<div id="chart" class="w-full p-4">
+<div id="chart" class="w-full h-full ">
   <div class="flex items-center gap-3 pb-2">
     <div
       class="w-10 h-10 rounded-full {{
@@ -16,14 +16,15 @@
     type="bar"
     [data]="data"
     [options]="options"
-    class="h-auto"
+    [responsive]="true"
+    [height]="'250'"
   ></p-chart>
-
+  <!-- 
   <div class="flex justify-around mt-4 gap-2 flex-wrap">
-    @for (legend of labels(); track $index) {
+    @for (legend of data.datasets; track $index) {
     <div class="flex items-center space-x-2">
       <span
-        [ngStyle]="{ 'background-color': legend.color }"
+        [ngStyle]="{ 'background-color': legend.backgroundColor }"
         class="inline-block bg-primary-l-500 w-6 h-6 rounded-md"
       ></span>
       <span class="text-sm text-gray-500"
@@ -32,5 +33,5 @@
       </span>
     </div>
     }
-  </div>
+  </div> -->
 </div>

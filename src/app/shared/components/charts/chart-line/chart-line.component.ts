@@ -1,59 +1,63 @@
-import { Component, input, OnInit } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
-import { ButtonComponent } from '../../ui/button/button.component';
+import {
+  Component,
+  ElementRef,
+  input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChartModule, UIChart } from 'primeng/chart';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+
+export interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    fill: boolean;
+    tension: number;
+    borderColor: string;
+  }[];
+}
+
 @Component({
   selector: 'app-chart-line',
-  standalone: true,
-  imports: [ChartModule, ButtonComponent],
+  imports: [CommonModule, ChartModule, ButtonModule, TooltipModule],
   templateUrl: './chart-line.component.html',
   styleUrl: './chart-line.component.scss',
 })
-export class ChartLineComponent implements OnInit {
-  readonly title = input<string>();
-  readonly icon = input<string>();
-  readonly iconBg = input<string>();
-  readonly subtitle = input<string>();
-
+export class ChartLineComponent implements OnInit, OnChanges {
+  readonly title = input<string>('');
+  readonly subtitle = input<string>('');
+  readonly chartData = input<ChartData>({} as ChartData); 
+  @ViewChild('chart') chartRef!: UIChart;
   options: any;
   data: any;
 
   ngOnInit() {
-    this.chartLine();
+    this.initChart();
   }
-  chartLine() {
+
+  ngOnChanges() {
+    if (this.chartData()) {
+      this.updateChartWithData(this.chartData());
+    }
+  }
+
+  private initChart() {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue(
-      '--text-color-secondary'
-    );
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    const textColor =
+      documentStyle.getPropertyValue('--text-color') || '#333333';
+    const textColorSecondary =
+      documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
+    const surfaceBorder =
+      documentStyle.getPropertyValue('--surface-border') || '#e5e7eb';
 
     this.data = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label: 'First Dataset',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          tension: 0.4,
-          borderColor: documentStyle.getPropertyValue('--purple-500'),
-        },
-        {
-          label: 'Second Dataset',
-          data: [28, 48, 40, 19, 86, 27, 90],
-          fill: false,
-          borderDash: [5, 5],
-          tension: 0.4,
-          borderColor: documentStyle.getPropertyValue('--teal-500'),
-        },
-        {
-          label: 'Third Dataset',
-          data: [12, 51, 62, 33, 21, 62, 45],
-          fill: false,
-          borderColor: documentStyle.getPropertyValue('--orange-500'),
-          tension: 0.4,
-        },
-      ],
+      labels: this.chartData().labels,
+      datasets: this.chartData().datasets,
     };
 
     this.options = {
@@ -61,9 +65,17 @@ export class ChartLineComponent implements OnInit {
       aspectRatio: 0.8,
       plugins: {
         legend: {
+          position: 'bottom',
           labels: {
             color: textColor,
           },
+        },
+        tooltip: {
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: textColor,
+          bodyColor: textColorSecondary,
+          borderColor: surfaceBorder,
+          borderWidth: 1,
         },
       },
       scales: {
@@ -85,5 +97,41 @@ export class ChartLineComponent implements OnInit {
         },
       },
     };
+  }
+
+  private updateChartWithData(chartData: any) {
+    if (chartData) {
+      this.data = chartData;
+    }
+  }
+
+  downloadChart(format: 'png' | 'jpg' = 'png'): void {
+    if (!this.chartRef || !this.chartRef.chart) {
+      return;
+    }
+
+    const canvas = this.chartRef.chart.canvas;
+    if (!canvas) {
+      return;
+    }
+
+    const imageType = format === 'png' ? 'image/png' : 'image/jpeg';
+    const imageQuality = format === 'png' ? 1 : 0.95;
+
+    try {
+      const imageUrl = canvas.toDataURL(imageType, imageQuality);
+
+      const link = document.createElement('a');
+      const chartTitle = this.title() || 'grafico';
+      const fileName = `${chartTitle
+        .toLowerCase()
+        .replace(/\s+/g, '-')}.${format}`;
+
+      link.download = fileName;
+      link.href = imageUrl;
+      link.click();
+    } catch (error) {
+      console.error('Error al generar la imagen:', error);
+    }
   }
 }

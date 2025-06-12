@@ -84,10 +84,11 @@
     >
       @defer {
       <app-chart-bar
-        [labels]="totalSalesByBranch"
+        [chartItems]="ventasPorSucursal"
         title="Ventas por Sucursal"
         icon="pi pi-map-marker text-red-500"
         iconBg="bg-red-50 dark:bg-red-900"
+        class="w-full h-full"
       ></app-chart-bar>
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
@@ -102,13 +103,14 @@
     <div
       class="col-span-1 md:col-span-2 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow order-5 min-h-[250px] sm:min-h-[300px]"
     >
-      <app-chart-line
-        class="w-full"
+      <app-chart-bar
+        class="w-full h-full"
+        [chartData]="comparativaVentas"
         [title]="'Total de ventas realizadas'"
         [subtitle]="'Evolución mensual'"
         icon="pi pi-chart-line text-green-500"
         iconBg="bg-green-50 dark:bg-green-900"
-      ></app-chart-line>
+      ></app-chart-bar>
     </div>
 
     <!-- Top Paquetes -->
@@ -118,12 +120,12 @@
       @defer {
       <app-chart-bar
         [orientation]="'y'"
-        [labels]="topPackages"
+        [chartItems]="topPaquetesChartData"
         title="Top Paquetes"
         subtitle="Más Vendidos"
         icon="pi pi-box text-orange-500"
         iconBg="bg-orange-50 dark:bg-orange-900"
-        class="h-full"
+        class="w-full h-full"
       />
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
@@ -146,7 +148,8 @@
         icon="pi pi-cog text-blue-500"
         iconBg="bg-blue-50 dark:bg-blue-900"
         [orientation]="'y'"
-        [labels]="topServices"
+        [chartItems]="topServiciosChartData"
+        class="w-full h-full"
       />
       } @placeholder {
       <div class="w-full h-full flex items-center justify-center">
@@ -158,5 +161,4 @@
       }
     </div>
   </section>
- 
 </main>

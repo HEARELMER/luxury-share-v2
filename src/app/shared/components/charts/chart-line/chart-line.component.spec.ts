@@ -11,7 +11,7 @@ describe('ChartLineComponent', () => {
       imports: [ChartLineComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ChartLineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

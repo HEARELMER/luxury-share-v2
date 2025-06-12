@@ -101,6 +101,90 @@ export class HomeComponent {
     this.dragDropService.saveOrderToLocalStorage('dashboard-cards', newOrder);
   }
 
+  // simalciones
+  comparativaVentas = {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: '2023',
+        data: [6500, 5900, 8000, 8100, 7200, 7500],
+        backgroundColor: ['#4361EE'],
+        borderRadius: 6,
+        barPercentage: 0.5,
+      },
+      {
+        label: '2024',
+        data: [7200, 6800, 9100, 9500, 8300, 8800],
+        backgroundColor: ['#F72585'],
+        borderRadius: 6,
+        barPercentage: 0.5,
+      },
+    ],
+  };
+  // Para Top Paquetes
+  topPaquetesChartData = [
+    {
+      label: 'Paquete A',
+      quantity: 1500,
+      color: '#3A0CA3',
+    },
+    {
+      label: 'Paquete B',
+      quantity: 1200,
+      color: '#7209B7',
+    },
+    {
+      label: 'Paquete C',
+      quantity: 900,
+      color: '#F72585',
+    },
+    {
+      label: 'Paquete D',
+      quantity: 700,
+      color: '#560BAD',
+    },
+    {
+      label: 'Paquete E',
+      quantity: 600,
+      color: '#4361EE',
+    },
+  ];
+
+  // Para Top Servicios
+  topServiciosChartData = [
+    {
+      label: 'Servicioaffffffffffffffffff A',
+      quantity: 1200,
+      color: '#3A0CA3',
+    },
+    {
+      label: 'Servicio B',
+      quantity: 950,
+      color: '#7209B7',
+    },
+    {
+      label: 'Servicio C',
+      quantity: 800,
+      color: '#F72585',
+    },
+    {
+      label: 'Servicio D',
+      quantity: 600,
+      color: '#560BAD',
+    },
+    {
+      label: 'Servicio E',
+      quantity: 500,
+      color: '#4361EE',
+    },
+  ];
+  ventasPorSucursal = [
+    { label: 'Miraflores', quantity: 15200, color: '#4361EE' },
+    { label: 'San Isidro', quantity: 12800, color: '#3A0CA3' },
+    { label: 'La Molina', quantity: 9500, color: '#7209B7' },
+    { label: 'San Borja', quantity: 8700, color: '#F72585' },
+    { label: 'Surco', quantity: 7600, color: '#560BAD' },
+  ];
   cards = signal<any[]>([
     {
       id: 'sellers',

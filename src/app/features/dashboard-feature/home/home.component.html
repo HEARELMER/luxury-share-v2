@@ -6,7 +6,7 @@
   >
     <!-- header dashboard -->
     <div
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4 md:mb-6"
+      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 pb-3 sm:pb-4 md:pb-6"
     >
       <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
         <div
@@ -76,8 +76,132 @@
 
   <!-- grid bento -->
   <section
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
   >
+    <!-- Componente de Actividad Reciente -->
+    <div
+      class="col-span-1 md:col-span-2 lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow order-1 p-3 sm:p-4 lg:row-span-2 flex flex-col"
+    >
+      <div class="flex items-center justify-between pb-3">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900 flex items-center justify-center"
+          >
+            <i class="pi pi-history text-lg text-indigo-500"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-gray-100">
+              Actividad Reciente
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Últimas actualizaciones
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-1">
+          <button
+            class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <i class="pi pi-refresh text-gray-500 dark:text-gray-400"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <!-- Contenido dinámico de actividades -->
+        <div class="flex flex-col gap-3">
+          @for (activity of recentActivities(); track activity.id) {
+          <div
+            class="p-3 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+          >
+            <div class="flex items-start gap-3">
+              <div
+                class="w-10 h-10 rounded-full {{
+                  activity.bgColor
+                }} flex items-center justify-center flex-shrink-0"
+              >
+                <i
+                  class="{{ activity.icon }} text-lg {{ activity.iconColor }}"
+                ></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h4
+                    class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                  >
+                    {{ activity.title }}
+                  </h4>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">{{
+                    activity.time
+                  }}</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 pb-1">
+                  {{ activity.subtitle }}
+                </p>
+
+                <!-- Contenido dinámico según el tipo de actividad -->
+                @if (activity.type === 'sale') {
+                <div
+                  class="flex items-center gap-2 pt-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-md"
+                >
+                  <img
+                    [src]="activity.image"
+                    class="w-8 h-8 rounded object-cover"
+                    alt="Producto"
+                  />
+                  <div>
+                    <p class="text-xs font-medium">
+                      {{ activity.productName }}
+                    </p>
+                    <p class="text-xs text-indigo-600 dark:text-indigo-400">
+                      S/ {{ activity.amount }}
+                    </p>
+                  </div>
+                </div>
+                } @if (activity.type === 'user') {
+                <div class="flex items-center gap-2 pt-2">
+                  <div class="flex -space-x-2">
+                    @for (img of activity.userImages; track $index) {
+                    <img
+                      [src]="img"
+                      class="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
+                    />
+                    }
+                  </div>
+                  <p class="text-xs text-gray-600 dark:text-gray-300">
+                    {{ activity.message }}
+                  </p>
+                </div>
+                } @if (activity.type === 'alert') {
+                <div class="pt-2 p-2 {{ activity.alertBg }} rounded-md">
+                  <p class="text-xs {{ activity.alertColor }}">
+                    {{ activity.message }}
+                  </p>
+                </div>
+                } @if (activity.type === 'stat') {
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                  @for (stat of activity.stats; track $index) {
+                  <div
+                    class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md text-center"
+                  >
+                    <p class="text-sm font-semibold {{ stat.color }}">
+                      {{ stat.value }}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ stat.label }}
+                    </p>
+                  </div>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
     <!-- Ventas por Sucursal -->
     <div
       class="col-span-1 md:col-span-2 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow order-2 p-3 sm:p-4 min-h-[250px] sm:min-h-[300px]"

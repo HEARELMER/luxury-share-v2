@@ -21,14 +21,14 @@
     <div
       class="group relative overflow-hidden rounded-xl border transition-all duration-300 hover:shadow-lg"
       [class]="
-        selectedBranch()?.branchId === branch.branchId
+        selectedBranch().branchId === branch.branchId
           ? 'bg-primary-50 border-primary-300 dark:bg-primary-900/20 dark:border-primary-700'
           : 'bg-white border-gray-200 hover:border-primary-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-primary-800'
       "
       (click)="selectBranch(branch)"
     >
       <!-- Indicador de selección -->
-      @if (selectedBranch()?.branchId === branch.branchId) {
+      @if (selectedBranch().branchId === branch.branchId) {
       <div
         class="absolute top-3 right-3 bg-primary-500 dark:bg-primary-600 w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
       >
@@ -63,14 +63,14 @@
           <span
             class="text-xs px-2.5 py-1 rounded-full"
             [class]="
-              selectedBranch()?.branchId === branch.branchId
+              selectedBranch().branchId === branch.branchId
                 ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
                 : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
             "
           >
             <i class="pi pi-map-marker pr-1"></i>
             {{
-              selectedBranch()?.branchId === branch.branchId
+              selectedBranch().branchId === branch.branchId
                 ? "Seleccionada"
                 : "Disponible"
             }}
@@ -79,13 +79,13 @@
           <button
             pButton
             [label]="
-              selectedBranch()?.branchId === branch.branchId
+              selectedBranch().branchId === branch.branchId
                 ? 'Actualmente activa'
                 : 'Seleccionar'
             "
-            [disabled]="selectedBranch()?.branchId === branch.branchId"
+            [disabled]="selectedBranch().branchId === branch.branchId"
             [class]="
-              selectedBranch()?.branchId === branch.branchId
+              selectedBranch().branchId === branch.branchId
                 ? 'p-button-outlined p-button-success p-button-sm'
                 : 'p-button-outlined p-button-primary p-button-sm'
             "

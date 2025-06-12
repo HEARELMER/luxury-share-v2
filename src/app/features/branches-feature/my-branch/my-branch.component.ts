@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,7 +7,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BranchService } from '../../../core/services/braches-services/branch.service';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 interface Branch {
   address: string;
   branchId: string;
@@ -19,7 +18,7 @@ interface Branch {
     FormsModule,
     ButtonModule,
     InputTextModule,
-    ProgressSpinnerModule,ButtonComponent
+    ProgressSpinnerModule, 
   ],
   templateUrl: './my-branch.component.html',
   styleUrl: './my-branch.component.scss',

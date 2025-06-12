@@ -11,8 +11,6 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DatePickerComponent } from '../../../shared/components/forms/date-picker/date-picker.component';
-import { ScrollTop } from 'primeng/scrolltop';
 import { ReportsService } from '../../../core/services/reports-services/reports.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
@@ -26,7 +24,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
     CdkDragPreview,
     CdkDropList,
     DatePickerModule,
-    ScrollTop,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -53,7 +50,7 @@ export class HomeComponent {
   totalSales = 0;
 
   topServices: any[] = [];
-  topPackages: any[] = []
+  topPackages: any[] = [];
   totalSalesByBranch: any[] = [];
 
   ngOnInit(): void {}

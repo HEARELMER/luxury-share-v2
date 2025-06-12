@@ -9,14 +9,14 @@ import { RouterLink } from '@angular/router';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UserAuthorized } from '../../../interfaces/user';
 import { LocalstorageService } from '../../../../core/services/localstorage-services/localstorage.service';
-import { Option, SelectComponent } from '../../forms/select/select.component';
+import { Option } from '../../forms/select/select.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, UserMenuComponent, SelectComponent],
+  imports: [RouterLink, UserMenuComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

@@ -84,7 +84,10 @@ export class AuthService {
           }
         }),
         catchError(() => {
-          return of({ success: false, message: 'Error en la autenticación' });
+          return of({
+            success: false,
+            message: 'Error en la autenticación, revisa tus credenciales',
+          });
         })
       );
   }

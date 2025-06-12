@@ -10,6 +10,8 @@ import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { UserAccessing } from '../../../shared/interfaces/user';
 import { AuthService } from '../../../core/services/auth-services/auth.service';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
@@ -20,23 +22,19 @@ import { AuthService } from '../../../core/services/auth-services/auth.service';
     FormsModule,
     NgClass,
     ReactiveFormsModule,
+    Toast,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  providers: [MessageService],
 })
 export class LoginComponent {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
-  private readonly _router = inject(Router);
+  private readonly _messageService = inject(MessageService);
   passwordVisible: boolean = false;
   loading: boolean = false;
   confirmLogin: boolean = false;
-
-  messageLogin: any = {
-    title: '',
-    message: '',
-    type: '',
-  };
 
   form = this._formBuilder.group({
     userId: [
@@ -65,16 +63,31 @@ export class LoginComponent {
       };
 
       this._authService.signIn(user).subscribe({
-        next: (response) => {
-          this.loading = false;
+        next: ({ success, message }) => {
+          if (!success) {
+            this.loading = false;
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: message || 'Credenciales incorrectas',
+            });
+            return;
+          } else if (success) {
+            this.loading = false;
+            this._messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Inicio de sesión exitoso',
+            });
+          }
         },
         error: (error) => {
           this.loading = false;
-          this.messageLogin = {
-            title: 'Error',
-            message: 'Usuario o contraseña incorrectos',
-            type: 'error',
-          };
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error.message || 'Credenciales incorrectas',
+          });
         },
       });
 

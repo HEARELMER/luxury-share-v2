@@ -64,7 +64,6 @@ export class ReportsComponent {
   private readonly _filterEmptyValuesPipe = inject(FilterEmptyValuesPipe);
   private readonly _packagesService = inject(PackagesService);
   private readonly _usersService = inject(UserService);
-
   private readonly _localStorageService = inject(LocalstorageService);
   // Signals
   kpisData = signal<any[]>([]);

@@ -13,9 +13,13 @@ import {
   SELECTED_COLUMNS_FOR_REPORT_OF_SALES,
   SELECTED_COLUMNS_FOR_REPORT_OF_SERVICES,
 } from '../constants/export-files.constant';
-import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { RouterLink } from '@angular/router';
-import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+import {
+  formatSalesData,
+  prepareSalesByServicesPackagesData,
+  prepareSalesSummaryData,
+} from '../helpers/report-export-file';
 
 @Component({
   selector: 'app-sales-summary-files',
@@ -34,7 +38,6 @@ export class SalesSummaryFilesComponent {
   ref: DynamicDialogRef | undefined;
   loading = signal<boolean>(false);
 
-
   // Métodos para generar reportes
   generateExcelReportOfSales(): void {
     this.loading.set(true);
@@ -47,26 +50,18 @@ export class SalesSummaryFilesComponent {
           const selectedColumns = SELECTED_COLUMNS_FOR_REPORT_OF_SALES;
           // Mapear los nombres de columnas para el encabezado del Excel
           const headers = HEADERS_FOR_REPORT_OF_SALES;
-          // Formatear fechas y valores monetarios
-          const formattedData = response.data.data.items.map((item: any) => {
-            return {
-              ...item,
-              date: new Date(item.date).toLocaleDateString(),
-              departureDate: item.departureDate
-                ? new Date(item.departureDate).toLocaleDateString()
-                : 'N/A',
-              subtotal: `S/ ${item.subtotal}`,
-              discount: `S/ ${item.discount}`,
-              total: `S/ ${item.total}`,
-            };
-          });
+          // Formatear los datos
+          const formattedData = formatSalesData(response.data.data.items);
+          // Preparar los datos de resumen
+          const summaryData = prepareSalesSummaryData(response.data.data);
 
           // Exportar a Excel usando el servicio
           this._exportFilesService.exportToExcel(
             formattedData,
             headers,
             selectedColumns,
-            'Reporte_Ventas'
+            'Reporte_Ventas',
+            summaryData
           );
 
           // Mensaje de éxito
@@ -126,13 +121,16 @@ export class SalesSummaryFilesComponent {
 
           // Mapear los nombres de columnas para el encabezado del Excel
           const headers = HEADERS_FOR_REPORT_OF_SERVICES;
-
+          const summaryData = prepareSalesByServicesPackagesData(
+            response.data.data
+          );
           // Exportar a Excel usando el servicio
           this._exportFilesService.exportToExcel(
             allItems,
             headers,
             selectedColumns,
-            'Reporte_Servicios_Paquetes'
+            'Reporte_Servicios_Paquetes',
+            summaryData
           );
 
           // Mensaje de éxito

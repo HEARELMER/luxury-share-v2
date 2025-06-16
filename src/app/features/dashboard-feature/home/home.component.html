@@ -208,7 +208,7 @@
     >
       @defer {
       <app-chart-bar
-        [chartItems]="ventasPorSucursal"
+        [chartItems]="salesByBranchChartData()"
         title="Ventas por Sucursal"
         icon="pi pi-map-marker text-red-500"
         iconBg="bg-red-50 dark:bg-red-900"
@@ -229,7 +229,7 @@
     >
       <app-chart-bar
         class="w-full h-full"
-        [chartData]="comparativaVentas"
+        [chartData]="comparativeSalesChartData()"
         [title]="'Total de ventas realizadas'"
         [subtitle]="'Evolución mensual'"
         icon="pi pi-chart-line text-green-500"
@@ -244,7 +244,7 @@
       @defer {
       <app-chart-bar
         [orientation]="'y'"
-        [chartItems]="topPaquetesChartData"
+        [chartItems]="topPackagesChartData()"
         title="Top Paquetes"
         subtitle="Más Vendidos"
         icon="pi pi-box text-orange-500"
@@ -272,7 +272,7 @@
         icon="pi pi-cog text-blue-500"
         iconBg="bg-blue-50 dark:bg-blue-900"
         [orientation]="'y'"
-        [chartItems]="topServiciosChartData"
+        [chartItems]="topServicesChartData()"
         class="w-full h-full"
       />
       } @placeholder {

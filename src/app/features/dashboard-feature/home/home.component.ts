@@ -16,7 +16,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CardHomeComponent, 
+    CardHomeComponent,
     ChartBarComponent,
     CdkDrag,
     CdkDragPreview,
@@ -44,17 +44,16 @@ export class HomeComponent {
   totalGerents = 0;
   totalSellers = 0;
   totalUsers = 0;
-  salesData = [];
   totalSales = 0;
 
-  topServices: any[] = [];
-  topPackages: any[] = [];
-  totalSalesByBranch: any[] = [];
-
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.loadDataDashboard();
+  }
   dateRange: Date[] = [];
-
+  comparativeSalesChartData = signal<any>(null);
+  topPackagesChartData = signal<any[]>([]);
+  topServicesChartData = signal<any[]>([]);
+  salesByBranchChartData = signal<any[]>([]);
   setDateRange(period: 'week' | 'month') {
     const today = new Date();
     const start = new Date();
@@ -98,91 +97,16 @@ export class HomeComponent {
     // Guardar el nuevo orden en localStorage
     this.dragDropService.saveOrderToLocalStorage('dashboard-cards', newOrder);
   }
+  loadDataDashboard() {
+    this.dashboardService.getDashboardData().subscribe((data: any) => {
+      console.log('Dashboard data:', data);
+      this.comparativeSalesChartData.set(data.charts.comparativeSales || null);
+      this.topPackagesChartData.set(data.charts.topPackagesChartData || []);
+      this.topServicesChartData.set(data.charts.topServicesChartData || []);
+      this.salesByBranchChartData.set(data.charts.salesBySucursal || []);
+    });
+  }
 
-  // simalciones
-  comparativaVentas = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: '2023',
-        data: [6500, 5900, 8000, 8100, 7200, 7500],
-        backgroundColor: ['#4361EE'],
-        borderRadius: 6,
-        barPercentage: 0.5,
-      },
-      {
-        label: '2024',
-        data: [7200, 6800, 9100, 9500, 8300, 8800],
-        backgroundColor: ['#F72585'],
-        borderRadius: 6,
-        barPercentage: 0.5,
-      },
-    ],
-  };
-  // Para Top Paquetes
-  topPaquetesChartData = [
-    {
-      label: 'Paquete A',
-      quantity: 1500,
-      color: '#3A0CA3',
-    },
-    {
-      label: 'Paquete B',
-      quantity: 1200,
-      color: '#7209B7',
-    },
-    {
-      label: 'Paquete C',
-      quantity: 900,
-      color: '#F72585',
-    },
-    {
-      label: 'Paquete D',
-      quantity: 700,
-      color: '#560BAD',
-    },
-    {
-      label: 'Paquete E',
-      quantity: 600,
-      color: '#4361EE',
-    },
-  ];
-
-  // Para Top Servicios
-  topServiciosChartData = [
-    {
-      label: 'Servicioaffffffffffffffffff A',
-      quantity: 1200,
-      color: '#3A0CA3',
-    },
-    {
-      label: 'Servicio B',
-      quantity: 950,
-      color: '#7209B7',
-    },
-    {
-      label: 'Servicio C',
-      quantity: 800,
-      color: '#F72585',
-    },
-    {
-      label: 'Servicio D',
-      quantity: 600,
-      color: '#560BAD',
-    },
-    {
-      label: 'Servicio E',
-      quantity: 500,
-      color: '#4361EE',
-    },
-  ];
-  ventasPorSucursal = [
-    { label: 'Miraflores', quantity: 15200, color: '#4361EE' },
-    { label: 'San Isidro', quantity: 12800, color: '#3A0CA3' },
-    { label: 'La Molina', quantity: 9500, color: '#7209B7' },
-    { label: 'San Borja', quantity: 8700, color: '#F72585' },
-    { label: 'Surco', quantity: 7600, color: '#560BAD' },
-  ];
   cards = signal<any[]>([
     {
       id: 'sellers',
@@ -227,7 +151,7 @@ export class HomeComponent {
     },
   ]);
 
-    // Array de actividades recientes
+  // Array de actividades recientes
   readonly recentActivities = input<any[]>([
     {
       id: 1,
@@ -238,9 +162,10 @@ export class HomeComponent {
       icon: 'pi pi-globe',
       iconColor: 'text-green-500',
       bgColor: 'bg-green-50 dark:bg-green-900',
-      image: 'https://explorandomaravillas.com/wp-content/uploads/mirador-acuchimay-ayacucho.jpg',
+      image:
+        'https://explorandomaravillas.com/wp-content/uploads/mirador-acuchimay-ayacucho.jpg',
       productName: 'Tour Ayacucho Histórico 3D/2N',
-      amount: '899.00'
+      amount: '899.00',
     },
     {
       id: 2,
@@ -254,9 +179,9 @@ export class HomeComponent {
       userImages: [
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D',
         'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg',
-        'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'
+        'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg',
       ],
-      message: '5 nuevos turistas reservaron el tour Semana Santa Ayacucho'
+      message: '5 nuevos turistas reservaron el tour Semana Santa Ayacucho',
     },
     {
       id: 3,
@@ -269,7 +194,8 @@ export class HomeComponent {
       bgColor: 'bg-yellow-50 dark:bg-yellow-900',
       alertBg: 'bg-yellow-50 dark:bg-yellow-900/50',
       alertColor: 'text-yellow-700 dark:text-yellow-300',
-      message: 'Solo quedan 4 cupos para "Ruta Artesanal de Retablos" del 20/06'
+      message:
+        'Solo quedan 4 cupos para "Ruta Artesanal de Retablos" del 20/06',
     },
     {
       id: 4,
@@ -281,11 +207,27 @@ export class HomeComponent {
       iconColor: 'text-purple-500',
       bgColor: 'bg-purple-50 dark:bg-purple-900',
       stats: [
-        { label: 'Tours', value: '14', color: 'text-blue-600 dark:text-blue-400' },
-        { label: 'Ingresos', value: 'S/ 19,750', color: 'text-green-600 dark:text-green-400' },
-        { label: 'Turistas', value: '36', color: 'text-indigo-600 dark:text-indigo-400' },
-        { label: 'Destinos', value: '5', color: 'text-purple-600 dark:text-purple-400' }
-      ]
+        {
+          label: 'Tours',
+          value: '14',
+          color: 'text-blue-600 dark:text-blue-400',
+        },
+        {
+          label: 'Ingresos',
+          value: 'S/ 19,750',
+          color: 'text-green-600 dark:text-green-400',
+        },
+        {
+          label: 'Turistas',
+          value: '36',
+          color: 'text-indigo-600 dark:text-indigo-400',
+        },
+        {
+          label: 'Destinos',
+          value: '5',
+          color: 'text-purple-600 dark:text-purple-400',
+        },
+      ],
     },
     {
       id: 6,
@@ -298,9 +240,8 @@ export class HomeComponent {
       bgColor: 'bg-red-50 dark:bg-red-900',
       alertBg: 'bg-red-50 dark:bg-red-900/50',
       alertColor: 'text-red-700 dark:text-red-300',
-      message: 'Festival de danzas típicas en Quinua el 25/06 - Tours especiales disponibles'
-    }
+      message:
+        'Festival de danzas típicas en Quinua el 25/06 - Tours especiales disponibles',
+    },
   ]);
 }
-
-

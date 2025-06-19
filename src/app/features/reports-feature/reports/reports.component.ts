@@ -53,6 +53,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
     SalesSummaryFilesComponent,
     ChartsPanelComponent,
     SelectModule,
+    DatePipe,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
@@ -71,6 +72,7 @@ export class ReportsComponent {
   loading = signal<boolean>(false);
   lastUpdate = signal<any>(new Date());
   showFilters = signal<boolean>(false);
+  summaryData = signal<any>(null);
 
   // Formulario de filtros
   filtersForm = this._fb.group({
@@ -254,6 +256,8 @@ export class ReportsComponent {
             detail: 'Los datos del reporte han sido actualizados correctamente',
           });
           this.loading.set(false);
+          this.summaryData.set(response?.data?.activeFilters?.period || null);
+          console.log('Datos del reporte:', response);
         },
         error: (error) => {
           this._messageService.add({

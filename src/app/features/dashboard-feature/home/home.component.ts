@@ -10,7 +10,6 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 import { DatePickerModule } from 'primeng/datepicker';
-import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -21,7 +20,6 @@ import { JsonPipe } from '@angular/common';
     CdkDragPreview,
     CdkDropList,
     DatePickerModule,
-    JsonPipe,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

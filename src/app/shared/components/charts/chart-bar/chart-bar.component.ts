@@ -6,8 +6,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { ChartModule, UIChart } from 'primeng/chart';
-import { Tooltip } from 'primeng/tooltip';
+import { ChartModule, UIChart } from 'primeng/chart'; 
 import {
   ChartBarData,
   ChartBarItem,
@@ -16,7 +15,7 @@ import {
 @Component({
   selector: 'app-chart-bar',
   standalone: true,
-  imports: [ChartModule, NgStyle],
+  imports: [ChartModule ],
   templateUrl: './chart-bar.component.html',
   styleUrl: './chart-bar.component.scss',
 })

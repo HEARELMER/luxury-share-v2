@@ -52,7 +52,7 @@
 
   <!-- SECCIÓN DE FILTROS -->
   <section class="px-6 py-4 border-b dark:border-gray-700">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center pb-4 justify-between">
       <div class="flex items-center gap-2">
         <h2 class="text-sm font-medium text-gray-700 dark:text-gray-300">
           Filtros activos
@@ -63,17 +63,36 @@
           {{ activeFiltersCount() }} aplicados
         </span>
       </div>
-      <button
-        pButton
-        icon="pi pi-filter-slash"
-        label="Limpiar filtros"
-        class="bg-white dark:bg-gray-700 border-2 shadow-sm rounded-lg text-black dark:text-gray-100 border-slate-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200"
-        [disabled]="activeFiltersCount() === 0"
-        (click)="filtersForm.reset()"
-        size="small"
-      ></button>
+      <div class="flex gap-3 items-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-900 flex items-center justify-center"
+            >
+              <i class="pi pi-calendar text-indigo-500 text-2xl"></i>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                {{ summaryData().label }}
+              </h1>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ summaryData().from | date : "MMM d, y" }} -
+                {{ summaryData().to | date : "MMM d, y" }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <button
+          pButton
+          icon="pi pi-filter-slash"
+          label="Limpiar filtros"
+          class="bg-white dark:bg-gray-700 border-2 shadow-sm rounded-lg text-black dark:text-gray-100 border-slate-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200"
+          [disabled]="activeFiltersCount() === 0"
+          (click)="filtersForm.reset()"
+          size="small"
+        ></button>
+      </div>
     </div>
-
     <form
       [formGroup]="filtersForm"
       class="grid gap-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1"

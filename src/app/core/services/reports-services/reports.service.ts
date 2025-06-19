@@ -64,12 +64,6 @@ export class ReportsService {
     });
   }
 
-  loadDashboardData(): Observable<any> {
-    return this._httpclient.get<any>(`${this._api}reports/totals`, {
-      withCredentials: true,
-    });
-  }
-
   getReportsHistory(
     page: number,
     size: number,

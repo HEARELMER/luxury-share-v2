@@ -327,7 +327,9 @@
             [rowsPerPageOptions]="rowsPerPageOptions"
             [showFirstLastIcon]="false"
             styleClass="dark:paginator-dark dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-          />
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} - {last} de {totalRecords}"
+          ></p-paginator>
         </div>
       </div>
     </div>

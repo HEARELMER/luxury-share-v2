@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-input-form', 
+  selector: 'app-input-form',
   imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './input-form.component.html',
   styleUrls: ['./input-form.component.scss'],
@@ -37,6 +37,7 @@ export class InputFormComponent implements ControlValueAccessor {
   onTouch: any = () => {};
   maxDate = input<Date | null>(null);
   minDate = input<Date | null>(null);
+  decimal = input<boolean>(false);
   inputClasses = signal(`
     ${this.showError() ? 'border-red-500' : 'border-gray-300'}
   `);
@@ -65,7 +66,28 @@ export class InputFormComponent implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+    if (this.decimal() && this.type() === 'text') {
+      const input = event.target as HTMLInputElement;
 
+      // Allow only numbers and a single decimal point
+      input.value = input.value.replace(/[^0-9.]/g, '');
+
+      // Ensure only one decimal point exists
+      const parts = input.value.split('.');
+      if (parts.length > 2) {
+        input.value = parts[0] + '.' + parts[1];
+      }
+
+      // Ensure the value is positive
+      if (Number(input.value) < 0) {
+        input.value = '';
+      }
+
+      // Update the value
+      this.value.set(input.value);
+      this.onChange(input.value);
+      this.validateField();
+    }
     // Si es un campo numérico y positivo
     if (this.isPositive() && this.type() === 'text') {
       input.value = input.value.replace(/[^0-9]/g, '');

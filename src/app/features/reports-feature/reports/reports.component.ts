@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { SelectComponent } from '../../../shared/components/forms/select/select.component';
+import { ButtonModule } from 'primeng/button'; 
 import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -34,8 +33,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
   imports: [
     ButtonModule,
     ReactiveFormsModule,
-    FormsModule,
-    SelectComponent,
+    FormsModule, 
     KpiCardsComponent,
     ToggleSwitchModule,
     ButtonModule,
@@ -80,23 +78,11 @@ export class ReportsComponent {
     customDateStart: [''],
     customDateEnd: [''],
     serviceType: [''],
-    package: [''],
-    seller: [''],
+    packageId: [''],
+    sellerId: [''],
   });
 
   serviceTypeOptions = filtersByServiceType;
-
-  packageOptions = [
-    { label: 'Todos los paquetes', value: '' },
-    { label: 'Paquete A', value: 'package-a' },
-    { label: 'Paquete B', value: 'package-b' },
-  ];
-
-  sellersOptions = [
-    { label: 'Todos los vendedores', value: '' },
-    { label: 'Vendedor A', value: 'seller-a' },
-    { label: 'Vendedor B', value: 'seller-b' },
-  ];
 
   // Signals para el manejo de paquetes
   displayedPackages = signal<any[]>([
@@ -121,7 +107,7 @@ export class ReportsComponent {
           // Transformar los datos al formato esperado por p-select
           const formattedPackages = response.data.packages.map((pkg: any) => ({
             label: pkg.name,
-            value: pkg.oackageId,
+            value: pkg.packageId,
           }));
 
           if (reset) {
@@ -186,7 +172,7 @@ export class ReportsComponent {
         next: (response) => {
           const formattedSellers = response.data.users.map((user: any) => ({
             label: `${user.name} ${user.firstLastname}`,
-            value: user.id,
+            value: user.userId,
           }));
 
           if (reset) {
@@ -235,9 +221,8 @@ export class ReportsComponent {
   }
   ngOnInit() {
     this.updateReport();
-    this.updateReport();
-    this.loadPackages(1, true); // Cargar la primera página de paquetes
-    this.loadSellers(1, true); // Cargar la primera página de vendedores
+    this.loadPackages(1, true);
+    this.loadSellers(1, true);
   }
 
   // Método principal para actualizar el reporte
@@ -257,7 +242,6 @@ export class ReportsComponent {
           });
           this.loading.set(false);
           this.summaryData.set(response?.data?.activeFilters?.period || null);
-          console.log('Datos del reporte:', response);
         },
         error: (error) => {
           this._messageService.add({
@@ -276,14 +260,16 @@ export class ReportsComponent {
   }
 
   // Construir el payload para la API
-  private buildReportPayload() {
+  private buildReportPayload() { 
     const formValues = this.filtersForm.value;
-    const periodConfig = this.configurePeriod(formValues.dateRange || '');
+    const periodConfig = this.configurePeriod(
+      formValues.dateRange || 'this-month'
+    ); 
     return this._filterEmptyValuesPipe.transform({
       period: periodConfig,
       serviceType: formValues.serviceType,
-      packageType: formValues.package,
-      sellerId: formValues.seller,
+      packageId: formValues.packageId,
+      sellerId: formValues.sellerId,
       userId: this._localStorageService.getUserId(),
     });
   }

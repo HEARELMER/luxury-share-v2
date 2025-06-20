@@ -69,12 +69,20 @@ export class SalesSummaryFilesComponent {
             severity: 'success',
             summary: 'Exportación exitosa',
             detail: 'El reporte de ventas se ha descargado correctamente',
+            icon:'pi pi-file-excel'
+          });
+        } else {
+          this._messageService.add({
+            severity: 'warn',
+            summary: 'Error',
+            detail: 'No hay datos disponibles para exportar',
+            icon:'pi pi-file-excel'
           });
         }
+
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Error al generar reporte Excel:', error);
         this._messageService.add({
           severity: 'error',
           summary: 'Error',

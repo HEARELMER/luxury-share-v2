@@ -15,35 +15,40 @@ export class ReportsService {
 
   loadReports(filters: any, forceRefresh: boolean = false): Observable<any> {
     if (!forceRefresh) {
-      const reports = this._localStorageService.getReportsFromCache('reports');
-      const lastUpdate =
-        this._localStorageService.getReportsFromCache('reports').data.metadata
-          .lastGenerated;
-      if (reports) {
+      const cachedReports = this._localStorageService.getReportsFromCache('reports');
+      
+      // Ensure cachedReports and metadata exist before proceeding
+      if (cachedReports && cachedReports.data?.metadata?.lastGenerated) {
+        const lastUpdate = new Date(cachedReports.data.metadata.lastGenerated);
         return of({
-          response: reports,
-          lastUpdate: new Date(lastUpdate),
+          response: cachedReports,
+          lastUpdate: lastUpdate,
         });
       }
     }
-
+  
+    // Fetch reports from the API if no valid cache is found or forceRefresh is true
     return this._httpclient
       .post<any>(`${this._api}reports/data`, filters, {
         withCredentials: true,
       })
       .pipe(
         tap((response) => {
+          // Cache the response for future use
           this._localStorageService.setReportsToCache('reports', response);
         }),
         map((response) => {
+          // Ensure metadata exists in the response before accessing lastGenerated
+          const lastGenerated = response.data?.metadata?.lastGenerated
+            ? new Date(response.data.metadata.lastGenerated)
+            : null;
           return {
             response: response,
-            lastUpdate: new Date(response.data.metadata.lastGenerated),
+            lastUpdate: lastGenerated,
           };
         })
       );
   }
-
   getDataOfSales(filters: any): Observable<any> {
     return this._httpclient.post<any>(`${this._api}reports/sales`, filters, {
       withCredentials: true,

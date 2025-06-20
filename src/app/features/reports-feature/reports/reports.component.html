@@ -71,6 +71,7 @@
             >
               <i class="pi pi-calendar text-indigo-500 text-2xl"></i>
             </div>
+            @if(summaryData()){
             <div>
               <h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">
                 {{ summaryData().label }}
@@ -80,6 +81,7 @@
                 {{ summaryData().to | date : "MMM d, y" }}
               </p>
             </div>
+            }
           </div>
         </div>
         <button
@@ -100,20 +102,21 @@
       <!-- Selector de período -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 pb-3 dark:text-gray-300 flex items-center gap-2"
         >
           <i
             class="pi pi-calendar text-primary-500 dark:text-primary-dark-400"
           ></i>
           Período
         </label>
-        <app-select
+
+        <p-select
           [options]="dateRangeOptions"
           formControlName="dateRange"
           placeholder="Seleccione un período"
           [required]="true"
-          errorType=" "
-        ></app-select>
+          styleClass="w-full"
+        />
         @if(filtersForm.get('dateRange')?.value === 'custom'){
         <div class="grid grid-cols-2 gap-2">
           <div class="flex flex-col gap-1">
@@ -141,18 +144,19 @@
       <!-- Tipo de servicio -->
       <div class="col-span-1 space-y-2">
         <label
-          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 flex pb-3 items-center gap-2"
         >
           <i class="pi pi-tag text-primary-500 dark:text-primary-dark-400"></i>
           Tipo de servicio
         </label>
-        <app-select
-          [required]="true"
-          errorType=" "
+
+        <p-select
           [options]="serviceTypeOptions"
           formControlName="serviceType"
-          placeholder="Todos los tipos"
-        ></app-select>
+          placeholder="Seleccionar tipo de servicio"
+          [required]="true"
+          styleClass="w-full"
+        />
       </div>
 
       <!-- Paquetes -->
@@ -164,9 +168,8 @@
           Paquetes
         </label>
         <p-select
-          [options]="displayedPackages()"
-          [(ngModel)]="filtersForm.value.package"
-          formControlName="package"
+          [options]="displayedPackages()" 
+          formControlName="packageId"
           placeholder="Seleccionar paquete"
           [virtualScroll]="true"
           [virtualScrollItemSize]="38"
@@ -191,8 +194,8 @@
         </label>
         <p-select
           [options]="displayedSellers()"
-          [(ngModel)]="filtersForm.value.seller"
-          formControlName="package"
+          [(ngModel)]="filtersForm.value.sellerId"
+          formControlName="sellerId"
           placeholder="Seleccionar paquete"
           [virtualScroll]="true"
           [virtualScrollItemSize]="38"
@@ -212,7 +215,7 @@
   <!-- SECCIÓN DE RESUMEN DE VENTAS -->
   <section class="dark:bg-gray-800">
     <app-sales-summary-files
-      title="Resumen de ventas para exportar"
+      title="Reporte de ventas para exportar"
     ></app-sales-summary-files>
   </section>
 

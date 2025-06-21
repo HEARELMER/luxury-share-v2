@@ -24,7 +24,7 @@ import { DialogComponent } from '../../../shared/components/ui/dialog/dialog.com
 import { ManifestPdfService } from '../../../core/services/manifests-services/manifest-pdf.service';
 import { InputFormComponent } from '../../../shared/components/forms/input-form/input-form.component';
 import { SelectComponent } from '../../../shared/components/forms/select/select.component';
-import { ButtonComponent } from "../../../shared/components/ui/button/button.component";
+import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 @Component({
   selector: 'app-manifests',
   standalone: true,
@@ -44,8 +44,8 @@ import { ButtonComponent } from "../../../shared/components/ui/button/button.com
     SelectButtonModule,
     InputFormComponent,
     SelectComponent,
-    ButtonComponent
-],
+    ButtonComponent,
+  ],
   templateUrl: './manifests.component.html',
   styleUrl: './manifests.component.scss',
   providers: [MessageService, DialogService],
@@ -289,6 +289,28 @@ export class ManifestsComponent {
           severity: 'error',
           summary: 'Error',
           detail: 'No se pudo descargar el PDF del manifiesto',
+        });
+      },
+    });
+  }
+
+  completeManifest(manifestId: string) {
+    this.loading.set(true);
+    this._manifestService.completeManifest(manifestId).subscribe({
+      next: (res) => {
+        this.loadManifests({ resetPage: true });
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Manifiesto completado exitosamente.',
+        });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo completar el manifiesto.',
         });
       },
     });

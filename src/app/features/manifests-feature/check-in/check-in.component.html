@@ -92,7 +92,7 @@
         class="flex flex-wrap gap-2 items-center justify-between sm:justify-end w-full lg:w-auto"
       >
         <div class="flex gap-2 flex-shrink-0">
-          <app-button
+          <!-- <app-button
             text="Check-In Grupal"
             icon="pi pi-users"
             [disabled]="selectedPassengers.length === 0"
@@ -101,7 +101,7 @@
             pTooltip="Aplicar check-in a todos los seleccionados"
             tooltipPosition="left"
             (click)="applyGroupCheckIn()"
-          />
+          /> -->
           <app-button
             text="Exportar PDF"
             bgColor="bg-primary-500"
@@ -138,7 +138,7 @@
           @for (col of columns; track $index) {
           <th
             pResizableColumn
-            class="text-primary-l-500 cursor-pointer border-y py-2 font-semibold border border-primary-100 bg-primary-l-100"
+            class="text-primary-l-500 cursor-pointer border-y py-2 px-1 font-semibold border border-primary-100 bg-primary-l-100"
           >
             {{ col.header }}
           </th>
@@ -158,7 +158,7 @@
           }"
         >
           @for (col of columns; track $index) {
-          <td class="">
+          <td class="p-1">
             @if (col.field == "#") {
             <p-tableCheckbox [value]="participant"></p-tableCheckbox>
             } @else if (col.field=="check-in") {

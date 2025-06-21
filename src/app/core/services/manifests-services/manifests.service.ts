@@ -89,11 +89,23 @@ export class ManifestsService {
   removeParticipant(
     manifestId: string,
     participantId: string,
+    saleId: string,
     updatedBy?: string
   ): Observable<any> {
     return this._http.patch(
       `${this._api}manifests/${manifestId}/participants/${participantId}`,
-      { updatedBy } , {withCredentials: true}
+      { updatedBy, saleId },
+      { withCredentials: true }
+    );
+  }
+
+  completeManifest(manifestId: string): Observable<any> {
+    return this._http.patch(
+      `${this._api}manifests/${manifestId}`,
+      {},
+      {
+        withCredentials: true,
+      }
     );
   }
 }

@@ -1,10 +1,10 @@
 export const MANIFEST_TABLE_COLS = [
   { field: 'title', header: 'Servicio' },
-  { field: 'date', header: 'Fecha/Hora' },
+  { field: 'departureDate', header: 'Fecha de salida' },
   { field: 'description', header: 'Descripción' },
   { field: 'serviceType', header: 'Tipo' },
   { field: 'status', header: 'Estado' },
-  { field: 'checkedInCount', header: 'Clientes ✅' },
+  { field: 'checkedInCount', header: 'Nº Clientes ' },
   { field: 'registeredBy', header: 'Registrado por' },
   { field: 'actions', header: 'Acciones' },
 ];

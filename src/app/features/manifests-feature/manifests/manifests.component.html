@@ -154,7 +154,7 @@
               [value]="getEstadoLabel(manifest[col.field])"
               [severity]="getEstadoSeverity(manifest[col.field])"
             ></p-tag>
-            } @else if (col.field === "date") {
+            } @else if (col.field === "departureDate") {
             <span class="dark:text-gray-300">{{
               manifest[col.field] | date : "dd-MM-yyyy hh:mm a"
             }}</span>
@@ -232,6 +232,18 @@
               >
                 <i class="pi pi-file-pdf"></i>
               </button>
+              @if (manifest.status=="PENDIENTE") {
+              <button
+                class="button-table-actions"
+                [pTooltip]="'Completar Manifiesto'"
+                tooltipPosition="left"
+                [showDelay]="300"
+                (click)="completeManifest(manifest.manifestId)"
+              >
+                <i class="pi pi-check"></i>
+              </button>
+
+              }
             </div>
             } @else {
             <span class="dark:text-gray-300">{{ manifest[col.field] }}</span>

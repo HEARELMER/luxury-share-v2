@@ -129,6 +129,7 @@ export class CheckInComponent {
         {
           participantId: participant.participantId,
           checkInStatus: participant.checkInStatus,
+          saleId: participant.saleId,
         },
       ],
       updatedBy: this._localStorageService.getUserId(),
@@ -191,7 +192,11 @@ export class CheckInComponent {
     ref.onClose.subscribe((result: boolean) => {
       if (result) {
         this.manifestService
-          .removeParticipant(this.manifestId(), participant.participantId)
+          .removeParticipant(
+            this.manifestId(),
+            participant.participantId,
+            participant.saleId
+          )
           .subscribe({
             next: (res) => {
               this.messageService.add({

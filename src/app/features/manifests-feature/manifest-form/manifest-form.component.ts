@@ -264,4 +264,6 @@ export class ManifestFormComponent {
   closeDialog(): void {
     this._ref.close();
   }
+
+  
 }

@@ -145,7 +145,7 @@ export class Step2SaleFormComponent {
     discount: [0],
     observations: [''],
     paymentMethod: ['', [Validators.required]],
-    status: ['COMPLETADO'],
+    status: ['PAGADO'],
   });
 
   serviceColumns: ColumnDef[] = SERVICE_COLUMNS;
@@ -339,7 +339,7 @@ export class Step2SaleFormComponent {
       ...formFormated,
       details,
       dateSale: new Date().toISOString(),
-      status: 'PENDIENTE',
+      status: 'RESERVADO',
       clientId: this.clientId(),
     };
     this._salesService.createSale(saleData).subscribe({

@@ -80,23 +80,7 @@ export class Step2SaleFormComponent {
       this.loadItems();
     });
   }
-  // Estados
-  readonly salesDataOfEdit = model<any>(null);
-  ngOnInit() {
-    if (this.salesDataOfEdit()) {
-      this.formSale.patchValue({
-        clientId: this.salesDataOfEdit().client.clientId,
-        dateSale: this.formatDateForForm(this.salesDataOfEdit().dateSale),
-        departureDate: this.formatDateForForm(
-          this.salesDataOfEdit().departureDate
-        ),
-        registeredBy: this._localstorageService.getUserId(),
-        discount: this.salesDataOfEdit().discount || 0,
-        observations: this.salesDataOfEdit().observations || '',
-        paymentMethod: this.salesDataOfEdit().paymentMethod || '',
-      });
-    }
-  }
+
   readonly statusOfSaleCreated = output<SaleCreationResult>();
   readonly submitForm = output<void>();
   currentClientModel = model.required<Client | null>();
@@ -142,7 +126,6 @@ export class Step2SaleFormComponent {
     dateSale: [''],
     departureDate: [''],
     registeredBy: [this._localstorageService.getUserId()],
-    discount: [0],
     observations: [''],
     paymentMethod: ['', [Validators.required]],
     status: ['PAGADO'],
@@ -284,6 +267,7 @@ export class Step2SaleFormComponent {
       ...formFormated,
       details,
       dateSale: new Date().toISOString(),
+      discount: Number(this.discount()),
     };
     this._salesService.createSale(saleData).subscribe({
       next: (response) => {
@@ -319,8 +303,6 @@ export class Step2SaleFormComponent {
     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     // Verificar si hay al menos 2 días de anticipación
     if (daysDiff < 2) {
-      console.log(departureDate);
-      console.log(daysDiff);
       this.statusOfSaleCreated.emit({
         success: false,
         message:
@@ -341,6 +323,7 @@ export class Step2SaleFormComponent {
       dateSale: new Date().toISOString(),
       status: 'RESERVADO',
       clientId: this.clientId(),
+      discount: Number(this.discount()),
     };
     this._salesService.createSale(saleData).subscribe({
       next: (response) => {

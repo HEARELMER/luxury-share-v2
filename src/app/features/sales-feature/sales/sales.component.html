@@ -149,7 +149,7 @@
           @for (col of columns; track $index) {
           <td class="dark:border-gray-700">
             @if (col.field == "status") { @switch (sale[col.field]) { @case
-            ('PENDIENTE') {
+            ('RESERVADO') {
             <p-tag
               styleClass="bg-orange-100 text-orange-500 dark:bg-orange-900/30 dark:text-orange-400"
               value="Reservado"

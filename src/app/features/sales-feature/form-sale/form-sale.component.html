@@ -42,8 +42,7 @@
               <app-step2-sale-form
                 (submitForm)="confirmSale(activateCallback)"
                 (statusOfSaleCreated)="handleSaleCreationResult($event)"
-                [(currentClientModel)]="currentClient"
-                [(salesDataOfEdit)]="dataOfSale"
+                [(currentClientModel)]="currentClient" 
               />
             </ng-template>
           </p-step-panel>

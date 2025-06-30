@@ -41,35 +41,9 @@ export class FormSaleComponent {
   private readonly _filterEmmptyValues = inject(FilterEmptyValuesPipe);
   private readonly _pdfSaleService = inject(SalePdfService);
   private readonly _localStorageService = inject(LocalstorageService);
-  private readonly _messageService = inject(MessageService);
-  private readonly _salesService = inject(SalesService);
-  dataOfSale = signal<any>(null);
-  codeSale = model<string | null>(null);
-  ngOnInit() {
-    if (this.codeSale()) {
-      this._salesService
-        .getSaleByCodeSale(this.codeSale() as string)
-        .subscribe({
-          next: (sale) => { 
-            this.dataOfSale.set(sale);
-            this.clientForm.patchValue(this.dataOfSale().client);
-            this.currentClient.set(this.dataOfSale().client);
-            this.stepsCompleted.update((steps) => ({
-              ...steps,
-              1: true,
-              2: true,
-            }));  
-          },
-          error: (error) => {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: error.error.message,
-            });
-          },
-        });
-    }
-  }
+  private readonly _messageService = inject(MessageService); 
+  dataOfSale = signal<any>(null); 
+ 
   // Signals,variables constantes y outputs
   saleCreationResult = signal<SaleCreationResult | null>(null);
   currentClient = signal<any>(null);

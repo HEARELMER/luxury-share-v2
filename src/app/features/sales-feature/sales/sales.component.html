@@ -296,7 +296,13 @@
 <app-form-sale
   [(showModal)]="showModalAddSale"
   (refreshData)="handleRefreshData()"
-  [(codeSale)]="codeSaleSelected" 
 />
-}
+} 
+@if(showModalEditSale()) {
+<app-edit-form-sale
+  [(showModal)]="showModalEditSale"
+  (refreshData)="handleRefreshData()"
+  [saleData]="saleSelected()"
+/>}
+
 <p-toast [baseZIndex]="10000" [life]="2000" />

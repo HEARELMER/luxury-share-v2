@@ -30,8 +30,12 @@
     </div>
     <p class="text-2xl font-bold pt-2">
       <ng-container [ngSwitch]="metric.type">
-        <span *ngSwitchCase="'currency'">S/. {{ metric.value }}</span>
-        <span *ngSwitchCase="'percentage'">{{ metric.value }}%</span>
+        <span *ngSwitchCase="'currency'"
+          >S/. {{ metric.value | number : "1.2-2" }}</span
+        >
+        <span *ngSwitchCase="'percentage'"
+          >{{ metric.value | number : "1.2-2" }}%</span
+        >
         <span *ngSwitchCase="'number'">{{ metric.value }}</span>
         <span *ngSwitchCase="'text'">{{ metric.value }}</span>
       </ng-container>
@@ -44,7 +48,10 @@
       class="flex items-center text-xs text-green-500 pt-2"
     >
       <i class="pi pi-arrow-up pr-1"></i>
-      <span>{{ metric.trend.value }}% {{ metric.trend.label }}</span>
+      <span
+        >{{ metric.trend.value | number : "1.2-2" }}%
+        {{ metric.trend.label }}</span
+      >
     </div>
   </div>
   }

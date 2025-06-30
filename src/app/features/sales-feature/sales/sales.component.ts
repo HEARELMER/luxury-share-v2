@@ -26,6 +26,7 @@ import { ViewUserInfoComponent } from '../../../shared/components/layout/view-us
 import { Toast } from 'primeng/toast';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { ButtonModule } from 'primeng/button';
+import { EditFormSaleComponent } from "../edit-form-sale/edit-form-sale.component";
 @Component({
   selector: 'app-sales',
   imports: [
@@ -49,7 +50,8 @@ import { ButtonModule } from 'primeng/button';
     SelectComponent,
     Toast,
     ButtonModule,
-  ],
+    EditFormSaleComponent
+],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
   providers: [DialogService],
@@ -65,11 +67,12 @@ export class SalesComponent {
   }
   // signlas
   showModalAddSale = signal<boolean>(false);
+  showModalEditSale = signal<boolean>(false);
   loading = signal<boolean>(false);
   filterSaleByCodeSale = signal<string>('');
   sales = signal<any[]>([]);
   filters = signal<{ key: string; value: string }[]>([]);
-  codeSaleSelected = signal<any>(null);
+  saleSelected = signal<any>(null);
 
   salesStatusFilters = SALE_STATUS_FILTERS;
   // Configuración de tabla
@@ -274,7 +277,7 @@ export class SalesComponent {
       });
       return;
     }
-    this.codeSaleSelected.set(sale.codeSale);
-    this.showModalAddSale.set(true);
+    this.saleSelected.set(sale);
+    this.showModalEditSale.set(true);
   }
 }

@@ -1,1 +1,87 @@
-<p>edit-form-sale works!</p>
+<app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
+  <main
+    class="flex flex-col h-auto max-h-[90vh] overflow-y-auto overflow-x-hidden w-[90vw] max-w-7xl mx-auto"
+  >
+    <header class="flex w-full justify-between items-center">
+      <h2 class="text-lg font-semibold text-primary-500">Modificar Venta</h2>
+      <button
+        class="hover:bg-primary-100 hover:rotate-90 text-primary-500 duration-300 ease-in-out w-10 h-10 flex items-center justify-center rounded-full"
+        (click)="closeModal()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </header>
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-3">
+      <h1 class="col-span-2 font-semibold">Datos del cliente</h1>
+      <h1 class="col-span-2 font-semibold">Datos de la venta</h1>
+      <form
+        [formGroup]="clientForm"
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow col-span-2"
+      >
+        <app-select
+          label="Tipo de Documento"
+          [required]="true"
+          [options]="documentTypes"
+          class="w-full"
+          formControlName="typeDocument"
+        />
+
+        <div class="flex items-end gap-2">
+          <app-input-form
+            [required]="true"
+            label="N° Documento"
+            [isPositive]="true"
+            class="w-full"
+            formControlName="numberDocument"
+          />
+        </div>
+        <app-input-form
+          [required]="true"
+          label="Nombres"
+          class="w-full"
+          formControlName="name"
+        />
+        <app-input-form
+          [required]="true"
+          label="Primer Apellido"
+          class="w-full"
+          formControlName="firstLastname"
+        />
+        <app-input-form
+          [required]="true"
+          label="Segundo Apellido"
+          class="w-full"
+          formControlName="secondLastname"
+        />
+        <app-input-form
+          label="Fecha de nacimiento"
+          class="w-full"
+          formControlName="birthDate"
+          type="date"
+          [required]="true"
+        />
+        <app-input-form
+          label="Correo Electrónico"
+          class="w-full"
+          type="email"
+          formControlName="email"
+        />
+        <app-input-form
+          [required]="true"
+          label="Número de Celular"
+          class="w-full"
+          formControlName="phone"
+          [isPositive]="true"
+          [maxLength]="9"
+        />
+        <app-input-form
+          label="Procedencia"
+          class="w-full"
+          formControlName="nationality"
+          placeholder="Lugar de procedencia"
+        />
+      </form>
+       {{saleData() | json}}
+    </section>
+  </main>
+</app-modal>

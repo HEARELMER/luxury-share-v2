@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button'; 
+import { ButtonModule } from 'primeng/button';
 import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -33,7 +33,7 @@ import { LocalstorageService } from '../../../core/services/localstorage-service
   imports: [
     ButtonModule,
     ReactiveFormsModule,
-    FormsModule, 
+    FormsModule,
     KpiCardsComponent,
     ToggleSwitchModule,
     ButtonModule,
@@ -80,6 +80,7 @@ export class ReportsComponent {
     serviceType: [''],
     packageId: [''],
     sellerId: [''],
+    status: ['COMPLETADO'],
   });
 
   serviceTypeOptions = filtersByServiceType;
@@ -219,6 +220,7 @@ export class ReportsComponent {
     );
     return activeFilters.length;
   }
+  
   ngOnInit() {
     this.updateReport();
     this.loadPackages(1, true);
@@ -260,17 +262,18 @@ export class ReportsComponent {
   }
 
   // Construir el payload para la API
-  private buildReportPayload() { 
+  private buildReportPayload() {
     const formValues = this.filtersForm.value;
     const periodConfig = this.configurePeriod(
       formValues.dateRange || 'this-month'
-    ); 
+    );
     return this._filterEmptyValuesPipe.transform({
       period: periodConfig,
       serviceType: formValues.serviceType,
       packageId: formValues.packageId,
       sellerId: formValues.sellerId,
       userId: this._localStorageService.getUserId(),
+      status: formValues.status || 'COMPLETADO',
     });
   }
 

@@ -22,7 +22,6 @@ import { UserService } from '../../../core/services/users-services/user.service'
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { RolesService } from '../../../core/services/roles-services/roles.service';
-import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { ButtonModule } from 'primeng/button';
 import { VerifiedRolesService } from '../../../core/services/auth-services/verified-roles.service';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
@@ -35,7 +34,7 @@ import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
     InputFormComponent,
     ButtonComponent,
     ModalComponent,
-    ToastModule,
+ 
     ButtonModule,
     CapitalizePipe,
   ],
@@ -46,8 +45,7 @@ export class AddUserComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _userService = inject(UserService);
   private readonly _rolesService = inject(RolesService);
-  private readonly _messageService = inject(MessageService);
-  private readonly _localStorageService = inject(LocalstorageService);
+  private readonly _messageService = inject(MessageService); 
   private readonly _verifiedRoles = inject(VerifiedRolesService);
   private readonly _filteredEmpptyValues = inject(FilterEmptyValuesPipe);
   rolesOptions = signal<any[]>([]);

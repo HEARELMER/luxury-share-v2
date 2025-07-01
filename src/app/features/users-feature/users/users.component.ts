@@ -18,6 +18,7 @@ import { InputFormComponent } from '../../../shared/components/forms/input-form/
 import { TagModule } from 'primeng/tag';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { VerifiedRolesService } from '../../../core/services/auth-services/verified-roles.service';
+import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-users',
   imports: [
@@ -37,6 +38,7 @@ import { VerifiedRolesService } from '../../../core/services/auth-services/verif
     InputFormComponent,
     TagModule,
     AddUserComponent,
+    ToastModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',

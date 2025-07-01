@@ -22,7 +22,7 @@
             icon="pi pi-refresh"
             size="small"
             class="border-2 shadow-sm rounded-lg border-slate-100 dark:border-gray-700 hover:bg-primary-400 dark:hover:bg-primary-dark-400 hover:shadow-md transition-all duration-200"
-            [label]="'Actualizar Reporte'"
+            [label]="'Actualizar resumen'"
             pTooltip="Actualizar datos"
             tooltipPosition="bottom"
             [disabled]="loading()"
@@ -168,7 +168,7 @@
           Paquetes
         </label>
         <p-select
-          [options]="displayedPackages()" 
+          [options]="displayedPackages()"
           formControlName="packageId"
           placeholder="Seleccionar paquete"
           [virtualScroll]="true"

@@ -223,21 +223,28 @@
             </div>
 
             <!-- Fechas calculadas -->
-            <div class="pt-2 text-sm text-gray-600">
+            <div class="pt-2  text-sm text-gray-600">
               <p>
-                <strong>Inicio:</strong>
+                <strong>Fecha inicio:</strong>
                 <!-- {{ item.startDate | date : "dd-MM-yyyy  hh:mm a" }} -->
                 @let startDate = item.startDate | date:'yyyy-MM-dd HH:mm';
                 <app-input-form
                   [value]="startDate ?? ''"
                   type="datetime-local"
+                  (valueChange)="updateStartDate($index, $event)"
+                  [required]="true"
                 />
               </p>
               <p>
-                <strong>Fin:</strong>
+                <strong>Fecha fin:</strong>
                 <!-- {{ item.endDate | date : "dd-MM-yyyy  hh:mm a" }} -->
                 @let endDate = item.endDate | date:'yyyy-MM-dd HH:mm';
-                <app-input-form [value]="endDate ?? ''" type="datetime-local" />
+                <app-input-form
+                  [value]="endDate ?? ''"
+                  type="datetime-local"
+                  (valueChange)="updateEndDate($index, $event)"
+                  [required]="true"
+                />
               </p>
             </div>
           </div>

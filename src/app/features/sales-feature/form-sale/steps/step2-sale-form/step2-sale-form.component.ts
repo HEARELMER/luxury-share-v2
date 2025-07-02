@@ -254,7 +254,7 @@ export class Step2SaleFormComponent {
 
   // createSale
   createSale() {
-    this.loading.set(true); 
+    this.loading.set(true);
     const details = this.formatSaleDetails(this.calculatedItems());
     this.formSale.patchValue({
       clientId: this.clientId(),
@@ -351,7 +351,6 @@ export class Step2SaleFormComponent {
 
   private formatSaleDetails(items: SaleItem[]): any[] {
     return items.map((item) => {
-      console.log('item', item);
       const itemDetail = {
         serviceId: item.serviceId,
         packageId: item.packageId,
@@ -369,15 +368,25 @@ export class Step2SaleFormComponent {
   }
 
   calculatedItems = computed(() => {
-    let lastEndDate: Date | null = null; // Variable para rastrear el endDate del último servicio
+    let lastEndDate: Date | null = null;
 
     return this.selectedItems().map((item: any, index: number) => {
-      const formDepartureDate = this.formSale.value.departureDate; // Obtener departureDate del formulario
-      if (!formDepartureDate || !item.duration) {
-        return { ...item, startDate: null, endDate: null }; // Retornar con fechas nulas si faltan datos
+      const formDepartureDate = this.formSale.value.departureDate;
+
+      // Si el item ya tiene fechas modificadas manualmente, usarlas
+      if (item.startDate && item.endDate) {
+        return {
+          ...item,
+          startDate: item.startDate,
+          endDate: item.endDate,
+        };
       }
 
-      // Determinar el startDate
+      if (!formDepartureDate || !item.duration) {
+        return { ...item, startDate: null, endDate: null };
+      }
+
+      // Lógica original para cálculo automático
       const startDate = lastEndDate
         ? new Date(lastEndDate)
         : new Date(formDepartureDate);
@@ -386,16 +395,13 @@ export class Step2SaleFormComponent {
         return { ...item, startDate: null, endDate: null };
       }
 
-      // Asegurarse de que la duración sea un número válido
       const duration = Number(item.duration);
       if (isNaN(duration)) {
         return { ...item, startDate: startDate, endDate: null };
       }
 
-      // Calcular endDate sumando la duración en horas
       const endDate = new Date(startDate.getTime());
-      endDate.setHours(endDate.getHours() + duration); // Sumar la duración en horas
-      // Actualizar lastEndDate para el siguiente servicio
+      endDate.setHours(endDate.getHours() + duration);
       lastEndDate = endDate;
 
       return {
@@ -405,4 +411,40 @@ export class Step2SaleFormComponent {
       };
     });
   });
+
+  updateStartDate(index: number, event: any): void {
+    this.selectedItems.update((items: any) => {
+      const startDate = new Date(event);
+      if (isNaN(startDate.getTime())) {
+        return items;
+      }
+
+      // Actualizar startDate directamente en el item
+      items[index].startDate = startDate.toISOString();
+
+      // Calcular automáticamente endDate si existe duration
+      if (items[index].duration) {
+        const duration = Number(items[index].duration);
+        if (!isNaN(duration)) {
+          const endDate = new Date(startDate.getTime());
+          endDate.setHours(endDate.getHours() + duration);
+          items[index].endDate = endDate.toISOString();
+        }
+      }
+
+      return [...items]; // Esto hace que el signal se actualice
+    });
+  }
+
+  updateEndDate(index: number, event: any): void {
+    this.selectedItems.update((items: any) => {
+      const endDate = new Date(event);
+      if (isNaN(endDate.getTime())) {
+        return items;
+      }
+
+      items[index].endDate = endDate.toISOString();
+      return [...items]; // Esto hace que el signal se actualice
+    });
+  }
 }

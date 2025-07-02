@@ -50,7 +50,14 @@
           }
         ]"
         [placeholder]="'Selecciona el estado'"
-    
+      />
+
+      <app-input-form
+        label="Duración aprox (en horas)"
+        type="text"
+        formControlName="duration"
+        [required]="true"
+        [isPositive]="true"
       />
     </div>
 

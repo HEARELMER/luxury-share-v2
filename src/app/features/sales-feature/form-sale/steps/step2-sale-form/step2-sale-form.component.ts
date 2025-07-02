@@ -240,7 +240,6 @@ export class Step2SaleFormComponent {
   onDateChange(event: any): void {
     const value = event;
     const departureDate = value ? new Date(value) : undefined;
-    this.loadItems(departureDate);
   }
 
   // Metodo para cambiar de página
@@ -255,8 +254,8 @@ export class Step2SaleFormComponent {
 
   // createSale
   createSale() {
-    this.loading.set(true);
-    const details = this.formatSaleDetails(this.selectedItems());
+    this.loading.set(true); 
+    const details = this.formatSaleDetails(this.calculatedItems());
     this.formSale.patchValue({
       clientId: this.clientId(),
     });
@@ -312,7 +311,7 @@ export class Step2SaleFormComponent {
       this.loading.set(false);
       return;
     }
-    const details = this.formatSaleDetails(this.selectedItems());
+    const details = this.formatSaleDetails(this.calculatedItems());
 
     const formFormated = this._filterEmptyValuesPipe.transform(
       this.formSale.value
@@ -352,12 +351,16 @@ export class Step2SaleFormComponent {
 
   private formatSaleDetails(items: SaleItem[]): any[] {
     return items.map((item) => {
-      // Primero crear el objeto con todas las propiedades
+      console.log('item', item);
       const itemDetail = {
         serviceId: item.serviceId,
         packageId: item.packageId,
         quantity: Number(item.quantity),
         unitPrice: Number(item.priceUnit),
+        startDate: item.startDate
+          ? new Date(item.startDate).toISOString()
+          : null,
+        endDate: item.endDate ? new Date(item.endDate).toISOString() : null,
       };
 
       // Luego filtrar propiedades vacías
@@ -365,23 +368,41 @@ export class Step2SaleFormComponent {
     });
   }
 
-  // Utility function to format dates without timezone info
-  private formatDateForForm(date: string | Date): string {
-    if (!date) return '';
+  calculatedItems = computed(() => {
+    let lastEndDate: Date | null = null; // Variable para rastrear el endDate del último servicio
 
-    const d = new Date(date);
+    return this.selectedItems().map((item: any, index: number) => {
+      const formDepartureDate = this.formSale.value.departureDate; // Obtener departureDate del formulario
+      if (!formDepartureDate || !item.duration) {
+        return { ...item, startDate: null, endDate: null }; // Retornar con fechas nulas si faltan datos
+      }
 
-    // Format as YYYY-MM-DDTHH:MM
-    return (
-      d.getFullYear() +
-      '-' +
-      ('0' + (d.getMonth() + 1)).slice(-2) +
-      '-' +
-      ('0' + d.getDate()).slice(-2) +
-      'T' +
-      ('0' + d.getHours()).slice(-2) +
-      ':' +
-      ('0' + d.getMinutes()).slice(-2)
-    );
-  }
+      // Determinar el startDate
+      const startDate = lastEndDate
+        ? new Date(lastEndDate)
+        : new Date(formDepartureDate);
+
+      if (isNaN(startDate.getTime())) {
+        return { ...item, startDate: null, endDate: null };
+      }
+
+      // Asegurarse de que la duración sea un número válido
+      const duration = Number(item.duration);
+      if (isNaN(duration)) {
+        return { ...item, startDate: startDate, endDate: null };
+      }
+
+      // Calcular endDate sumando la duración en horas
+      const endDate = new Date(startDate.getTime());
+      endDate.setHours(endDate.getHours() + duration); // Sumar la duración en horas
+      // Actualizar lastEndDate para el siguiente servicio
+      lastEndDate = endDate;
+
+      return {
+        ...item,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      };
+    });
+  });
 }

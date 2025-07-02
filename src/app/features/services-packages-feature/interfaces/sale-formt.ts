@@ -19,4 +19,6 @@ export interface SaleItem {
   status?: boolean;
   serviceId?: string;
   packageId?: string;
+  startDate?: Date;
+  endDate?: Date;
 }

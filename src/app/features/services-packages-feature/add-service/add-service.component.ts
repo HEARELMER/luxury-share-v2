@@ -61,6 +61,7 @@ export class AddServiceComponent {
     status: [true],
     registeredBy: ['', Validators.minLength(8)],
     serviceId: [''],
+    duration: [24, Validators.required],
   });
 
   constructor() {
@@ -84,6 +85,7 @@ export class AddServiceComponent {
       type: formValues.type?.trim(),
       status: Boolean(formValues.status),
       registeredBy: this._localStorageService.getUserId(),
+      duration: Number(formValues.duration),
     });
   }
 

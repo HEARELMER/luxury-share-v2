@@ -1,7 +1,6 @@
 export const environmentDev = {
   // apiUrl: 'http://localhost:8080/api/v1/',
-  apiUrl:
-    'https://luxury-service-v2-908000326356.southamerica-east1.run.app/api/v1/',
+  apiUrl:'https://luxury-service-v2-908000326356.southamerica-east1.run.app/api/v1/',
   // apiUrl: 'https://luxury-service-v2-815357059473.southamerica-east1.run.app/api/v1/', solo para emergencias
   authStateKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   authStateValue:

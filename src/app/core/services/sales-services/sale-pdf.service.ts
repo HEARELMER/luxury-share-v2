@@ -25,6 +25,24 @@ export class SalePdfService {
         item.quantity,
         `S/ ${Number(item.unitPrice).toFixed(2)}`,
         `S/ ${(Number(item.quantity) * Number(item.unitPrice)).toFixed(2)}`,
+         item.startDate
+        ? new Date(item.startDate).toLocaleDateString('es-PE', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+        : 'No especificado',
+        item.endDate
+          ? new Date(item.endDate).toLocaleDateString('es-PE', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : 'No especificado',
       ]) || [];
 
     const reportData = {
@@ -66,7 +84,7 @@ export class SalePdfService {
           title: 'Detalle de Servicios',
           type: 'table',
           tableData: {
-            headers: ['Descripción', 'Cantidad', 'Precio Unitario', 'Total'],
+             headers: ['Descripción', 'Cantidad', 'Precio Unitario', 'Total', 'Fecha Inicio', 'Fecha Fin'],
             rows: tableItems,
           },
         },

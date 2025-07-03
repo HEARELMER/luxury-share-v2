@@ -1,6 +1,6 @@
 <app-modal [(isOpen)]="showModal" [closeOnBackdrop]="false">
   <main
-    class="flex flex-col h-auto max-h-[90vh] overflow-y-auto overflow-x-hidden w-[90vw] max-w-7xl mx-auto"
+    class="flex flex-col h-auto max-h-[90vh] overflow-y-auto overflow-x-hidden w-[90vw] max-w-[85rem] mx-auto"
   >
     <header class="flex w-full justify-between items-center">
       <h2 class="text-lg font-semibold text-primary-500">Modificar Venta</h2>
@@ -12,21 +12,20 @@
       </button>
     </header>
     <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-3">
-      <h1 class="col-span-2 font-semibold">Datos del cliente</h1>
-      <h1 class="col-span-2 font-semibold">Datos de la venta</h1>
-      <form
-        [formGroup]="clientForm"
-        class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow col-span-2"
-      >
-        <app-select
-          label="Tipo de Documento"
-          [required]="true"
-          [options]="documentTypes"
-          class="w-full"
-          formControlName="typeDocument"
-        />
+      <div class="col-span-2">
+        <h1 class="col-span-2 font-semibold">Datos del cliente</h1>
+        <form
+          [formGroup]="clientForm"
+          class="grid grid-cols-1 md:grid-cols-2 h-auto gap-2 col-span-2"
+        >
+          <app-select
+            label="Tipo de Documento"
+            [required]="true"
+            [options]="documentTypes"
+            class="w-full"
+            formControlName="typeDocument"
+          />
 
-        <div class="flex items-end gap-2">
           <app-input-form
             [required]="true"
             label="N° Documento"
@@ -34,54 +33,302 @@
             class="w-full"
             formControlName="numberDocument"
           />
+
+          <app-input-form
+            [required]="true"
+            label="Nombres"
+            class="w-full"
+            formControlName="name"
+          />
+          <app-input-form
+            [required]="true"
+            label="Primer Apellido"
+            class="w-full"
+            formControlName="firstLastname"
+          />
+          <app-input-form
+            [required]="true"
+            label="Segundo Apellido"
+            class="w-full"
+            formControlName="secondLastname"
+          />
+          <app-input-form
+            label="Fecha de nacimiento"
+            class="w-full"
+            formControlName="birthDate"
+            type="date"
+            [required]="true"
+          />
+          <app-input-form
+            label="Correo Electrónico"
+            class="w-full"
+            type="email"
+            formControlName="email"
+          />
+          <app-input-form
+            [required]="true"
+            label="Número de Celular"
+            class="w-full"
+            formControlName="phone"
+            [isPositive]="true"
+            [maxLength]="9"
+          />
+          <app-input-form
+            label="Procedencia"
+            class="w-full"
+            formControlName="nationality"
+            placeholder="Lugar de procedencia"
+          />
+        </form>
+      </div>
+
+      <!-- Detalles de la venta -->
+      <div class="col-span-2">
+        <div class="space-y-6">
+          <!-- Header con título y estado -->
+
+          <h1 class="col-span-2 font-semibold">Datos de la venta</h1>
+          <div
+            class="flex items-center justify-between pb-4 border-b border-gray-200"
+          >
+            <span
+              class="px-3 py-1 rounded-full text-sm font-medium"
+              [ngClass]="{
+                'bg-green-100 text-green-700': saleData()?.status === 'PAGADO',
+                'bg-yellow-100 text-yellow-700':
+                  saleData()?.status === 'RESERVADO',
+                'bg-gray-100 text-gray-700': saleData()?.status === 'PENDIENTE',
+                'bg-red-100 text-red-700': saleData()?.status === 'CANCELADO',
+                'bg-blue-100 text-blue-700': saleData()?.status === 'COMPLETADO'
+              }"
+            >
+              {{ saleData()?.status }}
+            </span>
+          </div>
+
+          <!-- Información general en grid -->
+          <div class="grid grid-cols-3 gap-6 p-4 border-b border-gray-100">
+            <div class="space-y-4">
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Código
+                </p>
+                <p class="font-semibold text-gray-900 text-lg">
+                  {{ saleData()?.codeSale }}
+                </p>
+              </div>
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Fecha Venta
+                </p>
+                <p class="font-medium text-gray-700">
+                  {{ saleData()?.dateSale | date : "dd/MM/yyyy HH:mm" }}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Fecha Salida
+                </p>
+                <p class="font-medium text-gray-700">
+                  {{ saleData()?.departureDate | date : "dd/MM/yyyy HH:mm" }}
+                </p>
+              </div>
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Forma de Pago
+                </p>
+                <p class="font-medium text-gray-700 capitalize">
+                  {{ saleData()?.paymentMethod }}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Sucursal
+                </p>
+                <p class="font-medium text-gray-700">
+                  {{ saleData()?.branch?.address }}
+                </p>
+              </div>
+              <div>
+                <p
+                  class="text-xs text-gray-500 capitalize tracking-wide font-medium"
+                >
+                  Registrado por
+                </p>
+                <p class="font-medium text-gray-700 text-sm">
+                  {{ saleData()?.registeredByUser?.name }}
+                  {{ saleData()?.registeredByUser?.firstLastname }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de servicios -->
+          <div class="p-4">
+            <div
+              class="flex items-center justify-between mb-4 pb-2 border-b border-gray-100"
+            >
+              <h4
+                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+              >
+                <i class="pi pi-list text-primary-500"></i>
+                Servicios Contratados
+              </h4>
+              <span class="text-sm text-gray-500">
+                {{ saleData()?.details?.length }} servicio(s)
+              </span>
+            </div>
+
+            <div class="flex flex-col gap-2 py-2 max-h-72 overflow-y-auto">
+              @for (detail of saleData()?.details; track detail.detailSaleId) {
+              <div
+                class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center"
+                    >
+                      <i class="pi pi-star-fill text-primary-600 text-xs"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold text-gray-900">
+                        {{ detail.service?.name || detail.package?.name }}
+                      </h5>
+                      <p class="text-xs text-gray-500">
+                        {{ detail.service ? "Servicio" : "Paquete" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-lg font-bold text-primary-600">
+                      S/ {{ detail.unitPrice }}
+                    </p>
+                    <p class="text-xs text-gray-500">por unidad</p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div class="space-y-1">
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Cantidad:</span>
+                      <span class="font-semibold">{{ detail.quantity }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Subtotal:</span>
+                      <span class="font-semibold text-green-600"
+                        >S/ {{ detail.subtotal }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Inicio:</span>
+                      <span class="font-medium text-blue-600">
+                        {{ detail.startDate | date : "dd/MM/yyyy HH:mm" }}
+                      </span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Fin:</span>
+                      <span class="font-medium text-red-600">
+                        {{ detail.endDate | date : "dd/MM/yyyy HH:mm" }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Resumen final -->
+          <div class="pt-4 border-t border-gray-200">
+            <div class="flex justify-between items-center">
+              <div class="space-y-2">
+                <div class="flex items-center gap-6 text-sm">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-calculator text-gray-400 text-xs"></i>
+                    <span class="text-gray-600">Subtotal:</span>
+                    <span class="font-semibold"
+                      >S/ {{ saleData()?.total }}</span
+                    >
+                  </div>
+                  @if (saleData()?.discount && saleData()?.discount !== '0.00')
+                  {
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-percentage text-red-400 text-xs"></i>
+                    <span class="text-gray-600">Descuento:</span>
+                    <span class="font-semibold text-red-600"
+                      >- S/ {{ saleData()?.discount }}</span
+                    >
+                  </div>
+                  }
+                </div>
+
+                @if (saleData()?.observations) {
+                <div
+                  class="pt-3 p-3 bg-amber-50 border-l-4 border-amber-400 rounded-r-md"
+                >
+                  <div class="flex items-center gap-2 mb-1">
+                    <i class="pi pi-info-circle text-amber-600 text-sm"></i>
+                    <span class="text-sm font-medium text-amber-800"
+                      >Observaciones</span
+                    >
+                  </div>
+                  <p class="text-sm text-amber-700">
+                    {{ saleData()?.observations }}
+                  </p>
+                </div>
+                }
+              </div>
+
+              <div class="text-right">
+                <p class="text-sm text-gray-500">Total a Pagar</p>
+                <p class="text-xl font-bold text-gray-900">
+                  S/ {{ saleData()?.totalWithDiscount }}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <app-input-form
-          [required]="true"
-          label="Nombres"
-          class="w-full"
-          formControlName="name"
+      </div>
+      <div class="w-full flex col-span-4 gap-2 justify-end">
+        @if (saleData().status=='RESERVADO') {
+        <app-button
+          text="Completar Reserva"
+          moreClasses="py-2"
+          bgColor="bg-green-500"
+          icon="pi pi-credit-card"
+          [disabled]="!clientForm.valid"
+          (click)="updateStatusSale(saleData().saleId)"
         />
-        <app-input-form
-          [required]="true"
-          label="Primer Apellido"
-          class="w-full"
-          formControlName="firstLastname"
+        }
+        <app-button
+          text="Guardar Cambios"
+          moreClasses="py-2"
+          bgColor="bg-primary-500"
+          icon="pi pi-save"
+          type="submit"
+          [disabled]="!clientForm.valid"
+          (click)="updateClientForm()"
         />
-        <app-input-form
-          [required]="true"
-          label="Segundo Apellido"
-          class="w-full"
-          formControlName="secondLastname"
-        />
-        <app-input-form
-          label="Fecha de nacimiento"
-          class="w-full"
-          formControlName="birthDate"
-          type="date"
-          [required]="true"
-        />
-        <app-input-form
-          label="Correo Electrónico"
-          class="w-full"
-          type="email"
-          formControlName="email"
-        />
-        <app-input-form
-          [required]="true"
-          label="Número de Celular"
-          class="w-full"
-          formControlName="phone"
-          [isPositive]="true"
-          [maxLength]="9"
-        />
-        <app-input-form
-          label="Procedencia"
-          class="w-full"
-          formControlName="nationality"
-          placeholder="Lugar de procedencia"
-        />
-      </form>
-       {{saleData() | json}}
+      </div>
     </section>
   </main>
 </app-modal>

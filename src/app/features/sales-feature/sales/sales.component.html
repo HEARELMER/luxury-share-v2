@@ -168,7 +168,7 @@
             <p-tag
               severity="secondary"
               styleClass="dark:bg-gray-700 dark:text-gray-300"
-              [value]="sale[col.field] || 'Desconocido'"
+              [value]="sale[col.field] || 'Desconocido' | capitalize"
             ></p-tag>
             } } } @else if (col.field == "codeSale") {
             <span class="dark:text-gray-300">{{
@@ -218,7 +218,7 @@
                 [pTooltip]="'Modificar Venta'"
                 tooltipPosition="left"
                 [showDelay]="300"
-                (click)="editSale(sale)"
+                (click)="editSale(sale.codeSale)"
               >
                 <i class="pi pi-file-edit"></i>
               </button>
@@ -297,12 +297,11 @@
   [(showModal)]="showModalAddSale"
   (refreshData)="handleRefreshData()"
 />
-} 
-@if(showModalEditSale()) {
+} @if(showModalEditSale()) {
 <app-edit-form-sale
   [(showModal)]="showModalEditSale"
   (refreshData)="handleRefreshData()"
-  [saleData]="saleSelected()"
+  [codeSale]="codeSaleSelected()"
 />}
 
 <p-toast [baseZIndex]="10000" [life]="2000" />

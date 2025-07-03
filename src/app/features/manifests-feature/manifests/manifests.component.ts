@@ -298,12 +298,12 @@ export class ManifestsComponent {
     this.loading.set(true);
     this._manifestService.completeManifest(manifestId).subscribe({
       next: (res) => {
-        this.loadManifests({ resetPage: true });
         this._messageService.add({
           severity: 'success',
           summary: 'Éxito',
           detail: 'Manifiesto completado exitosamente.',
         });
+        this.loadManifests();
       },
       error: (err) => {
         this.loading.set(false);

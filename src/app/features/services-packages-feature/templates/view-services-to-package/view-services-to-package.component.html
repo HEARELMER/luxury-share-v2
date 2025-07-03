@@ -1,5 +1,5 @@
 <p-table
-  [columns]="SERVICES_COLS"
+  [columns]="servicesCols()"
   [value]="formatDataInput()"
   [scrollable]="true"
   [virtualScrollItemSize]="50"
@@ -8,8 +8,7 @@
   styleClass="p-datatable-gridlines"
   [tableStyle]="{ 'min-width': '50rem' }"
   [metaKeySelection]="true"
-  selectionMode="single"
-  size="small"
+  selectionMode="single" 
 >
   <ng-template pTemplate="header" let-columns>
     <tr>

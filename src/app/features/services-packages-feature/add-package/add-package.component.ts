@@ -35,6 +35,7 @@ import { PackagesService } from '../../../core/services/services_packages-servic
 import { ViewServicesToPackageComponent } from '../templates/view-services-to-package/view-services-to-package.component';
 import { FilterEmptyValuesPipe } from '../../../shared/pipes/filter-empty-value.pipe';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
+
 @Component({
   selector: 'app-add-package',
   imports: [
@@ -70,32 +71,48 @@ export class AddPackageComponent {
   totalRecords = 0;
   filterServiceByType = SERVICE_FILTER_BY_TYPE;
   selectedType = signal<string>('');
-
   showModal = model<boolean>(false);
   refreshData = output<void>();
   isEditing = signal<boolean>(false);
   serviceTypeOptions = SERVICE_TYPES;
   isSubmitting = signal<boolean>(false);
   packageDataToEdit = input<any>({});
-
   addService = signal<boolean>(false);
   packageForm: FormGroup = this._fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
     priceUnit: ['', [Validators.required, Validators.min(0)]],
-    registeredBy: [this._localStorageService.getUserId()],
+    registeredBy: [Validators.required],
     services: [[]],
     status: [true],
     packageId: [''],
+    duration: ['', [Validators.required, Validators.min(1)]],
   });
+
+  // Guarda los servicios originales del paquete en edición
+  private originalServices: any[] = [];
+  private originalPrice: number = 0;
 
   constructor() {
     effect(() => {
       if (this.showModal() && !this.packageDataToEdit()) {
+        this.isEditing.set(false);
+        this.packageForm.reset();
+        this.targetServices.set([]);
+        this.originalServices = [];
+        this.originalPrice = 0;
         this.loadServices();
+        this.packageForm.patchValue({
+          registeredBy: this._localStorageService.getUserId(),
+        });
       } else if (this.showModal() && this.packageDataToEdit()) {
         this.isEditing.set(true);
         this.packageForm.patchValue(this.packageDataToEdit());
+        // Cargar servicios originales y precio original
+        const services = this.packageDataToEdit().servicesData || [];
+        this.targetServices.set(services);
+        this.originalServices = [...services];
+        this.originalPrice = this.packageDataToEdit().priceUnit || 0;
         this.loadServices();
       }
     });
@@ -131,20 +148,21 @@ export class AddPackageComponent {
   }
 
   onFilterChange(option: string) {
-    console.log(option);
     this.selectedType.set(option);
-    this.currentPage = 1; // Reset paginación
+    this.currentPage = 1;
     this.loadServices();
   }
 
   formatValues() {
     this.packageForm.patchValue({
       priceUnit: parseFloat(this.packageForm.value.priceUnit),
+      duration: parseFloat(this.packageForm.value.duration),
     });
   }
 
   onSubmit() {
     if (!this.packageForm.valid) return;
+
     this.formatValues();
     const filteredValues = this._filterEmptyValuesPipe.transform(
       this.packageForm.value
@@ -157,6 +175,13 @@ export class AddPackageComponent {
   }
 
   update(data: any) {
+    if (
+      !Array.isArray(data.services) ||
+      !data.services.every((item: any) => typeof item === 'string')
+    ) {
+      data.services = [];
+    }
+
     this.isSubmitting.set(true);
     this._packagesService.updatePackage(data.packageId, data).subscribe({
       next: (response) => {
@@ -184,6 +209,9 @@ export class AddPackageComponent {
     this.packageForm.reset();
     this.isEditing.set(false);
     this.isSubmitting.set(false);
+    this.targetServices.set([]);
+    this.originalServices = [];
+    this.originalPrice = 0;
   }
 
   updateSelectedServices() {
@@ -191,13 +219,50 @@ export class AddPackageComponent {
     this.packageForm.patchValue({
       services: selectedServices.map((service) => service.serviceId),
     });
-    const totalPrice = selectedServices.reduce(
-      (sum, service) => sum + (service.priceUnit || 0),
-      0
-    );
-    this.packageForm.patchValue({
-      priceUnit: totalPrice,
-    });
+
+    // Si está en modo edición, sumar solo los precios de los servicios nuevos
+    if (this.isEditing()) {
+      // Servicios originales (por id)
+      const originalIds = new Set(
+        this.originalServices.map((s) => s.serviceId)
+      );
+      // Servicios nuevos agregados
+      const newServices = selectedServices.filter(
+        (s) => !originalIds.has(s.serviceId)
+      );
+      // Servicios eliminados
+      const removedServices = this.originalServices.filter(
+        (s) => !selectedServices.some((sel) => sel.serviceId === s.serviceId)
+      );
+      // Calcular nuevo precio
+      let newPrice = this.originalPrice;
+
+      // Sumar precios de servicios nuevos
+      newServices.forEach((s) => {
+        newPrice += parseFloat(s.priceUnit) || 0;
+      });
+
+      // Restar precios de servicios eliminados
+      removedServices.forEach((s) => {
+        newPrice -= parseFloat(s.priceUnit) || 0;
+      });
+
+      // Evitar negativos
+      if (newPrice < 0) newPrice = 0;
+
+      this.packageForm.patchValue({
+        priceUnit: newPrice,
+      });
+    } else {
+      // En modo creación, sumar todos los precios
+      const totalPrice = selectedServices.reduce(
+        (sum, service) => sum + (parseFloat(service.priceUnit) || 0),
+        0
+      );
+      this.packageForm.patchValue({
+        priceUnit: totalPrice,
+      });
+    }
   }
 
   save(data: any) {
@@ -230,9 +295,12 @@ export class AddPackageComponent {
     );
   }
 
-  onServiceRemoved(event: { success: boolean; newPrice?: number }) {
+  onServiceRemoved(event: {
+    success: boolean;
+    newPrice?: number;
+    message?: string;
+  }) {
     if (event.success && event.newPrice !== undefined) {
-      // Actualizar el precio en el formulario
       this.packageForm.patchValue({
         priceUnit: event.newPrice,
       });
@@ -240,13 +308,14 @@ export class AddPackageComponent {
       this._messageService.add({
         severity: 'success',
         summary: 'Servicio eliminado',
-        detail: 'El servicio se eliminó correctamente del paquete',
+        detail:
+          event.message || 'El servicio se eliminó correctamente del paquete',
       });
     } else {
       this._messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'No se pudo eliminar el servicio del paquete',
+        detail: event.message || 'No se pudo eliminar el servicio del paquete',
       });
     }
   }

@@ -27,6 +27,7 @@ import { Toast } from 'primeng/toast';
 import { LocalstorageService } from '../../../core/services/localstorage-services/localstorage.service';
 import { ButtonModule } from 'primeng/button';
 import { EditFormSaleComponent } from "../edit-form-sale/edit-form-sale.component";
+import { CapitalizePipe } from "../../../shared/pipes/capitalize.pipe";
 @Component({
   selector: 'app-sales',
   imports: [
@@ -50,7 +51,8 @@ import { EditFormSaleComponent } from "../edit-form-sale/edit-form-sale.componen
     SelectComponent,
     Toast,
     ButtonModule,
-    EditFormSaleComponent
+    EditFormSaleComponent,
+    CapitalizePipe
 ],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss',
@@ -72,7 +74,7 @@ export class SalesComponent {
   filterSaleByCodeSale = signal<string>('');
   sales = signal<any[]>([]);
   filters = signal<{ key: string; value: string }[]>([]);
-  saleSelected = signal<any>(null);
+  codeSaleSelected = signal<any>(null);
 
   salesStatusFilters = SALE_STATUS_FILTERS;
   // Configuración de tabla
@@ -268,8 +270,8 @@ export class SalesComponent {
     });
   }
 
-  editSale(sale: any): void {
-    if (!sale) {
+  editSale(codeSale: string): void {
+    if (!codeSale) {
       this._messageService.add({
         severity: 'warn',
         summary: 'Advertencia',
@@ -277,7 +279,7 @@ export class SalesComponent {
       });
       return;
     }
-    this.saleSelected.set(sale);
+    this.codeSaleSelected.set(codeSale);
     this.showModalEditSale.set(true);
   }
 }

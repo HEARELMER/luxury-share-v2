@@ -30,9 +30,13 @@ export class ViewServicesToPackageComponent {
 
   ref: DynamicDialogRef | undefined;
   dataTable = model<any>(null);
-  SERVICES_COLS = SERVICE_TABLE_COLS;
+  servicesCols = input<any>(SERVICE_TABLE_COLS);
 
-  serviceRemoved = output<{ success: boolean; newPrice?: number }>();
+  serviceRemoved = output<{
+    success: boolean;
+    newPrice?: number;
+    message?: string;
+  }>();
   formatDataInput = computed(() => {
     if (!this.dataTable() == null) return [];
 
@@ -87,6 +91,7 @@ export class ViewServicesToPackageComponent {
               this.serviceRemoved.emit({
                 success: true,
                 newPrice: newPrice,
+                message: response.message.message,
               });
 
               // Actualizar la lista local
@@ -98,9 +103,11 @@ export class ViewServicesToPackageComponent {
                 ),
               }));
             },
-            error: (error) => {
-              this.serviceRemoved.emit({ success: false });
-              console.error('Error removing service:', error);
+            error: (error) => { 
+              this.serviceRemoved.emit({
+                success: false,
+                message: error.error.message,
+              }); 
             },
           });
       } else {

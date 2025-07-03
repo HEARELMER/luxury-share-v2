@@ -50,6 +50,15 @@
             [required]="true"
             [decimal]="true"
           />
+
+          <app-input-form
+            label="Duración (horas)"
+            type="text"
+            formControlName="duration"
+            [required]="true"
+            placeholder="Ej. 30"
+            [isPositive]="true"
+          />
         </div>
 
         <!--section tabla servcios asocidos -->

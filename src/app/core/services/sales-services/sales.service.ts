@@ -53,6 +53,13 @@ export class SalesService {
       );
   }
 
+  updateSaleStatus(saleId: string, status: string): Observable<any> {
+    const data = { saleId, status };
+    return this._httpclient.patch(`${this._apiUrl}sales/status`, data, {
+      withCredentials: true,
+    });
+  }
+
   sendSaleToEmail(
     codeSale: string,
     email: string,

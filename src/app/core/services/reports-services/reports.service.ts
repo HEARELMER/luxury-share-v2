@@ -49,11 +49,13 @@ export class ReportsService {
         })
       );
   }
+
   getDataOfSales(filters: any): Observable<any> {
     return this._httpclient.post<any>(`${this._api}reports/sales`, filters, {
       withCredentials: true,
     });
   }
+
   getDataOfServicesAndPackages(filters: any): Observable<any> {
     return this._httpclient.post<any>(
       `${this._api}reports/services-and-packages`,
@@ -63,6 +65,7 @@ export class ReportsService {
       }
     );
   }
+  
   getDataOfBranches(filters: any): Observable<any> {
     return this._httpclient.post<any>(`${this._api}reports/branches`, filters, {
       withCredentials: true,

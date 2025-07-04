@@ -130,6 +130,7 @@ export class CheckInComponent {
           participantId: participant.participantId,
           checkInStatus: participant.checkInStatus,
           saleId: participant.saleId,
+          detailSaleId: participant.saleDetailId,
         },
       ],
       updatedBy: this._localStorageService.getUserId(),
@@ -191,11 +192,13 @@ export class CheckInComponent {
     });
     ref.onClose.subscribe((result: boolean) => {
       if (result) {
+        console.log(participant);
         this.manifestService
           .removeParticipant(
             this.manifestId(),
             participant.participantId,
-            participant.saleId
+            participant.saleId,
+            participant.saleDetailId
           )
           .subscribe({
             next: (res) => {

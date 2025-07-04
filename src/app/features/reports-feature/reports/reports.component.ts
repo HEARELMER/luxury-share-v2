@@ -80,7 +80,7 @@ export class ReportsComponent {
     serviceType: [''],
     packageId: [''],
     sellerId: [''],
-    status: ['COMPLETADO'],
+    status: ['PAGADO'],
   });
 
   serviceTypeOptions = filtersByServiceType;
@@ -273,7 +273,7 @@ export class ReportsComponent {
       packageId: formValues.packageId,
       sellerId: formValues.sellerId,
       userId: this._localStorageService.getUserId(),
-      status: formValues.status || 'COMPLETADO',
+      status: formValues.status || 'PAGADO',
     });
   }
 

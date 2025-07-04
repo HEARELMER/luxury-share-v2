@@ -90,11 +90,12 @@ export class ManifestsService {
     manifestId: string,
     participantId: string,
     saleId: string,
+    detailSaleId?: string,
     updatedBy?: string
   ): Observable<any> {
     return this._http.patch(
       `${this._api}manifests/${manifestId}/participants/${participantId}`,
-      { updatedBy, saleId },
+      { updatedBy, saleId, detailSaleId },
       { withCredentials: true }
     );
   }
